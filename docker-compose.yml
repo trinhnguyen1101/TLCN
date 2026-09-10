@@ -41,8 +41,10 @@ services:
   airflow-init:
     <<: *airflow-common
     restart: "no"
+    # The image entrypoint prefixes commands with `airflow`; override it so the
+    # initialization shell script below is executed as Bash instead.
+    entrypoint: /bin/bash
     command:
-      - /bin/bash
       - -ec
       - |
         airflow db migrate
@@ -118,6 +120,9 @@ services:
 
   nessie:
     image: ghcr.io/projectnessie/nessie:0.104.5
+    # Docker creates a new named volume as root. Nessie's default non-root user
+    # cannot initialize RocksDB there on Docker Desktop.
+    user: "0:0"
     environment:
       NESSIE_VERSION_STORE_TYPE: ROCKSDB
       NESSIE_VERSION_STORE_PERSIST_ROCKS_DATABASE_PATH: /var/lib/nessie
@@ -126,7 +131,8 @@ services:
     volumes:
       - nessie-data:/var/lib/nessie
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:19120/api/v2/config || exit 1"]
+      # The Nessie image provides curl, not wget.
+      test: ["CMD-SHELL", "curl -fsS http://localhost:19120/api/v2/config >/dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 12

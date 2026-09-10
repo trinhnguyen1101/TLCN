@@ -1,4 +1,7 @@
-FROM apache/spark:3.5.4-scala2.12-java17-ubuntu
+# Spark 3.5.4's Java 17 image currently ships Temurin 17.0.13, which fails
+# during ManagementFactory initialization under this Docker Desktop setup.
+# Java 11 is supported by Spark 3.5 and avoids that JVM issue.
+FROM apache/spark:3.5.4-scala2.12-java11-ubuntu
 
 USER root
 RUN apt-get update \
