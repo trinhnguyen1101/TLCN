@@ -1,0 +1,3 @@
+# Keep empty of data-pipeline dependencies for the bootstrap stage.
+# psycopg2-binary is required by Airflow's PostgreSQL metadata connection.
+psycopg2-binary==2.9.10
