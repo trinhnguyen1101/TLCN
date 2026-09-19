@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this dataset, please cite as below"
+type: dataset
+authors:
+  - name: "jakkrapongt"
+title: "Vietnam Administrative Divisions Dataset"
+version: "2026.09"
+date-released: "2026-09-08"
+url: "https://github.com/open-admin-data/vietnam-administrative-divisions"
+repository-code: "https://github.com/open-admin-data/vietnam-administrative-divisions"
+license: CC-BY-4.0
+keywords:
+  - vietnam
+  - administrative-divisions
+  - geography
+  - open-data
+  - dataset
+  - multilingual
+abstract: >
+  Open dataset of Vietnam's administrative hierarchy:
+  34 province/citys, 3,321 commune/wards.
+  Bilingual with coordinates and postal codes where available.

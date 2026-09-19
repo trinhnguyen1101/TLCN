@@ -1,0 +1,36 @@
+# Data from Open Admin Data (https://openadmindata.org/vn/) — CC-BY-4.0. Please cite: https://github.com/open-admin-data/vietnam-administrative-divisions
+id,level,level_name.local,level_name.en,name.local,name.en,name.slug,code.id,code.iso,parent.id,parent.name.local,parent.name.en,children_count.province,children_count.ward,zip_codes,geo.lat,geo.lon,source_url
+01,1,Tỉnh/Thành phố,Province/City,Hà Nội,Hanoi,ha-noi-01,01,,,,,,126,,21,105.698,https://openadmindata.org/vn/provinces/ha-noi-01/
+04,1,Tỉnh/Thành phố,Province/City,Cao Bằng,Cao Bang,cao-bang-04,04,,,,,,56,,22.746,106.083,https://openadmindata.org/vn/provinces/cao-bang-04/
+08,1,Tỉnh/Thành phố,Province/City,Tuyên Quang,Tuyen Quang,tuyen-quang-08,08,,,,,,124,,22.49,105.099,https://openadmindata.org/vn/provinces/tuyen-quang-08/
+11,1,Tỉnh/Thành phố,Province/City,Điện Biên,Dien Bien,dien-bien-11,11,,,,,,45,,21.477,103.232,https://openadmindata.org/vn/provinces/dien-bien-11/
+12,1,Tỉnh/Thành phố,Province/City,Lai Châu,Lai Chau,lai-chau-12,12,,,,,,38,,22.318,103.185,https://openadmindata.org/vn/provinces/lai-chau-12/
+14,1,Tỉnh/Thành phố,Province/City,Sơn La,Son La,son-la-14,14,,,,,,75,,21.195,104.069,https://openadmindata.org/vn/provinces/son-la-14/
+15,1,Tỉnh/Thành phố,Province/City,Lào Cai,Lao Cai,lao-cai-15,15,,,,,,99,,22.061,104.347,https://openadmindata.org/vn/provinces/lao-cai-15/
+19,1,Tỉnh/Thành phố,Province/City,Thái Nguyên,Thai Nguyen,thai-nguyen-19,19,,,,,,92,,22.024,105.824,https://openadmindata.org/vn/provinces/thai-nguyen-19/
+20,1,Tỉnh/Thành phố,Province/City,Lạng Sơn,Lang Son,lang-son-20,20,,,,,,65,,21.774,106.728,https://openadmindata.org/vn/provinces/lang-son-20/
+22,1,Tỉnh/Thành phố,Province/City,Quảng Ninh,Quang Ninh,quang-ninh-22,22,,,,,,54,,21.264,107.223,https://openadmindata.org/vn/provinces/quang-ninh-22/
+24,1,Tỉnh/Thành phố,Province/City,Bắc Ninh,Bac Ninh,bac-ninh-24,24,,,,,,99,,21.243,106.167,https://openadmindata.org/vn/provinces/bac-ninh-24/
+25,1,Tỉnh/Thành phố,Province/City,Phú Thọ,Phu Tho,phu-tho-25,25,,,,,,148,,20.707,105.333,https://openadmindata.org/vn/provinces/phu-tho-25/
+31,1,Tỉnh/Thành phố,Province/City,Hải Phòng,Hai Phong,hai-phong-31,31,,,,,,114,,20.876,106.47,https://openadmindata.org/vn/provinces/hai-phong-31/
+33,1,Tỉnh/Thành phố,Province/City,Hưng Yên,Hung Yen,hung-yen-33,33,,,,,,104,,20.453,106.463,https://openadmindata.org/vn/provinces/hung-yen-33/
+37,1,Tỉnh/Thành phố,Province/City,Ninh Bình,Ninh Binh,ninh-binh-37,37,,,,,,129,,20.312,106.046,https://openadmindata.org/vn/provinces/ninh-binh-37/
+38,1,Tỉnh/Thành phố,Province/City,Thanh Hóa,Thanh Hoa,thanh-hoa-38,38,,,,,,166,,20.047,105.317,https://openadmindata.org/vn/provinces/thanh-hoa-38/
+40,1,Tỉnh/Thành phố,Province/City,Nghệ An,Nghe An,nghe-an-40,40,,,,,,130,,19.237,104.944,https://openadmindata.org/vn/provinces/nghe-an-40/
+42,1,Tỉnh/Thành phố,Province/City,Hà Tĩnh,Ha Tinh,ha-tinh-42,42,,,,,,69,,18.291,105.735,https://openadmindata.org/vn/provinces/ha-tinh-42/
+44,1,Tỉnh/Thành phố,Province/City,Quảng Trị,Quang Tri,quang-tri-44,44,,,,,,78,,17.241,106.527,https://openadmindata.org/vn/provinces/quang-tri-44/
+46,1,Tỉnh/Thành phố,Province/City,Huế,Hue,hue-46,46,,,,,,40,,16.332,107.517,https://openadmindata.org/vn/provinces/hue-46/
+48,1,Tỉnh/Thành phố,Province/City,Đà Nẵng,Da Nang,da-nang-48,48,,,,,,94,,15.631,107.966,https://openadmindata.org/vn/provinces/da-nang-48/
+51,1,Tỉnh/Thành phố,Province/City,Quảng Ngãi,Quang Ngai,quang-ngai-51,51,,,,,,96,,14.769,108.143,https://openadmindata.org/vn/provinces/quang-ngai-51/
+52,1,Tỉnh/Thành phố,Province/City,Gia Lai,Gia Lai,gia-lai-52,52,,,,,,135,,13.89,108.438,https://openadmindata.org/vn/provinces/gia-lai-52/
+56,1,Tỉnh/Thành phố,Province/City,Khánh Hòa,Khanh Hoa,khanh-hoa-56,56,,,,,,65,,12.069,108.961,https://openadmindata.org/vn/provinces/khanh-hoa-56/
+66,1,Tỉnh/Thành phố,Province/City,Đắk Lắk,Dak Lak,dak-lak-66,66,,,,,,102,,12.707,108.47,https://openadmindata.org/vn/provinces/dak-lak-66/
+68,1,Tỉnh/Thành phố,Province/City,Lâm Đồng,Lam Dong,lam-dong-68,68,,,,,,124,,11.674,107.968,https://openadmindata.org/vn/provinces/lam-dong-68/
+75,1,Tỉnh/Thành phố,Province/City,Đồng Nai,Dong Nai,dong-nai-75,75,,,,,,95,,11.437,107.034,https://openadmindata.org/vn/provinces/dong-nai-75/
+79,1,Tỉnh/Thành phố,Province/City,Hồ Chí Minh,Ho Chi Minh City,ho-chi-minh-79,79,,,,,,168,,10.993,106.638,https://openadmindata.org/vn/provinces/ho-chi-minh-79/
+80,1,Tỉnh/Thành phố,Province/City,Tây Ninh,Tay Ninh,tay-ninh-80,80,,,,,,96,,10.694,106.123,https://openadmindata.org/vn/provinces/tay-ninh-80/
+82,1,Tỉnh/Thành phố,Province/City,Đồng Tháp,Dong Thap,dong-thap-82,82,,,,,,102,,10.429,105.999,https://openadmindata.org/vn/provinces/dong-thap-82/
+86,1,Tỉnh/Thành phố,Province/City,Vĩnh Long,Vinh Long,vinh-long-86,86,,,,,,124,,9.995,106.292,https://openadmindata.org/vn/provinces/vinh-long-86/
+91,1,Tỉnh/Thành phố,Province/City,An Giang,An Giang,an-giang-91,91,,,,,,102,,10.179,105.096,https://openadmindata.org/vn/provinces/an-giang-91/
+92,1,Tỉnh/Thành phố,Province/City,Cần Thơ,Can Tho,can-tho-92,92,,,,,,103,,9.744,105.757,https://openadmindata.org/vn/provinces/can-tho-92/
+96,1,Tỉnh/Thành phố,Province/City,Cà Mau,Ca Mau,ca-mau-96,96,,,,,,64,,9.136,105.182,https://openadmindata.org/vn/provinces/ca-mau-96/

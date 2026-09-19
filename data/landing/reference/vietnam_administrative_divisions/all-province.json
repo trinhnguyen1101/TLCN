@@ -1,0 +1,1124 @@
+[
+  {
+    "id": "01",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Hà Nội",
+      "en": "Hanoi",
+      "slug": "ha-noi-01"
+    },
+    "code": {
+      "id": "01",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 126
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "21",
+      "lon": "105.698"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/ha-noi-01/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "04",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Cao Bằng",
+      "en": "Cao Bang",
+      "slug": "cao-bang-04"
+    },
+    "code": {
+      "id": "04",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 56
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "22.746",
+      "lon": "106.083"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/cao-bang-04/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "08",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Tuyên Quang",
+      "en": "Tuyen Quang",
+      "slug": "tuyen-quang-08"
+    },
+    "code": {
+      "id": "08",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 124
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "22.49",
+      "lon": "105.099"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/tuyen-quang-08/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "11",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Điện Biên",
+      "en": "Dien Bien",
+      "slug": "dien-bien-11"
+    },
+    "code": {
+      "id": "11",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 45
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "21.477",
+      "lon": "103.232"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/dien-bien-11/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "12",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Lai Châu",
+      "en": "Lai Chau",
+      "slug": "lai-chau-12"
+    },
+    "code": {
+      "id": "12",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 38
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "22.318",
+      "lon": "103.185"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/lai-chau-12/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "14",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Sơn La",
+      "en": "Son La",
+      "slug": "son-la-14"
+    },
+    "code": {
+      "id": "14",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 75
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "21.195",
+      "lon": "104.069"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/son-la-14/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "15",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Lào Cai",
+      "en": "Lao Cai",
+      "slug": "lao-cai-15"
+    },
+    "code": {
+      "id": "15",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 99
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "22.061",
+      "lon": "104.347"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/lao-cai-15/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "19",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Thái Nguyên",
+      "en": "Thai Nguyen",
+      "slug": "thai-nguyen-19"
+    },
+    "code": {
+      "id": "19",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 92
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "22.024",
+      "lon": "105.824"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/thai-nguyen-19/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "20",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Lạng Sơn",
+      "en": "Lang Son",
+      "slug": "lang-son-20"
+    },
+    "code": {
+      "id": "20",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 65
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "21.774",
+      "lon": "106.728"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/lang-son-20/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "22",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Quảng Ninh",
+      "en": "Quang Ninh",
+      "slug": "quang-ninh-22"
+    },
+    "code": {
+      "id": "22",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 54
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "21.264",
+      "lon": "107.223"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/quang-ninh-22/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "24",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Bắc Ninh",
+      "en": "Bac Ninh",
+      "slug": "bac-ninh-24"
+    },
+    "code": {
+      "id": "24",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 99
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "21.243",
+      "lon": "106.167"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/bac-ninh-24/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "25",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Phú Thọ",
+      "en": "Phu Tho",
+      "slug": "phu-tho-25"
+    },
+    "code": {
+      "id": "25",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 148
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "20.707",
+      "lon": "105.333"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/phu-tho-25/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "31",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Hải Phòng",
+      "en": "Hai Phong",
+      "slug": "hai-phong-31"
+    },
+    "code": {
+      "id": "31",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 114
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "20.876",
+      "lon": "106.47"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/hai-phong-31/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "33",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Hưng Yên",
+      "en": "Hung Yen",
+      "slug": "hung-yen-33"
+    },
+    "code": {
+      "id": "33",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 104
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "20.453",
+      "lon": "106.463"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/hung-yen-33/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "37",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Ninh Bình",
+      "en": "Ninh Binh",
+      "slug": "ninh-binh-37"
+    },
+    "code": {
+      "id": "37",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 129
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "20.312",
+      "lon": "106.046"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/ninh-binh-37/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "38",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Thanh Hóa",
+      "en": "Thanh Hoa",
+      "slug": "thanh-hoa-38"
+    },
+    "code": {
+      "id": "38",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 166
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "20.047",
+      "lon": "105.317"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/thanh-hoa-38/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "40",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Nghệ An",
+      "en": "Nghe An",
+      "slug": "nghe-an-40"
+    },
+    "code": {
+      "id": "40",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 130
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "19.237",
+      "lon": "104.944"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/nghe-an-40/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "42",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Hà Tĩnh",
+      "en": "Ha Tinh",
+      "slug": "ha-tinh-42"
+    },
+    "code": {
+      "id": "42",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 69
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "18.291",
+      "lon": "105.735"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/ha-tinh-42/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "44",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Quảng Trị",
+      "en": "Quang Tri",
+      "slug": "quang-tri-44"
+    },
+    "code": {
+      "id": "44",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 78
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "17.241",
+      "lon": "106.527"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/quang-tri-44/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "46",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Huế",
+      "en": "Hue",
+      "slug": "hue-46"
+    },
+    "code": {
+      "id": "46",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 40
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "16.332",
+      "lon": "107.517"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/hue-46/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "48",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Đà Nẵng",
+      "en": "Da Nang",
+      "slug": "da-nang-48"
+    },
+    "code": {
+      "id": "48",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 94
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "15.631",
+      "lon": "107.966"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/da-nang-48/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "51",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Quảng Ngãi",
+      "en": "Quang Ngai",
+      "slug": "quang-ngai-51"
+    },
+    "code": {
+      "id": "51",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 96
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "14.769",
+      "lon": "108.143"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/quang-ngai-51/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "52",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Gia Lai",
+      "en": "Gia Lai",
+      "slug": "gia-lai-52"
+    },
+    "code": {
+      "id": "52",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 135
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "13.89",
+      "lon": "108.438"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/gia-lai-52/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "56",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Khánh Hòa",
+      "en": "Khanh Hoa",
+      "slug": "khanh-hoa-56"
+    },
+    "code": {
+      "id": "56",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 65
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "12.069",
+      "lon": "108.961"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/khanh-hoa-56/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "66",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Đắk Lắk",
+      "en": "Dak Lak",
+      "slug": "dak-lak-66"
+    },
+    "code": {
+      "id": "66",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 102
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "12.707",
+      "lon": "108.47"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/dak-lak-66/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "68",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Lâm Đồng",
+      "en": "Lam Dong",
+      "slug": "lam-dong-68"
+    },
+    "code": {
+      "id": "68",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 124
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "11.674",
+      "lon": "107.968"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/lam-dong-68/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "75",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Đồng Nai",
+      "en": "Dong Nai",
+      "slug": "dong-nai-75"
+    },
+    "code": {
+      "id": "75",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 95
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "11.437",
+      "lon": "107.034"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/dong-nai-75/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "79",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Hồ Chí Minh",
+      "en": "Ho Chi Minh City",
+      "slug": "ho-chi-minh-79"
+    },
+    "code": {
+      "id": "79",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 168
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "10.993",
+      "lon": "106.638"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/ho-chi-minh-79/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "80",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Tây Ninh",
+      "en": "Tay Ninh",
+      "slug": "tay-ninh-80"
+    },
+    "code": {
+      "id": "80",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 96
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "10.694",
+      "lon": "106.123"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/tay-ninh-80/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "82",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Đồng Tháp",
+      "en": "Dong Thap",
+      "slug": "dong-thap-82"
+    },
+    "code": {
+      "id": "82",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 102
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "10.429",
+      "lon": "105.999"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/dong-thap-82/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "86",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Vĩnh Long",
+      "en": "Vinh Long",
+      "slug": "vinh-long-86"
+    },
+    "code": {
+      "id": "86",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 124
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "9.995",
+      "lon": "106.292"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/vinh-long-86/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "91",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "An Giang",
+      "en": "An Giang",
+      "slug": "an-giang-91"
+    },
+    "code": {
+      "id": "91",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 102
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "10.179",
+      "lon": "105.096"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/an-giang-91/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "92",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Cần Thơ",
+      "en": "Can Tho",
+      "slug": "can-tho-92"
+    },
+    "code": {
+      "id": "92",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 103
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "9.744",
+      "lon": "105.757"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/can-tho-92/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  },
+  {
+    "id": "96",
+    "level": 1,
+    "level_name": {
+      "local": "Tỉnh/Thành phố",
+      "en": "Province/City"
+    },
+    "name": {
+      "local": "Cà Mau",
+      "en": "Ca Mau",
+      "slug": "ca-mau-96"
+    },
+    "code": {
+      "id": "96",
+      "iso": null
+    },
+    "parent": null,
+    "ancestors": [],
+    "children_count": {
+      "ward": 64
+    },
+    "zip_codes": [],
+    "geo": {
+      "lat": "9.136",
+      "lon": "105.182"
+    },
+    "metadata": {},
+    "source": {
+      "name": "Open Admin Data",
+      "url": "https://openadmindata.org/vn/provinces/ca-mau-96/",
+      "api": "https://openadmindata.org/api/vn/"
+    }
+  }
+]
