@@ -484,6 +484,76 @@ Trong `properties`, `level` có enum `[1, 2]`; `name` yêu cầu `local` và `en
 - Không union các biểu diễn `all-flat.*`, `hierarchy`, `all-province`, `all-ward` như các nguồn quan sát độc lập vì sẽ tạo trùng lặp.
 - Metadata snapshot chưa đủ truy vết do `git_commit` và `retrieved_at` còn `...`. Dữ liệu hành chính này không có lịch sử hiệu lực để tự ánh xạ tên địa phương cũ trong dữ liệu 2003–2025.
 
+### 5.7. Vietnamese Provinces Database — đơn vị hành chính và ranh giới GIS
+
+Thư mục: [`data/landing/reference/vietnamese-provinces-database/json/`](../../data/landing/reference/vietnamese-provinces-database/json/). Đây là **nguồn khác** với `vietnam_administrative_divisions` ở các mục trên. Snapshot được tạo lúc `2026-09-12T07:42:08Z`, phiên bản `v5.1.0`, phản ánh nghị quyết mới nhất `36/2026/QH16` theo file metadata. Các mô tả cấp hành chính sau chỉ áp dụng cho snapshot này.
+
+#### Các file và quan hệ giữa các biểu diễn
+
+| File / thư mục | Cấu trúc | Nội dung và cách dùng |
+|---|---|---|
+| `full_json_generated_data_vn_units.json` | Array 34 object tỉnh/thành, mỗi object chứa `Wards` | Bản đầy đủ; có loại đơn vị và nhãn cấp hành chính bằng Việt/Anh. |
+| `simplified_json_generated_data_vn_units.json` | Cùng cấu trúc lồng | Bản rút gọn, có tên Việt/Anh, slug và mã bưu chính; thuận tiện dùng trong ứng dụng. |
+| `simplified_json_generated_data_vn_units_minified.json` | Cùng dữ liệu bản rút gọn, không có khoảng trắng | Chỉ khác cách trình bày/tối ưu kích thước; không nạp cùng bản rút gọn vì sẽ trùng dữ liệu. |
+| `vn_only_simplified_json_generated_data_vn_units.json` | Cùng cấu trúc lồng | Bản tối giản chỉ giữ các trường tiếng Việt cần thiết. |
+| `vn_only_simplified_json_generated_data_vn_units_minified.json` | Cùng dữ liệu bản tiếng Việt, không có khoảng trắng | Chỉ khác cách trình bày; không nạp cùng bản tiếng Việt có định dạng. |
+| `vn_provinces_metadata.json` | Một object metadata | Phiên bản dataset, nghị quyết được phản ánh và thời điểm tạo. |
+| `geojson/{province}/` | Một GeoJSON tỉnh và một GeoJSON cho từng xã/phường | Ranh giới polygon thực tế: 34 tệp tỉnh + 3.321 tệp xã/phường = 3.355 tệp. |
+
+Ba JSON dạng pretty/minified của cùng một biến thể là tương đương về nội dung. Mỗi bản có 34 tỉnh/thành và tổng cộng 3.321 xã/phường; `Wards` là quan hệ cha–con, còn `ProvinceCode` trong xã/phường là khóa tham chiếu lại tỉnh cha. Mã đơn vị phải lưu kiểu `string` để giữ số 0 đầu, ví dụ tỉnh `"01"`, phường `"00004"`.
+
+#### Trường trong JSON đầy đủ
+
+| Trường | Kiểu | Có ở | Ý nghĩa |
+|---|---|---|---|
+| `Type` | string | Tỉnh và xã/phường | Loại bản ghi; ví dụ `province`, `ward`. |
+| `Code` | string | Tỉnh và xã/phường | Mã đơn vị hành chính; là khóa định danh trong dataset. |
+| `Name`, `NameEn` | string | Tỉnh và xã/phường | Tên ngắn bằng tiếng Việt và tiếng Anh/La-tinh hóa. |
+| `FullName`, `FullNameEn` | string | Tỉnh và xã/phường | Tên đầy đủ, bao gồm tiền tố đơn vị; ví dụ `Thành phố Hà Nội`, `Phường Ba Đình`. |
+| `CodeName` | string | Tỉnh và xã/phường | Tên mã/slug không dấu, dùng làm định danh thân thiện URL/tên tệp; ví dụ `ha_noi`, `ba_dinh`. |
+| `PostalCodePrefix` | string | Tỉnh | Các tiền tố mã bưu chính, phân tách bằng dấu phẩy; ví dụ `10, 11, 12, 13, 14`. |
+| `Wards` | array object | Tỉnh | Danh sách xã/phường trực thuộc; không có trường này trong object xã/phường. |
+| `ProvinceCode` | string | Xã/phường | Mã `Code` của tỉnh/thành cha để join với bản ghi tỉnh. |
+| `PostalCode` | string | Xã/phường | Mã bưu chính của xã/phường. |
+| `AdministrativeUnitId` | integer | Tỉnh và xã/phường | Mã loại đơn vị hành chính do nguồn quy ước. |
+| `AdministrativeUnitShortName`, `AdministrativeUnitFullName` | string | Tỉnh và xã/phường | Tên loại đơn vị rút gọn và đầy đủ bằng tiếng Việt. |
+| `AdministrativeUnitShortNameEn`, `AdministrativeUnitFullNameEn` | string | Tỉnh và xã/phường | Tên loại đơn vị rút gọn và đầy đủ bằng tiếng Anh. |
+
+`simplified_json_generated_data_vn_units*.json` giữ: `Code`, `Name`, `NameEn`, `FullName`, `FullNameEn`, `CodeName`, `PostalCodePrefix`, `Wards`; các phần tử `Wards` giữ các trường trên ngoại trừ `PostalCodePrefix`, thay bằng `ProvinceCode` và `PostalCode`. Hai file `vn_only_simplified_json_generated_data_vn_units*.json` chỉ giữ `Code`, `FullName`, `PostalCodePrefix`, `Wards` ở tỉnh; xã/phường chỉ còn `Code`, `FullName`, `ProvinceCode`, `PostalCode`.
+
+#### Metadata phát hành
+
+| Trường | Kiểu | Ý nghĩa |
+|---|---|---|
+| `DatasetVersion` | string | Phiên bản phát hành dataset, hiện `v5.1.0`. |
+| `LatestDecree` | string | Số nghị quyết mới nhất đã được dataset phản ánh, hiện `36/2026/QH16`. |
+| `GeneratedAt` | string RFC 3339, UTC | Thời điểm tạo dữ liệu, hiện `2026-09-12T07:42:08Z`. |
+
+#### GeoJSON ranh giới
+
+Mỗi tệp là GeoJSON `FeatureCollection` chứa đúng một `Feature`. Cấu trúc chung:
+
+```text
+FeatureCollection
+  bbox                         [minLongitude, minLatitude, maxLongitude, maxLatitude]
+  features[0]
+    id                         Mã đơn vị, khớp `Code`
+    bbox                       Hộp bao của feature, cùng thứ tự tọa độ
+    geometry.type              `MultiPolygon`
+    geometry.coordinates       Tập polygon; mỗi điểm là [kinh độ, vĩ độ]
+    properties                 Thuộc tính nhận diện và GIS
+```
+
+| `properties` | Kiểu | Ý nghĩa |
+|---|---|---|
+| `code`, `name`, `nameEn`, `fullName`, `fullNameEn`, `codeName` | string | Các trường nhận diện tương ứng JSON danh mục, nhưng dùng camelCase. |
+| `postalCode` | string | Mã bưu chính tại xã/phường; rỗng ở tệp cấp tỉnh. |
+| `postalCodePrefix` | string | Tiền tố mã bưu chính tại tỉnh; rỗng ở tệp xã/phường. |
+| `gisServerId` | string | Định danh đối tượng ranh giới trong nguồn GIS. |
+| `areaKm2` | number | Diện tích của đơn vị, đơn vị km². |
+
+Khác với nguồn hành chính ở mục 5.1–5.6, bộ này **có ranh giới**. Có thể nối dữ liệu không gian bằng `Feature.id`/`properties.code` với `Code`; khi xử lý hình học, luôn đọc vị trí theo thứ tự GeoJSON `[longitude, latitude]`, không đảo thành `[latitude, longitude]`. `bbox` chỉ là hộp bao, không phải ranh giới của đơn vị.
+
 ## 6. Những khác biệt cần giữ khi kết hợp các nguồn
 
 | Nội dung | CAMS | WAQI | Climate TRACE | Hành chính |
