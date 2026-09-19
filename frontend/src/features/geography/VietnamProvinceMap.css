@@ -1,0 +1,14 @@
+.vietnam-map { overflow: hidden; border: 1px solid #d8e1ec; border-radius: 16px; background: #fff; box-shadow: 0 12px 28px rgb(15 23 42 / 8%); }
+.map-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 20px 24px; }
+.map-eyebrow { margin: 0 0 4px; color: #64748b; font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.map-toolbar h2 { margin: 0; color: #0f172a; font-size: 1.3rem; }
+.metric-switch { display: flex; overflow: hidden; border: 1px solid #cbd5e1; border-radius: 8px; }
+.metric-switch button { border: 0; padding: 8px 13px; color: #475569; background: #fff; cursor: pointer; font: inherit; font-size: .9rem; }
+.metric-switch button.is-active { color: #fff; background: #0f766e; }
+.leaflet-map { height: 520px; width: 100%; background: #dceef9; }
+.map-legend { display: flex; flex-wrap: wrap; gap: 12px 18px; padding: 14px 24px; color: #475569; font-size: .82rem; }
+.map-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.legend-dot--good { background: #22c55e; }.legend-dot--moderate { background: #eab308; }.legend-dot--poor { background: #f97316; }.legend-dot--bad { background: #dc2626; }.legend-dot--empty { background: #e2e8f0; border: 1px solid #94a3b8; }
+.map-message { padding: 48px 20px; text-align: center; color: #475569; }.map-message--error { color: #b91c1c; }
+@media (max-width: 640px) { .map-toolbar { align-items: flex-start; flex-direction: column; padding: 16px; }.leaflet-map { height: 440px; }.map-legend { padding: 12px 16px; } }
