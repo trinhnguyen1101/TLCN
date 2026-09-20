@@ -1,0 +1,92 @@
+.admin-dashboard { position: relative; }
+
+.admin-context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: -4px 0 18px;
+  border: 1px dashed var(--border);
+  padding: 10px 13px;
+  color: var(--muted);
+  background: rgb(255 250 240 / 68%);
+  font-size: .76rem;
+  text-transform: uppercase;
+}
+
+.admin-context strong { color: var(--ink); font-size: .8rem; }
+.admin-context i { color: var(--red); font-style: normal; font-weight: 900; }
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.kpi-card {
+  display: grid;
+  min-width: 0;
+  min-height: 142px;
+  align-content: space-between;
+  gap: 10px;
+  border: 2px solid var(--border);
+  border-radius: 2px;
+  padding: 16px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 4px 0 var(--border);
+}
+
+.kpi-card--yellow { background: var(--yellow); }
+.kpi-card--red { color: #fff8df; background: var(--red); }
+.kpi-card__label { color: var(--muted); font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+.kpi-card--red .kpi-card__label,
+.kpi-card--red .kpi-card__detail { color: #fff2c2; }
+.kpi-card__value { overflow-wrap: anywhere; font-size: clamp(1.05rem, 2vw, 1.42rem); line-height: 1.08; }
+.kpi-card__detail { color: var(--muted); font-size: .72rem; font-weight: 700; line-height: 1.35; }
+.kpi-card__detail--up { color: var(--red-dark); }
+.kpi-card__detail--down { color: #39733a; }
+.kpi-card--red .kpi-card__detail--up,
+.kpi-card--red .kpi-card__detail--down { color: #fff2c2; }
+
+.admin-visual-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, .85fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.admin-visual-grid__map { grid-column: 1; }
+.admin-visual-grid__provinces { grid-column: 2; }
+.admin-visual-grid__trend { grid-column: 1; }
+.admin-visual-grid__sectors { grid-column: 2; }
+.admin-visual-grid .leaflet-map { height: 450px; }
+.admin-visual-grid .ranking-card { min-height: 100%; }
+
+.admin-disclaimer {
+  margin-top: 22px;
+  border-top: 4px double var(--border);
+  padding-top: 16px;
+  color: var(--muted);
+  font-size: .75rem;
+  line-height: 1.55;
+}
+
+.admin-disclaimer strong { color: var(--ink); }
+
+@media (max-width: 1080px) {
+  .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-visual-grid { grid-template-columns: 1fr; }
+  .admin-visual-grid__map,
+  .admin-visual-grid__provinces,
+  .admin-visual-grid__trend,
+  .admin-visual-grid__sectors { grid-column: 1; }
+}
+
+@media (max-width: 620px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-card { min-height: 126px; }
+  .admin-context { align-items: flex-start; flex-direction: column; }
+  .admin-context i { display: none; }
+}

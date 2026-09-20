@@ -1,0 +1,65 @@
+.ranking-card {
+  overflow: hidden;
+  border: 2px solid var(--border);
+  border-radius: 2px;
+  background: var(--paper);
+  box-shadow: var(--shadow-sm);
+}
+
+.ranking-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 20px 4px;
+}
+
+.ranking-card__header h2 {
+  margin: 4px 0 0;
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+
+.ranking-card__scroll {
+  overflow-x: auto;
+  padding: 4px 12px 12px;
+}
+
+.horizontal-bar-chart {
+  display: block;
+  min-width: 0;
+  width: 100%;
+  height: auto;
+}
+
+.horizontal-bar-chart text {
+  fill: var(--muted);
+  font-family: "Courier New", monospace;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.horizontal-bar-chart__track {
+  fill: #f6df9a;
+  stroke: var(--border);
+  stroke-width: 1.5px;
+}
+
+.horizontal-bar-chart__bar { fill: var(--red); }
+.horizontal-bar-chart__value { fill: var(--ink) !important; }
+.horizontal-bar-chart__row.is-interactive { cursor: pointer; }
+.horizontal-bar-chart__row.is-interactive:focus { outline: none; }
+.horizontal-bar-chart__row.is-interactive:hover .horizontal-bar-chart__bar,
+.horizontal-bar-chart__row.is-interactive:focus .horizontal-bar-chart__bar,
+.horizontal-bar-chart__row.is-selected .horizontal-bar-chart__bar { fill: var(--red-dark); }
+.horizontal-bar-chart__row.is-selected .horizontal-bar-chart__track { stroke-width: 3px; }
+
+@media (max-width: 620px) {
+  .ranking-card__header {
+    align-items: flex-start;
+    flex-direction: column;
+    padding: 16px 16px 4px;
+  }
+
+  .horizontal-bar-chart { min-width: 520px; }
+}

@@ -1,6 +1,7 @@
 import type {
   AirQualityReading,
   AirQualityStatus,
+  AnnualProvinceSummary,
   EmissionRecord,
   MonthlyTrend,
   PeriodComparison,
@@ -168,6 +169,19 @@ export const priorityAreas: PriorityArea[] = [
   { provinceCode: '48', provinceName: 'Đà Nẵng', pm25Average: 18, yearOverYearPercent: -5, exceedanceDays: 12, priorityLevel: 'Cải thiện', priorityScore: 22 },
 ]
 
+export const annualProvinceSummaries: AnnualProvinceSummary[] = [
+  { provinceCode: '01', provinceName: 'Hà Nội', year: 2025, pm25Average: 29.7, aqiAverage: 95, yearOverYearPercent: 9, exceedanceDays: 34 },
+  { provinceCode: '24', provinceName: 'Bắc Ninh', year: 2025, pm25Average: 28.1, aqiAverage: 90, yearOverYearPercent: 8, exceedanceDays: 32 },
+  { provinceCode: '22', provinceName: 'Quảng Ninh', year: 2025, pm25Average: 23.5, aqiAverage: 75, yearOverYearPercent: 4, exceedanceDays: 18 },
+  { provinceCode: '48', provinceName: 'Đà Nẵng', year: 2025, pm25Average: 18.9, aqiAverage: 60, yearOverYearPercent: -3, exceedanceDays: 15 },
+  { provinceCode: '79', provinceName: 'TP. Hồ Chí Minh', year: 2025, pm25Average: 25, aqiAverage: 80, yearOverYearPercent: 4, exceedanceDays: 24 },
+  { provinceCode: '01', provinceName: 'Hà Nội', year: 2026, pm25Average: 35, aqiAverage: 112, yearOverYearPercent: 18, exceedanceDays: 42 },
+  { provinceCode: '24', provinceName: 'Bắc Ninh', year: 2026, pm25Average: 32, aqiAverage: 102, yearOverYearPercent: 14, exceedanceDays: 38 },
+  { provinceCode: '22', provinceName: 'Quảng Ninh', year: 2026, pm25Average: 24, aqiAverage: 77, yearOverYearPercent: 2, exceedanceDays: 20 },
+  { provinceCode: '48', provinceName: 'Đà Nẵng', year: 2026, pm25Average: 18, aqiAverage: 58, yearOverYearPercent: -5, exceedanceDays: 12 },
+  { provinceCode: '79', provinceName: 'TP. Hồ Chí Minh', year: 2026, pm25Average: 27, aqiAverage: 86, yearOverYearPercent: 8, exceedanceDays: 28 },
+]
+
 /**
  * Monthly, province-level demo series used by the shared filter and comparison
  * components. The formula is stable so exports and comparisons are repeatable.
@@ -177,12 +191,13 @@ export const dashboardTrendRecords: DashboardTrendRecord[] = provinceSeed.flatMa
     [2025, 2026].flatMap((year) =>
       Array.from({ length: 12 }, (_, monthIndex) => {
         const seasonal = Math.round(Math.cos((monthIndex / 12) * Math.PI * 2) * 7)
-        const yearIncrease = year === 2026 ? 4 : 0
-        const pm25 = Math.max(8, province.pm25 - 13 + seasonal + yearIncrease - provinceIndex)
+        const summary = annualProvinceSummaries.find((item) => item.provinceCode === province.code && item.year === year)
+        const annualPm25 = summary?.pm25Average ?? province.pm25 - 13 - provinceIndex
+        const pm25 = Math.max(8, Math.round(annualPm25 + seasonal))
         return {
           provinceCode: province.code,
           date: `${year}-${String(monthIndex + 1).padStart(2, '0')}-15`,
-          aqi: Math.round(pm25 * 3.05),
+          aqi: Math.round(pm25 * (summary ? summary.aqiAverage / summary.pm25Average : 3.05)),
           pm25,
           pm10: pm25 + 20,
           o3: 35 + ((monthIndex + provinceIndex) % 7) * 3,
@@ -206,6 +221,7 @@ export const mockDashboardData = {
   adminProvinceTrend,
   emissionRecords,
   priorityAreas,
+  annualProvinceSummaries,
   dashboardTrendRecords,
   emissionSectors,
 }

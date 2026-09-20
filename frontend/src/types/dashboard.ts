@@ -77,6 +77,16 @@ export interface PriorityArea {
   priorityScore: number
 }
 
+export interface AnnualProvinceSummary {
+  provinceCode: ProvinceCode
+  provinceName: string
+  year: number
+  pm25Average: number
+  aqiAverage: number
+  yearOverYearPercent: number
+  exceedanceDays: number
+}
+
 export type DashboardProvince = ProvinceCode | 'all'
 
 export interface DashboardFiltersValue {
