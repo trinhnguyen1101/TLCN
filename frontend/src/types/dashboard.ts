@@ -76,3 +76,38 @@ export interface PriorityArea {
   priorityLevel: 'Cần chú ý' | 'Theo dõi' | 'Cải thiện'
   priorityScore: number
 }
+
+export type DashboardProvince = ProvinceCode | 'all'
+
+export interface DashboardFiltersValue {
+  provinceCode: DashboardProvince
+  pollutant: Pollutant
+  year: number | 'all'
+  month: number | 'all'
+  startDate: string
+  endDate: string
+  sector: string | 'all'
+}
+
+export interface DashboardTrendRecord {
+  provinceCode: ProvinceCode
+  date: string
+  aqi: number
+  pm25: number
+  pm10: number
+  o3: number
+  no2: number
+  so2: number
+  co: number
+}
+
+export interface ChartPoint {
+  label: string
+  value: number
+}
+
+export interface BreadcrumbItem {
+  id: string
+  label: string
+  onSelect?: () => void
+}

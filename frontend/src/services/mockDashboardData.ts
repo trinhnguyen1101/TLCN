@@ -8,6 +8,7 @@ import type {
   PriorityArea,
   ProvinceCode,
   ProvinceSnapshot,
+  DashboardTrendRecord,
 } from '../types/dashboard'
 
 /**
@@ -167,6 +168,34 @@ export const priorityAreas: PriorityArea[] = [
   { provinceCode: '48', provinceName: 'Đà Nẵng', pm25Average: 18, yearOverYearPercent: -5, exceedanceDays: 12, priorityLevel: 'Cải thiện', priorityScore: 22 },
 ]
 
+/**
+ * Monthly, province-level demo series used by the shared filter and comparison
+ * components. The formula is stable so exports and comparisons are repeatable.
+ */
+export const dashboardTrendRecords: DashboardTrendRecord[] = provinceSeed.flatMap(
+  (province, provinceIndex) =>
+    [2025, 2026].flatMap((year) =>
+      Array.from({ length: 12 }, (_, monthIndex) => {
+        const seasonal = Math.round(Math.cos((monthIndex / 12) * Math.PI * 2) * 7)
+        const yearIncrease = year === 2026 ? 4 : 0
+        const pm25 = Math.max(8, province.pm25 - 13 + seasonal + yearIncrease - provinceIndex)
+        return {
+          provinceCode: province.code,
+          date: `${year}-${String(monthIndex + 1).padStart(2, '0')}-15`,
+          aqi: Math.round(pm25 * 3.05),
+          pm25,
+          pm10: pm25 + 20,
+          o3: 35 + ((monthIndex + provinceIndex) % 7) * 3,
+          no2: 20 + ((monthIndex * 2 + provinceIndex) % 9),
+          so2: 7 + ((monthIndex + provinceIndex) % 5),
+          co: 5 + ((monthIndex + provinceIndex) % 4),
+        }
+      }),
+    ),
+)
+
+export const emissionSectors = [...new Set(emissionRecords.map((record) => record.sector))]
+
 export const mockDashboardData = {
   demoDate: DEMO_DATE,
   provinceSnapshots,
@@ -177,4 +206,6 @@ export const mockDashboardData = {
   adminProvinceTrend,
   emissionRecords,
   priorityAreas,
+  dashboardTrendRecords,
+  emissionSectors,
 }

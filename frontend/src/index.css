@@ -1,7 +1,11 @@
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  color: #1e293b;
-  background: #f1f5f9;
+  font-family: "Courier New", Courier, monospace;
+  color: #3b1d16;
+  background-color: #e9b83f;
+  background-image:
+    linear-gradient(rgb(92 35 27 / 7%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(92 35 27 / 7%) 1px, transparent 1px);
+  background-size: 24px 24px;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -9,4 +13,11 @@
 
 * { box-sizing: border-box; }
 body { min-width: 320px; min-height: 100vh; margin: 0; }
-button { font: inherit; }
+button, select, input { font: inherit; }
+button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px dashed #b6292e; outline-offset: 3px; }
+
+h1, h2, h3, strong {
+  font-family: Rockwell, "Roboto Slab", "Courier New", serif;
+}
+
+button, select { letter-spacing: .01em; }
