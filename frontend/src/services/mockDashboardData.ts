@@ -139,34 +139,39 @@ export const adminProvinceTrend: MonthlyTrend[] = [
   { provinceCode: '79', month: '2026-01', pm25Average: 27, pm10Average: 46, aqiAverage: 86, exceedanceDays: 21 },
 ]
 
-const emissionSeed: Array<[string, string, number]> = [
-  ['Manufacturing', 'Cement', 760],
-  ['Power', 'Coal-fired power', 615],
-  ['Transport', 'Road transport', 490],
-  ['Residential', 'Fuel combustion', 285],
-]
+const emissionProfiles: Record<ProvinceCode, Array<[string, string, number]>> = {
+  '01': [['Manufacturing', 'Cement', 1600], ['Power', 'Coal-fired power', 950], ['Transport', 'Road transport', 900], ['Residential', 'Fuel combustion', 400]],
+  '24': [['Manufacturing', 'Electronics', 1400], ['Power', 'Grid power', 750], ['Transport', 'Road transport', 520], ['Residential', 'Fuel combustion', 270]],
+  '22': [['Power', 'Coal-fired power', 1250], ['Manufacturing', 'Cement', 750], ['Transport', 'Road transport', 430], ['Residential', 'Fuel combustion', 250]],
+  '48': [['Transport', 'Road transport', 460], ['Manufacturing', 'Construction materials', 260], ['Power', 'Grid power', 190], ['Residential', 'Fuel combustion', 140]],
+  '79': [['Transport', 'Road transport', 1350], ['Manufacturing', 'Industrial production', 800], ['Power', 'Grid power', 520], ['Residential', 'Fuel combustion', 450]],
+}
 
 export const emissionRecords: EmissionRecord[] = provinceSeed.flatMap((province, provinceIndex) =>
-  emissionSeed.map(([sector, subsector, baseEmission], sectorIndex) => ({
-    provinceCode: province.code,
-    provinceName: province.name,
-    year: 2026,
-    month: 6,
-    pollutant: 'pm2_5',
-    sector,
-    subsector,
-    sourceType: sectorIndex === 3 ? 'gadm-aggregation' : 'point-source',
-    emissionTonnes: baseEmission - provinceIndex * 54 + (sectorIndex === 0 && province.code === '01' ? 120 : 0),
-    sourceCount: 4 + ((provinceIndex + sectorIndex) % 6),
-  })),
+  [2025, 2026].flatMap((year) =>
+    emissionProfiles[province.code].flatMap(([sector, subsector, annualEmission], sectorIndex) =>
+      Array.from({ length: 12 }, (_, monthIndex) => ({
+        provinceCode: province.code,
+        provinceName: province.name,
+        year,
+        month: monthIndex + 1,
+        pollutant: 'pm2_5' as const,
+        sector,
+        subsector,
+        sourceType: sectorIndex === 3 ? 'gadm-aggregation' as const : 'point-source' as const,
+        emissionTonnes: annualEmission * (year === 2026 ? 1 : .93) / 12,
+        sourceCount: 4 + ((provinceIndex + sectorIndex + monthIndex) % 6),
+      })),
+    ),
+  ),
 )
 
 export const priorityAreas: PriorityArea[] = [
-  { provinceCode: '01', provinceName: 'Hà Nội', pm25Average: 35, yearOverYearPercent: 18, exceedanceDays: 42, priorityLevel: 'Cần chú ý', priorityScore: 92 },
-  { provinceCode: '24', provinceName: 'Bắc Ninh', pm25Average: 32, yearOverYearPercent: 14, exceedanceDays: 38, priorityLevel: 'Cần chú ý', priorityScore: 84 },
-  { provinceCode: '79', provinceName: 'TP. Hồ Chí Minh', pm25Average: 27, yearOverYearPercent: 8, exceedanceDays: 28, priorityLevel: 'Theo dõi', priorityScore: 63 },
-  { provinceCode: '22', provinceName: 'Quảng Ninh', pm25Average: 24, yearOverYearPercent: 2, exceedanceDays: 20, priorityLevel: 'Theo dõi', priorityScore: 48 },
-  { provinceCode: '48', provinceName: 'Đà Nẵng', pm25Average: 18, yearOverYearPercent: -5, exceedanceDays: 12, priorityLevel: 'Cải thiện', priorityScore: 22 },
+  { provinceCode: '01', provinceName: 'Hà Nội', pm25Average: 35.1, yearOverYearPercent: 16.7, exceedanceDays: 42, totalEmissions: 3850, mainEmissionSector: 'Manufacturing', trend: 'up' },
+  { provinceCode: '24', provinceName: 'Bắc Ninh', pm25Average: 32.1, yearOverYearPercent: 11.2, exceedanceDays: 36, totalEmissions: 2940, mainEmissionSector: 'Manufacturing', trend: 'up' },
+  { provinceCode: '79', provinceName: 'TP. Hồ Chí Minh', pm25Average: 27.1, yearOverYearPercent: 5.3, exceedanceDays: 24, totalEmissions: 3120, mainEmissionSector: 'Transport', trend: 'slight-up' },
+  { provinceCode: '22', provinceName: 'Quảng Ninh', pm25Average: 24, yearOverYearPercent: 2, exceedanceDays: 20, totalEmissions: 2680, mainEmissionSector: 'Power', trend: 'steady' },
+  { provinceCode: '48', provinceName: 'Đà Nẵng', pm25Average: 18.1, yearOverYearPercent: -6.2, exceedanceDays: 8, totalEmissions: 1050, mainEmissionSector: 'Transport', trend: 'down' },
 ]
 
 export const annualProvinceSummaries: AnnualProvinceSummary[] = [

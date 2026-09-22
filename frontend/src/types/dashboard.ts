@@ -73,8 +73,9 @@ export interface PriorityArea {
   pm25Average: number
   yearOverYearPercent: number
   exceedanceDays: number
-  priorityLevel: 'Cần chú ý' | 'Theo dõi' | 'Cải thiện'
-  priorityScore: number
+  totalEmissions: number | null
+  mainEmissionSector: string | null
+  trend: 'up' | 'slight-up' | 'steady' | 'down'
 }
 
 export interface AnnualProvinceSummary {

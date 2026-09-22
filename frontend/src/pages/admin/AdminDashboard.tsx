@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { DashboardBreadcrumb } from '../../components/dashboard/DashboardBreadcrumb'
 import { DashboardFilters } from '../../components/dashboard/DashboardFilters'
 import { KpiCard } from '../../components/dashboard/KpiCard'
+import { PriorityAreasTable } from '../../components/dashboard/PriorityAreasTable'
 import { HorizontalBarChart, type HorizontalBarPoint } from '../../features/analytics/HorizontalBarChart'
 import { TrendChart } from '../../features/analytics/TrendChart'
 import { VietnamProvinceMap, type MapMetric } from '../../features/geography/VietnamProvinceMap'
@@ -10,9 +11,11 @@ import {
   dashboardTrendRecords,
   emissionRecords,
   emissionSectors,
+  priorityAreas,
   provinceSnapshots,
 } from '../../services/mockDashboardData'
-import type { ChartPoint, DashboardFiltersValue, DashboardTrendRecord, ProvinceCode } from '../../types/dashboard'
+import type { ChartPoint, DashboardFiltersValue, DashboardTrendRecord, PriorityArea, ProvinceCode } from '../../types/dashboard'
+import { formatDecimal } from '../../utils/formatters'
 import './AdminDashboard.css'
 
 const LATEST_YEAR = 2026
@@ -40,10 +43,6 @@ const mean = (values: number[]) => values.length > 0
   ? values.reduce((sum, value) => sum + value, 0) / values.length
   : null
 
-const formatDecimal = (value: number | null, unit = '') => value === null
-  ? 'Chưa có dữ liệu'
-  : `${value.toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}${unit ? ` ${unit}` : ''}`
-
 const dateForYear = (date: string, year: number) => date ? `${year}${date.slice(4)}` : ''
 
 function matchesPeriod(record: DashboardTrendRecord, filters: DashboardFiltersValue, year?: number, provinceCode = filters.provinceCode) {
@@ -63,6 +62,13 @@ function groupProvinceValues(records: DashboardTrendRecord[], key: 'pm25' | 'aqi
   const grouped = new Map<ProvinceCode, number[]>()
   records.forEach((record) => grouped.set(record.provinceCode, [...(grouped.get(record.provinceCode) ?? []), record[key]]))
   return new Map([...grouped].map(([code, values]) => [code, mean(values) ?? 0]))
+}
+
+const trendFromChange = (change: number): PriorityArea['trend'] => {
+  if (change >= 8) return 'up'
+  if (change > 2) return 'slight-up'
+  if (change <= -2) return 'down'
+  return 'steady'
 }
 
 export function AdminDashboard() {
@@ -140,20 +146,64 @@ export function AdminDashboard() {
     if (filters.provinceCode !== 'all' && record.provinceCode !== filters.provinceCode) return false
     if (filters.month !== 'all' && record.month !== filters.month) return false
     if (filters.sector !== 'all' && record.sector !== filters.sector) return false
+
+    const recordDate = `${record.year}-${String(record.month).padStart(2, '0')}-15`
+    const startDate = dateForYear(filters.startDate, currentYear)
+    const endDate = dateForYear(filters.endDate, currentYear)
+    if (startDate && recordDate < startDate) return false
+    if (endDate && recordDate > endDate) return false
     return true
-  }), [currentYear, filters.month, filters.provinceCode, filters.sector])
+  }), [currentYear, filters.endDate, filters.month, filters.provinceCode, filters.sector, filters.startDate])
 
   const sectorRanking = useMemo<HorizontalBarPoint[]>(() => {
     const totals = new Map<string, number>()
     filteredEmissions.forEach((record) => totals.set(record.sector, (totals.get(record.sector) ?? 0) + record.emissionTonnes))
     return [...totals]
-      .map(([sector, value]) => ({ id: sector, label: sector, value }))
+      .map(([sector, value]) => ({ id: sector, label: sector, value: Math.round(value) }))
       .sort((a, b) => b.value - a.value)
   }, [filteredEmissions])
 
   const totalEmissions = filteredEmissions.length > 0
-    ? filteredEmissions.reduce((sum, record) => sum + record.emissionTonnes, 0)
+    ? Math.round(filteredEmissions.reduce((sum, record) => sum + record.emissionTonnes, 0))
     : null
+
+  const priorityAreaRows = useMemo<PriorityArea[]>(() => priorityAreas
+    .filter((area) => filters.provinceCode === 'all' || area.provinceCode === filters.provinceCode)
+    .flatMap((area) => {
+      const provinceCurrentRecords = currentRecords.filter((record) => record.provinceCode === area.provinceCode)
+      if (provinceCurrentRecords.length === 0) return []
+
+      const provincePreviousRecords = previousRecords.filter((record) => record.provinceCode === area.provinceCode)
+      const pm25Average = mean(provinceCurrentRecords.map((record) => record.pm25))
+      const selectedMetricAverage = mean(provinceCurrentRecords.map((record) => record[filters.pollutant]))
+      const selectedMetricPreviousAverage = mean(provincePreviousRecords.map((record) => record[filters.pollutant]))
+      const summary = annualProvinceSummaries.find((item) => item.provinceCode === area.provinceCode && item.year === currentYear)
+      const isFullLatestPeriod = currentYear === LATEST_YEAR && filters.month === 'all' && !filters.startDate && !filters.endDate
+      const yearOverYearPercent = isFullLatestPeriod && filters.pollutant === 'pm25'
+        ? area.yearOverYearPercent
+        : selectedMetricAverage !== null && selectedMetricPreviousAverage !== null && selectedMetricPreviousAverage !== 0
+          ? ((selectedMetricAverage - selectedMetricPreviousAverage) / selectedMetricPreviousAverage) * 100
+          : filters.pollutant === 'pm25' ? (summary?.yearOverYearPercent ?? 0) : 0
+      const visibleProvinceMonthCount = new Set(provinceCurrentRecords.map((record) => record.date.slice(0, 7))).size
+      const annualExceedanceDays = currentYear === LATEST_YEAR ? area.exceedanceDays : (summary?.exceedanceDays ?? area.exceedanceDays)
+      const provinceEmissions = filteredEmissions.filter((record) => record.provinceCode === area.provinceCode)
+      const sectorTotals = new Map<string, number>()
+      provinceEmissions.forEach((record) => sectorTotals.set(record.sector, (sectorTotals.get(record.sector) ?? 0) + record.emissionTonnes))
+      const mainEmissionSector = [...sectorTotals].sort(([, a], [, b]) => b - a)[0]?.[0] ?? null
+
+      return [{
+        ...area,
+        pm25Average: isFullLatestPeriod ? area.pm25Average : Number((pm25Average ?? area.pm25Average).toFixed(1)),
+        yearOverYearPercent: Number(yearOverYearPercent.toFixed(1)),
+        exceedanceDays: Math.round(annualExceedanceDays * (visibleProvinceMonthCount / 12)),
+        totalEmissions: provinceEmissions.length > 0
+          ? Math.round(provinceEmissions.reduce((sum, record) => sum + record.emissionTonnes, 0))
+          : null,
+        mainEmissionSector,
+        trend: trendFromChange(yearOverYearPercent),
+      }]
+    }), [currentRecords, currentYear, filteredEmissions, filters.endDate, filters.month, filters.pollutant, filters.provinceCode, filters.startDate, previousRecords])
+
   const topProvince = provinceRanking[0]
   const fastestProvince = provinceGrowth[0]
   const topSector = sectorRanking[0]
@@ -246,6 +296,12 @@ export function AdminDashboard() {
           />
         </div>
       </section>
+
+      <PriorityAreasTable
+        areas={priorityAreaRows}
+        selectedProvinceCode={filters.provinceCode}
+        onProvinceSelect={(provinceCode) => setFilters((current) => ({ ...current, provinceCode }))}
+      />
 
       <footer className="admin-disclaimer">
         <strong>Lưu ý dữ liệu:</strong> Các chỉ số trên trang là dữ liệu minh họa phục vụ prototype, không dùng để đưa ra kết luận chuyên môn hoặc quyết định quản lý thực tế.
