@@ -1,4 +1,5 @@
 import type { DashboardFiltersValue, Pollutant, ProvinceSnapshot } from '../../types/dashboard'
+import { DashboardIcon } from './DashboardIcon'
 import './dashboardComponents.css'
 
 interface DashboardFiltersProps {
@@ -26,11 +27,8 @@ export function DashboardFilters({ value, provinces, sectors, onChange, onReset 
   return (
     <section className="dashboard-filters" aria-labelledby="filter-title">
       <div className="control-heading">
-        <div>
-          <p className="eyebrow">Bộ lọc chung</p>
-          <h2 id="filter-title">Phạm vi dữ liệu</h2>
-        </div>
-        <button className="button button--secondary" type="button" onClick={onReset}>Đặt lại bộ lọc</button>
+        <h2 id="filter-title"><DashboardIcon name="filter" />Bộ lọc</h2>
+        <button className="button button--secondary" type="button" onClick={onReset}><DashboardIcon name="reset" />Đặt lại bộ lọc</button>
       </div>
 
       <div className="filter-grid">

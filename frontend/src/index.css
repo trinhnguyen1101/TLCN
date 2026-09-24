@@ -1,23 +1,50 @@
 :root {
-  font-family: "Courier New", Courier, monospace;
-  color: #3b1d16;
-  background-color: #e9b83f;
-  background-image:
-    linear-gradient(rgb(92 35 27 / 7%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(92 35 27 / 7%) 1px, transparent 1px);
-  background-size: 24px 24px;
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  color: var(--ink);
+  background: var(--page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+  --page: #0b1120;
+  --ink: #e2e8f0;
+  --heading: #f8fafc;
+  --secondary: #c1cde0;
+  --muted: #a3b2c7;
+  --accent: #5eead4;
+  --accent-hover: #99f6e4;
+  --accent-soft: #133431;
+  --accent-border: #275c54;
+  --border: #2b3b53;
+  --border-strong: #425773;
+  --surface: #111c2e;
+  --surface-subtle: #17253a;
+  --surface-raised: #203149;
+  --danger: #fda4af;
+  --danger-soft: #3d202d;
+  --success: #6ee7b7;
+  --success-soft: #12382e;
+  --map-background: #0d1828;
+  --map-province-fill: #24364b;
+  --map-province-border: #61768f;
+  --radius: 14px;
+  --shadow-sm: 0 2px 8px rgb(0 0 0 / 18%);
 }
 
 * { box-sizing: border-box; }
-body { min-width: 320px; min-height: 100vh; margin: 0; }
+body { min-height: 100vh; margin: 0; }
 button, select, input { font: inherit; }
-button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px dashed #b6292e; outline-offset: 3px; }
+button { -webkit-tap-highlight-color: transparent; }
+button, select, input { transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }
+button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+button:disabled { cursor: not-allowed; }
+h1, h2, h3, p { margin-top: 0; }
+h1, h2, h3 { color: var(--heading); }
+strong { font-weight: 650; }
+::selection { color: var(--page); background: var(--accent); }
+.dashboard-icon { display: block; flex: 0 0 auto; width: 18px; height: 18px; }
 
-h1, h2, h3, strong {
-  font-family: Rockwell, "Roboto Slab", "Courier New", serif;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
-
-button, select { letter-spacing: .01em; }

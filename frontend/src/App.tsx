@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { ComparisonPanel, type ComparisonValue } from './components/dashboard/ComparisonPanel'
 import { DashboardBreadcrumb } from './components/dashboard/DashboardBreadcrumb'
 import { DashboardFilters } from './components/dashboard/DashboardFilters'
+import { DashboardIcon } from './components/dashboard/DashboardIcon'
 import { DataState } from './components/dashboard/DataState'
 import { TrendChart } from './features/analytics/TrendChart'
 import { VietnamProvinceMap, type MapMetric } from './features/geography/VietnamProvinceMap'
@@ -106,26 +107,49 @@ function App() {
 
   const metric = metricMeta[filters.pollutant]
   const scopeLabel = filters.provinceCode === 'all' ? 'Toàn quốc' : provinceName(filters.provinceCode)
+  const periodLabel = [filters.month === 'all' ? null : `Tháng ${filters.month}`, filters.year === 'all' ? 'Tất cả các năm' : `Năm ${filters.year}`].filter(Boolean).join(' · ')
+  const averageConcentration = mean(filteredRecords.map((record) => record[filters.pollutant]))
 
   return (
     <main className="app-shell">
       <header className="app-header">
-        <div>
-          <p>Air Quality Dashboard · Demo</p>
-          <h1>Phân tích chất lượng không khí</h1>
-          <span>Bộ tính năng chung dùng lại cho các dashboard User và Admin.</span>
+        <div className="app-identity">
+          <span className="app-mark"><DashboardIcon name="air" /></span>
+          <div>
+            <p>Air Quality</p>
+            <h1>Chất lượng không khí</h1>
+          </div>
         </div>
-        <span className="demo-badge">Dữ liệu minh họa</span>
+        <div className="period-label"><DashboardIcon name="calendar" /><span>{periodLabel}</span></div>
       </header>
 
-      <DashboardFilters value={filters} provinces={provinceSnapshots} sectors={emissionSectors} onChange={setFilters} onReset={() => setFilters(DEFAULT_FILTERS)} />
       <DashboardBreadcrumb items={breadcrumbItems} />
 
       <section className="summary-grid" aria-label="Tóm tắt bộ lọc">
-        <article><span>Khu vực</span><strong>{scopeLabel}</strong></article>
-        <article><span>{metric.label} trung bình</span><strong>{mean(filteredRecords.map((record) => record[filters.pollutant]))?.toFixed(1) ?? 'Chưa có dữ liệu'} {filteredRecords.length ? metric.unit : ''}</strong></article>
-        <article><span>Tổng phát thải</span><strong>{filteredEmissions.length ? `${totalEmissions.toLocaleString('vi-VN')} tấn` : 'Chưa có dữ liệu'}</strong></article>
+        <article className="summary-card">
+          <div className="summary-heading"><span>Khu vực theo dõi</span><span className="summary-icon"><DashboardIcon name="location" /></span></div>
+          <strong className="summary-value summary-value--location">{scopeLabel}</strong>
+          <p>{filters.provinceCode === 'all' ? `${provinceSnapshots.length} tỉnh, thành có dữ liệu` : 'Việt Nam'}</p>
+        </article>
+        <article className="summary-card summary-card--primary">
+          <div className="summary-heading"><span>{metric.label} trung bình</span><span className="summary-icon"><DashboardIcon name="chart" /></span></div>
+          <strong className={`summary-value${averageConcentration === null ? ' summary-value--empty' : ''}`}>
+            {averageConcentration?.toFixed(1) ?? 'Chưa có dữ liệu'}
+            {averageConcentration !== null && <span className="summary-unit">{metric.unit}</span>}
+          </strong>
+          <p>{periodLabel}</p>
+        </article>
+        <article className="summary-card">
+          <div className="summary-heading"><span>Tổng phát thải</span><span className="summary-icon summary-icon--blue"><DashboardIcon name="emission" /></span></div>
+          <strong className={`summary-value${filteredEmissions.length ? '' : ' summary-value--empty'}`}>
+            {filteredEmissions.length ? totalEmissions.toLocaleString('vi-VN') : 'Chưa có dữ liệu'}
+            {filteredEmissions.length > 0 && <span className="summary-unit">tấn</span>}
+          </strong>
+          <p>{filters.sector === 'all' ? 'Tất cả ngành phát thải' : filters.sector}</p>
+        </article>
       </section>
+
+      <DashboardFilters value={filters} provinces={provinceSnapshots} sectors={emissionSectors} onChange={setFilters} onReset={() => setFilters(DEFAULT_FILTERS)} />
 
       <div className="dashboard-grid">
         <VietnamProvinceMap
@@ -139,7 +163,7 @@ function App() {
 
         <TrendChart
           title={`${metric.label} · ${scopeLabel}`}
-          description="Biểu đồ tự động cập nhật theo tỉnh, chất ô nhiễm, năm, tháng và khoảng ngày đang chọn. Rê chuột hoặc dùng phím Tab trên từng điểm để xem tooltip."
+          description="Nồng độ trung bình theo tháng trong phạm vi đang chọn."
           points={chartPoints}
           metricLabel={metric.label}
           unit={metric.unit}
@@ -158,18 +182,27 @@ function App() {
         />
 
         <section className="emission-card" aria-labelledby="emission-title">
-          <div>
-            <p className="eyebrow">Bộ lọc ngành</p>
-            <h2 id="emission-title">Dữ liệu phát thải phù hợp</h2>
+          <div className="emission-header">
+            <div>
+              <h2 id="emission-title">Phát thải theo ngành</h2>
+              <p>{scopeLabel}</p>
+            </div>
+            <span className="unit-label">Đơn vị: tấn</span>
           </div>
-          <DataState isEmpty={filteredEmissions.length === 0} emptyMessage="Dữ liệu phát thải demo hiện chỉ có cho tháng 6/2026.">
-            <div className="emission-list">
-              {filteredEmissions.map((record) => (
-                <div key={`${record.provinceCode}-${record.sector}`}>
-                  <span>{record.provinceName} · {record.sector}</span>
-                  <strong>{record.emissionTonnes.toLocaleString('vi-VN')} tấn</strong>
-                </div>
-              ))}
+          <DataState isEmpty={filteredEmissions.length === 0} emptyMessage="Không có số liệu phát thải trong phạm vi đang chọn.">
+            <div className="emission-table-scroll" role="region" aria-label="Chi tiết phát thải" tabIndex={0}>
+              <table className="emission-table">
+                <thead><tr><th scope="col">Tỉnh / thành</th><th scope="col">Ngành phát thải</th><th scope="col">Lượng phát thải (tấn)</th></tr></thead>
+                <tbody>
+                  {filteredEmissions.map((record) => (
+                    <tr key={`${record.provinceCode}-${record.sector}`}>
+                      <td>{record.provinceName}</td>
+                      <td><span className="sector-tag">{record.sector}</span></td>
+                      <td>{record.emissionTonnes.toLocaleString('vi-VN')}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </DataState>
         </section>

@@ -12,7 +12,7 @@ export function DashboardBreadcrumb({ items }: DashboardBreadcrumbProps) {
         {items.map((item, index) => (
           <li key={item.id}>
             {index > 0 && <span aria-hidden="true">›</span>}
-            {item.onSelect ? <button type="button" onClick={item.onSelect}>{item.label}</button> : <span aria-current="page">{item.label}</span>}
+            {item.onSelect ? <button type="button" onClick={item.onSelect}>{item.label}</button> : <span aria-current={index === items.length - 1 ? 'location' : undefined}>{item.label}</span>}
           </li>
         ))}
       </ol>

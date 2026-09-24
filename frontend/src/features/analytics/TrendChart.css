@@ -1,14 +1,13 @@
-.trend-card { overflow: hidden; border: 2px solid var(--border); border-radius: 2px; background: var(--paper); box-shadow: var(--shadow-sm); }
-.trend-card__header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 20px 5px; }
-.trend-card__header h2 { margin: 4px 0 0; color: var(--ink); font-size: 1.15rem; }
-.trend-title-row { display: flex; align-items: center; gap: 8px; }
-.info-tooltip { position: relative; display: inline-grid; width: 18px; height: 18px; place-items: center; border: 2px solid var(--border); border-radius: 0; color: #fff8df; background: var(--red); cursor: help; font-size: .68rem; font-weight: 900; }
-.info-tooltip > span { position: absolute; z-index: 10; bottom: calc(100% + 8px); left: 50%; display: none; width: 230px; transform: translateX(-50%); border: 2px solid var(--yellow); border-radius: 0; padding: 8px 10px; color: #fff8df; background: var(--red-dark); box-shadow: 4px 4px 0 var(--border); font-size: .72rem; font-weight: 700; line-height: 1.4; }
-.info-tooltip:hover > span, .info-tooltip:focus > span { display: block; }
-.chart-scroll { overflow-x: auto; padding: 4px 12px 12px; }
-.trend-chart { display: block; min-width: 620px; width: 100%; height: auto; }
-.trend-chart text { fill: #7a4030; font-family: "Courier New", monospace; font-size: 10px; font-weight: 700; }
-.trend-chart .axis-label { fill: var(--ink); font-size: 10px; font-weight: 900; }
-.chart-tooltip rect { fill: var(--red-dark); stroke: var(--yellow); stroke-width: 1px; }
-.chart-tooltip text { fill: #fff; font-size: 9px; }
-@media (max-width: 620px) { .trend-card__header { align-items: flex-start; flex-direction: column; padding: 16px 16px 4px; } }
+.trend-card { display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-sm); }
+.trend-card__header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 24px 24px 20px; }
+.trend-card__header h2 { margin: 0; font-size: .98rem; font-weight: 600; }
+.trend-card__header p { margin: 7px 0 0; color: var(--muted); font-size: .78rem; }
+.chart-scroll { overflow-x: auto; padding: 8px 16px 18px; }
+.trend-chart { display: block; width: 100%; min-width: 460px; height: auto; }
+.trend-chart .axis-label { font-size: 11px; }
+.chart-tooltip { pointer-events: none; }
+
+@media (max-width: 680px) {
+  .trend-card__header { padding: 20px; }
+  .chart-scroll { padding-right: 8px; padding-left: 8px; }
+}

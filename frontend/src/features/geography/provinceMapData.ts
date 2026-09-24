@@ -31,7 +31,7 @@ export interface ProvinceMapDatum {
 }
 
 /** URL served from public/data; load this once in the map page or map service. */
-export const VIETNAM_PROVINCES_GEOJSON_URL = '/data/vietnam-provinces.geojson'
+export const VIETNAM_PROVINCES_GEOJSON_URL = `${import.meta.env.BASE_URL}data/vietnam-provinces.geojson`
 
 export async function loadVietnamProvinceMapData(
   snapshots: ProvinceSnapshot[],

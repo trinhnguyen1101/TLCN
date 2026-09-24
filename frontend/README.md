@@ -1,3 +1,17 @@
+# Province map boundaries
+
+The map reads `public/data/vietnam-provinces.geojson`, a standalone frontend asset containing all 34 province boundaries from `../data/landing/reference/vietnamese-provinces-database/json/geojson/` (dataset `v5.1.0`). Every source coordinate and MultiPolygon ring is preserved, including islands and holes. Only province identifiers, names, area, and geometry are bundled; ward data is not needed.
+
+To refresh the asset from the local reference dataset:
+
+```sh
+npm run sync:provinces
+```
+
+The script checks province coverage, unique codes, coordinates, and closed rings before writing the asset. The generated file is committed so building or deploying `frontend` alone does not require the reference directory.
+
+Clicking a province draws its geometry in a separate, non-interactive highlight layer above the map. Provinces without air-quality readings can also be highlighted; only provinces with readings update the dashboard filters. Changing a province filter resets the map selection. Keyboard focus follows the province outline, and Enter/Space selects it.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

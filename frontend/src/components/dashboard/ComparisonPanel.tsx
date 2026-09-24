@@ -28,13 +28,10 @@ export function ComparisonPanel({ value, provinces, currentLabel, comparisonLabe
   return (
     <section className="comparison-panel" aria-labelledby="comparison-title">
       <div className="control-heading control-heading--compact">
-        <div>
-          <p className="eyebrow">So sánh</p>
-          <h2 id="comparison-title">Đối chiếu dữ liệu</h2>
-        </div>
+        <h2 id="comparison-title">So sánh dữ liệu</h2>
         <div className="segmented-control" role="group" aria-label="Chiều so sánh">
-          <button type="button" className={value.dimension === 'province' ? 'is-active' : ''} onClick={() => onChange({ ...value, dimension: 'province' })}>Tỉnh</button>
-          <button type="button" className={value.dimension === 'year' ? 'is-active' : ''} onClick={() => onChange({ ...value, dimension: 'year' })}>Năm</button>
+          <button type="button" aria-pressed={value.dimension === 'province'} className={value.dimension === 'province' ? 'is-active' : ''} onClick={() => onChange({ ...value, dimension: 'province' })}>Theo tỉnh</button>
+          <button type="button" aria-pressed={value.dimension === 'year'} className={value.dimension === 'year' ? 'is-active' : ''} onClick={() => onChange({ ...value, dimension: 'year' })}>Theo năm</button>
         </div>
       </div>
 
@@ -53,14 +50,17 @@ export function ComparisonPanel({ value, provinces, currentLabel, comparisonLabe
           )}
         </label>
         <div className="comparison-result" aria-live="polite">
-          {difference === null ? <p>Chưa có dữ liệu để so sánh.</p> : (
+          {difference === null ? <p className="comparison-empty">Chưa có dữ liệu để so sánh.</p> : (
             <>
-              <div><span>{currentLabel}</span><strong>{currentValue?.toFixed(1)} {unit}</strong></div>
-              <span className="comparison-vs">vs</span>
-              <div><span>{comparisonLabel}</span><strong>{comparisonValue?.toFixed(1)} {unit}</strong></div>
-              <p className={difference > 0 ? 'trend-up' : difference < 0 ? 'trend-down' : 'trend-neutral'}>
-                {difference > 0 ? '↑' : difference < 0 ? '↓' : '→'} {Math.abs(difference).toFixed(1)}%
-              </p>
+              <div><span>{currentLabel}</span><strong>{currentValue?.toFixed(1)} <small>{unit}</small></strong></div>
+              <span className="comparison-vs">/</span>
+              <div><span>{comparisonLabel}</span><strong>{comparisonValue?.toFixed(1)} <small>{unit}</small></strong></div>
+              <div className="comparison-change">
+                <span>Chênh lệch so với {comparisonLabel}</span>
+                <p className={difference > 0 ? 'trend-up' : difference < 0 ? 'trend-down' : 'trend-neutral'}>
+                  {difference > 0 ? '↑' : difference < 0 ? '↓' : '→'} {Math.abs(difference).toFixed(1)}%
+                </p>
+              </div>
             </>
           )}
         </div>

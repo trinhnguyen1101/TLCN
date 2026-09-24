@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "sync:provinces": "node scripts/sync-province-boundaries.mjs",
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
