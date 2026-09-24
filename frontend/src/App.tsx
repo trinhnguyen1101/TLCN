@@ -8,7 +8,6 @@ import { TrendChart } from './features/analytics/TrendChart'
 import { VietnamProvinceMap, type MapMetric } from './features/geography/VietnamProvinceMap'
 import { dashboardTrendRecords, emissionRecords, emissionSectors, provinceSnapshots } from './services/mockDashboardData'
 import type { ChartPoint, DashboardFiltersValue, DashboardTrendRecord, ProvinceCode } from './types/dashboard'
-import './App.css'
 
 const DEFAULT_FILTERS: DashboardFiltersValue = {
   provinceCode: 'all',
@@ -111,47 +110,47 @@ function App() {
   const averageConcentration = mean(filteredRecords.map((record) => record[filters.pollutant]))
 
   return (
-    <main className="app-shell">
-      <header className="app-header">
-        <div className="app-identity">
-          <span className="app-mark"><DashboardIcon name="air" /></span>
+    <main className="mx-auto w-full max-w-[1440px] px-12 pt-9 pb-14 max-[1100px]:px-7 max-[1100px]:pt-7 max-[1100px]:pb-10 max-[680px]:px-4 max-[680px]:pt-6 max-[680px]:pb-8">
+      <header className="flex items-center justify-between gap-6 max-[680px]:flex-col max-[680px]:items-start max-[680px]:gap-4">
+        <div className="flex min-w-0 items-center gap-4 max-[680px]:gap-3">
+          <span className="grid size-12 shrink-0 place-items-center rounded-[13px] border border-accent-border bg-accent-soft text-accent max-[680px]:size-[42px]"><DashboardIcon name="air" size="brand" /></span>
           <div>
-            <p>Air Quality</p>
-            <h1>Chất lượng không khí</h1>
+            <p className="mb-[3px] text-[.75rem] font-semibold tracking-[.06em] text-muted">Air Quality</p>
+            <h1 className="text-[clamp(1.4rem,2.6vw,1.85rem)] font-[650] tracking-[-.035em] text-heading leading-[1.3]">Chất lượng không khí</h1>
           </div>
         </div>
-        <div className="period-label"><DashboardIcon name="calendar" /><span>{periodLabel}</span></div>
+        <div className="inline-flex shrink-0 items-center gap-[9px] rounded-[9px] border border-border bg-surface px-[13px] py-2.5 text-[.8rem] font-medium text-secondary max-[680px]:px-[11px] max-[680px]:py-2"><DashboardIcon name="calendar" className="text-muted" /><span>{periodLabel}</span></div>
       </header>
 
       <DashboardBreadcrumb items={breadcrumbItems} />
 
-      <section className="summary-grid" aria-label="Tóm tắt bộ lọc">
-        <article className="summary-card">
-          <div className="summary-heading"><span>Khu vực theo dõi</span><span className="summary-icon"><DashboardIcon name="location" /></span></div>
-          <strong className="summary-value summary-value--location">{scopeLabel}</strong>
-          <p>{filters.provinceCode === 'all' ? `${provinceSnapshots.length} tỉnh, thành có dữ liệu` : 'Việt Nam'}</p>
+      <section className="mb-6 grid grid-cols-3 gap-5 max-[680px]:grid-cols-1 max-[680px]:gap-3" aria-label="Tóm tắt bộ lọc">
+        <article className="flex min-w-0 flex-col items-start rounded-card border px-6 py-5 shadow-card max-[1100px]:p-[18px] max-[680px]:px-5 border-border bg-surface">
+          <div className="flex w-full items-center justify-between gap-3 text-[.82rem] font-medium text-secondary"><span>Khu vực theo dõi</span><span className="grid size-[34px] shrink-0 place-items-center rounded-[9px] bg-accent-soft text-accent"><DashboardIcon name="location" /></span></div>
+          <strong className="mt-2.5 flex flex-wrap gap-2 font-[650] leading-[1.3] tabular-nums wrap-anywhere max-[680px]:mt-[5px] min-h-[45px] items-center text-[1.6rem] tracking-[-.025em] text-heading">{scopeLabel}</strong>
+          <p className="mt-[7px] text-[.77rem] leading-normal text-muted">{filters.provinceCode === 'all' ? `${provinceSnapshots.length} tỉnh, thành có dữ liệu` : 'Việt Nam'}</p>
         </article>
-        <article className="summary-card summary-card--primary">
-          <div className="summary-heading"><span>{metric.label} trung bình</span><span className="summary-icon"><DashboardIcon name="chart" /></span></div>
-          <strong className={`summary-value${averageConcentration === null ? ' summary-value--empty' : ''}`}>
+        <article className="flex min-w-0 flex-col items-start rounded-card border px-6 py-5 shadow-card max-[1100px]:p-[18px] max-[680px]:px-5 border-accent-border bg-[#102c2c]">
+          <div className="flex w-full items-center justify-between gap-3 text-[.82rem] font-medium text-secondary"><span>{metric.label} trung bình</span><span className="grid size-[34px] shrink-0 place-items-center rounded-[9px] bg-[#1c4841] text-accent"><DashboardIcon name="chart" /></span></div>
+          <strong className={`mt-2.5 flex flex-wrap gap-2 font-[650] leading-[1.3] tabular-nums wrap-anywhere max-[680px]:mt-[5px] text-accent-hover ${averageConcentration === null ? 'min-h-[45px] items-center text-[1.2rem] tracking-[-.02em]' : 'items-baseline text-[2.15rem] tracking-[-.04em]'}`}>
             {averageConcentration?.toFixed(1) ?? 'Chưa có dữ liệu'}
-            {averageConcentration !== null && <span className="summary-unit">{metric.unit}</span>}
+            {averageConcentration !== null && <span className="text-[.9rem] font-normal tracking-normal text-muted">{metric.unit}</span>}
           </strong>
-          <p>{periodLabel}</p>
+          <p className="mt-[7px] text-[.77rem] leading-normal text-muted">{periodLabel}</p>
         </article>
-        <article className="summary-card">
-          <div className="summary-heading"><span>Tổng phát thải</span><span className="summary-icon summary-icon--blue"><DashboardIcon name="emission" /></span></div>
-          <strong className={`summary-value${filteredEmissions.length ? '' : ' summary-value--empty'}`}>
+        <article className="flex min-w-0 flex-col items-start rounded-card border px-6 py-5 shadow-card max-[1100px]:p-[18px] max-[680px]:px-5 border-border bg-surface">
+          <div className="flex w-full items-center justify-between gap-3 text-[.82rem] font-medium text-secondary"><span>Tổng phát thải</span><span className="grid size-[34px] shrink-0 place-items-center rounded-[9px] bg-[#1c304c] text-[#a5c9ff]"><DashboardIcon name="emission" /></span></div>
+          <strong className={`mt-2.5 flex flex-wrap gap-2 font-[650] leading-[1.3] tabular-nums wrap-anywhere max-[680px]:mt-[5px] text-heading ${filteredEmissions.length ? 'items-baseline text-[2.15rem] tracking-[-.04em]' : 'min-h-[45px] items-center text-[1.2rem] tracking-[-.02em]'}`}>
             {filteredEmissions.length ? totalEmissions.toLocaleString('vi-VN') : 'Chưa có dữ liệu'}
-            {filteredEmissions.length > 0 && <span className="summary-unit">tấn</span>}
+            {filteredEmissions.length > 0 && <span className="text-[.9rem] font-normal tracking-normal text-muted">tấn</span>}
           </strong>
-          <p>{filters.sector === 'all' ? 'Tất cả ngành phát thải' : filters.sector}</p>
+          <p className="mt-[7px] text-[.77rem] leading-normal text-muted">{filters.sector === 'all' ? 'Tất cả ngành phát thải' : filters.sector}</p>
         </article>
       </section>
 
       <DashboardFilters value={filters} provinces={provinceSnapshots} sectors={emissionSectors} onChange={setFilters} onReset={() => setFilters(DEFAULT_FILTERS)} />
 
-      <div className="dashboard-grid">
+      <div className="mt-6 grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-stretch gap-6 max-[1100px]:grid-cols-1 max-[680px]:mt-4 max-[680px]:gap-4">
         <VietnamProvinceMap
           selectedProvinceCode={filters.provinceCode}
           metric={mapMetric}
@@ -181,24 +180,24 @@ function App() {
           onChange={setComparison}
         />
 
-        <section className="emission-card" aria-labelledby="emission-title">
-          <div className="emission-header">
+        <section className="col-span-full min-w-0 overflow-hidden rounded-card border border-border bg-surface shadow-card" aria-labelledby="emission-title">
+          <div className="flex items-center justify-between gap-4 px-6 py-[22px] max-[680px]:p-5">
             <div>
-              <h2 id="emission-title">Phát thải theo ngành</h2>
-              <p>{scopeLabel}</p>
+              <h2 id="emission-title" className="text-[.98rem] font-semibold text-heading">Phát thải theo ngành</h2>
+              <p className="mt-1.5 text-[.8rem] text-muted">{scopeLabel}</p>
             </div>
-            <span className="unit-label">Đơn vị: tấn</span>
+            <span className="shrink-0 text-[.76rem] text-muted">Đơn vị: tấn</span>
           </div>
-          <DataState isEmpty={filteredEmissions.length === 0} emptyMessage="Không có số liệu phát thải trong phạm vi đang chọn.">
-            <div className="emission-table-scroll" role="region" aria-label="Chi tiết phát thải" tabIndex={0}>
-              <table className="emission-table">
-                <thead><tr><th scope="col">Tỉnh / thành</th><th scope="col">Ngành phát thải</th><th scope="col">Lượng phát thải (tấn)</th></tr></thead>
+          <DataState compact isEmpty={filteredEmissions.length === 0} emptyMessage="Không có số liệu phát thải trong phạm vi đang chọn.">
+            <div className="max-h-[350px] overflow-auto focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-accent" role="region" aria-label="Chi tiết phát thải" tabIndex={0}>
+              <table className="w-full border-separate border-spacing-0 text-left text-[.83rem]">
+                <thead><tr><th scope="col" className="sticky top-0 z-1 border-y border-border bg-surface-subtle px-6 py-3 text-[.76rem] font-medium whitespace-nowrap text-muted last:text-right last:tabular-nums max-[680px]:px-5">Tỉnh / thành</th><th scope="col" className="sticky top-0 z-1 border-y border-border bg-surface-subtle px-6 py-3 text-[.76rem] font-medium whitespace-nowrap text-muted last:text-right last:tabular-nums max-[680px]:px-5">Ngành phát thải</th><th scope="col" className="sticky top-0 z-1 border-y border-border bg-surface-subtle px-6 py-3 text-[.76rem] font-medium whitespace-nowrap text-muted last:text-right last:tabular-nums max-[680px]:px-5">Lượng phát thải (tấn)</th></tr></thead>
                 <tbody>
                   {filteredEmissions.map((record) => (
-                    <tr key={`${record.provinceCode}-${record.sector}`}>
-                      <td>{record.provinceName}</td>
-                      <td><span className="sector-tag">{record.sector}</span></td>
-                      <td>{record.emissionTonnes.toLocaleString('vi-VN')}</td>
+                    <tr key={`${record.provinceCode}-${record.sector}`} className="group hover:bg-surface-subtle">
+                      <td className="border-b border-border px-6 py-[13px] text-secondary first:font-medium first:text-ink last:text-right last:font-semibold last:text-ink last:tabular-nums group-last:border-b-0 max-[680px]:px-5">{record.provinceName}</td>
+                      <td className="border-b border-border px-6 py-[13px] text-secondary first:font-medium first:text-ink last:text-right last:font-semibold last:text-ink last:tabular-nums group-last:border-b-0 max-[680px]:px-5"><span className="inline-block rounded-[5px] bg-surface-subtle px-2 py-1 text-[.75rem] text-secondary">{record.sector}</span></td>
+                      <td className="border-b border-border px-6 py-[13px] text-secondary first:font-medium first:text-ink last:text-right last:font-semibold last:text-ink last:tabular-nums group-last:border-b-0 max-[680px]:px-5">{record.emissionTonnes.toLocaleString('vi-VN')}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -1,11 +1,7 @@
 import type {
-  AirQualityReading,
   AirQualityStatus,
   EmissionRecord,
-  MonthlyTrend,
-  PeriodComparison,
   Pollutant,
-  PriorityArea,
   ProvinceCode,
   ProvinceSnapshot,
   DashboardTrendRecord,
@@ -62,82 +58,6 @@ export const provinceSnapshots: ProvinceSnapshot[] = provinceSeed.map((province)
   updatedAt: `${DEMO_DATE}T09:00:00+07:00`,
 }))
 
-// 24 hourly readings for the User dashboard. Highest values occur at 18:00–21:00.
-export const hanoiHourlyReadings: AirQualityReading[] = Array.from({ length: 24 }, (_, hour) => {
-  const eveningPeak = hour >= 18 && hour <= 21 ? 17 : 0
-  const morningPeak = hour >= 7 && hour <= 9 ? 8 : 0
-  const aqi = 103 + eveningPeak + morningPeak + (hour % 4) * 3
-  const pm25 = Math.round(aqi * 0.33)
-
-  return {
-    provinceCode: '01',
-    timestamp: `${DEMO_DATE}T${String(hour).padStart(2, '0')}:00:00+07:00`,
-    aqi,
-    pm25,
-    pm10: pm25 + 22,
-    o3: 38 + (hour % 6) * 3,
-    no2: 24 + (hour % 5) * 2,
-    so2: 8 + (hour % 3),
-    co: 7 + (hour % 4),
-    temperature: 26 + Math.min(hour, 14) * 0.42,
-    humidity: 84 - Math.min(hour, 14),
-    windSpeed: eveningPeak > 0 ? 1.3 : 2.1 + (hour % 3) * 0.3,
-  }
-})
-
-// 30 daily readings support the 7-day/30-day trend, comparison and calendar views.
-export const hanoiDailyReadings: AirQualityReading[] = Array.from({ length: 30 }, (_, index) => {
-  const day = index + 1
-  const spike = [8, 15, 23, 29].includes(day) ? 16 : 0
-  const aqi = 96 + ((day * 7) % 25) + spike
-  const pm25 = Math.round(aqi * 0.32)
-
-  return {
-    provinceCode: '01',
-    timestamp: `2026-08-${String(day).padStart(2, '0')}T12:00:00+07:00`,
-    aqi,
-    pm25,
-    pm10: pm25 + 21,
-    o3: 40 + (day % 8) * 2,
-    no2: 22 + (day % 6) * 2,
-    so2: 7 + (day % 4),
-    co: 6 + (day % 5),
-    temperature: 28 + (day % 5) * 0.6,
-    humidity: 78 - (day % 7),
-    windSpeed: 1.5 + (day % 5) * 0.45,
-  }
-})
-
-export const userPeriodComparisons: PeriodComparison[] = [
-  { metric: 'aqi', currentLabel: 'Hôm nay', previousLabel: 'Hôm qua', currentValue: 145, previousValue: 129, changePercent: 12.4 },
-  { metric: 'pm25', currentLabel: 'Tháng 9/2026', previousLabel: 'Tháng 8/2026', currentValue: 35.2, previousValue: 31.4, changePercent: 12.1 },
-  { metric: 'pm25', currentLabel: 'Tháng 9/2026', previousLabel: 'Tháng 9/2025', currentValue: 35.2, previousValue: 32.5, changePercent: 8.3 },
-]
-
-const monthlyPm25 = [24, 25, 27, 25, 22, 20, 19, 21, 26, 30, 33, 31]
-export const nationalMonthlyTrend: MonthlyTrend[] = [2024, 2025, 2026].flatMap((year, yearIndex) =>
-  monthlyPm25.map((basePm25, monthIndex) => {
-    const pm25Average = basePm25 + yearIndex * 2 + (year === 2026 && monthIndex === 2 ? 4 : 0)
-    return {
-      provinceCode: 'VNM',
-      month: `${year}-${String(monthIndex + 1).padStart(2, '0')}`,
-      pm25Average,
-      pm10Average: pm25Average + 19,
-      aqiAverage: Math.round(pm25Average * 3.2),
-      exceedanceDays: Math.max(2, Math.round((pm25Average - 15) * 1.35)),
-    }
-  }),
-)
-
-export const adminProvinceTrend: MonthlyTrend[] = [
-  { provinceCode: '01', month: '2024-01', pm25Average: 24, pm10Average: 43, aqiAverage: 77, exceedanceDays: 16 },
-  { provinceCode: '01', month: '2025-01', pm25Average: 28, pm10Average: 48, aqiAverage: 90, exceedanceDays: 24 },
-  { provinceCode: '01', month: '2026-01', pm25Average: 34, pm10Average: 56, aqiAverage: 109, exceedanceDays: 33 },
-  { provinceCode: '24', month: '2026-01', pm25Average: 31, pm10Average: 53, aqiAverage: 99, exceedanceDays: 29 },
-  { provinceCode: '48', month: '2026-01', pm25Average: 18, pm10Average: 36, aqiAverage: 58, exceedanceDays: 12 },
-  { provinceCode: '79', month: '2026-01', pm25Average: 27, pm10Average: 46, aqiAverage: 86, exceedanceDays: 21 },
-]
-
 const emissionSeed: Array<[string, string, number]> = [
   ['Manufacturing', 'Cement', 760],
   ['Power', 'Coal-fired power', 615],
@@ -159,14 +79,6 @@ export const emissionRecords: EmissionRecord[] = provinceSeed.flatMap((province,
     sourceCount: 4 + ((provinceIndex + sectorIndex) % 6),
   })),
 )
-
-export const priorityAreas: PriorityArea[] = [
-  { provinceCode: '01', provinceName: 'Hà Nội', pm25Average: 35, yearOverYearPercent: 18, exceedanceDays: 42, priorityLevel: 'Cần chú ý', priorityScore: 92 },
-  { provinceCode: '24', provinceName: 'Bắc Ninh', pm25Average: 32, yearOverYearPercent: 14, exceedanceDays: 38, priorityLevel: 'Cần chú ý', priorityScore: 84 },
-  { provinceCode: '79', provinceName: 'TP. Hồ Chí Minh', pm25Average: 27, yearOverYearPercent: 8, exceedanceDays: 28, priorityLevel: 'Theo dõi', priorityScore: 63 },
-  { provinceCode: '22', provinceName: 'Quảng Ninh', pm25Average: 24, yearOverYearPercent: 2, exceedanceDays: 20, priorityLevel: 'Theo dõi', priorityScore: 48 },
-  { provinceCode: '48', provinceName: 'Đà Nẵng', pm25Average: 18, yearOverYearPercent: -5, exceedanceDays: 12, priorityLevel: 'Cải thiện', priorityScore: 22 },
-]
 
 /**
  * Monthly, province-level demo series used by the shared filter and comparison
@@ -195,17 +107,3 @@ export const dashboardTrendRecords: DashboardTrendRecord[] = provinceSeed.flatMa
 )
 
 export const emissionSectors = [...new Set(emissionRecords.map((record) => record.sector))]
-
-export const mockDashboardData = {
-  demoDate: DEMO_DATE,
-  provinceSnapshots,
-  hanoiHourlyReadings,
-  hanoiDailyReadings,
-  userPeriodComparisons,
-  nationalMonthlyTrend,
-  adminProvinceTrend,
-  emissionRecords,
-  priorityAreas,
-  dashboardTrendRecords,
-  emissionSectors,
-}

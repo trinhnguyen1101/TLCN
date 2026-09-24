@@ -1,6 +1,7 @@
 import type { DashboardFiltersValue, Pollutant, ProvinceSnapshot } from '../../types/dashboard'
 import { DashboardIcon } from './DashboardIcon'
-import './dashboardComponents.css'
+import { Button } from '../ui/Button'
+import { DateInput, Field, Select } from '../ui/FormControls'
 
 interface DashboardFiltersProps {
   value: DashboardFiltersValue
@@ -25,56 +26,56 @@ export function DashboardFilters({ value, provinces, sectors, onChange, onReset 
   }
 
   return (
-    <section className="dashboard-filters" aria-labelledby="filter-title">
-      <div className="control-heading">
-        <h2 id="filter-title"><DashboardIcon name="filter" />Bộ lọc</h2>
-        <button className="button button--secondary" type="button" onClick={onReset}><DashboardIcon name="reset" />Đặt lại bộ lọc</button>
+    <section className="min-w-0 rounded-card border border-border bg-surface px-6 py-[22px] shadow-card max-[480px]:p-5" aria-labelledby="filter-title">
+      <div className="mb-5 flex flex-wrap items-center justify-between gap-3 max-[480px]:gap-3.5">
+        <h2 id="filter-title" className="flex items-center gap-[9px] text-[.98rem] font-semibold text-heading"><DashboardIcon name="filter" className="text-muted" />Bộ lọc</h2>
+        <Button onClick={onReset}><DashboardIcon name="reset" size="small" />Đặt lại bộ lọc</Button>
       </div>
 
-      <div className="filter-grid">
-        <label>
+      <div className="grid grid-cols-[1.3fr_1fr_.8fr_.9fr_1.15fr_1.15fr_1.3fr] gap-3.5 max-[1250px]:grid-cols-4 max-[760px]:grid-cols-2 max-[480px]:grid-cols-1">
+        <Field>
           Tỉnh / thành
-          <select value={value.provinceCode} onChange={(event) => update('provinceCode', event.target.value as DashboardFiltersValue['provinceCode'])}>
+          <Select value={value.provinceCode} onChange={(event) => update('provinceCode', event.target.value as DashboardFiltersValue['provinceCode'])}>
             <option value="all">Toàn quốc</option>
             {provinces.map((province) => <option key={province.provinceCode} value={province.provinceCode}>{province.provinceName}</option>)}
-          </select>
-        </label>
-        <label>
+          </Select>
+        </Field>
+        <Field>
           Chất ô nhiễm
-          <select value={value.pollutant} onChange={(event) => update('pollutant', event.target.value as Pollutant)}>
+          <Select value={value.pollutant} onChange={(event) => update('pollutant', event.target.value as Pollutant)}>
             {pollutantOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-          </select>
-        </label>
-        <label>
+          </Select>
+        </Field>
+        <Field>
           Năm
-          <select value={value.year} onChange={(event) => update('year', event.target.value === 'all' ? 'all' : Number(event.target.value))}>
+          <Select value={value.year} onChange={(event) => update('year', event.target.value === 'all' ? 'all' : Number(event.target.value))}>
             <option value="all">Tất cả</option>
             <option value="2026">2026</option>
             <option value="2025">2025</option>
-          </select>
-        </label>
-        <label>
+          </Select>
+        </Field>
+        <Field>
           Tháng
-          <select value={value.month} onChange={(event) => update('month', event.target.value === 'all' ? 'all' : Number(event.target.value))}>
+          <Select value={value.month} onChange={(event) => update('month', event.target.value === 'all' ? 'all' : Number(event.target.value))}>
             <option value="all">Tất cả</option>
             {Array.from({ length: 12 }, (_, index) => <option key={index + 1} value={index + 1}>Tháng {index + 1}</option>)}
-          </select>
-        </label>
-        <label>
+          </Select>
+        </Field>
+        <Field>
           Từ ngày
-          <input type="date" value={value.startDate} max={value.endDate || undefined} onChange={(event) => update('startDate', event.target.value)} />
-        </label>
-        <label>
+          <DateInput value={value.startDate} max={value.endDate || undefined} onChange={(event) => update('startDate', event.target.value)} />
+        </Field>
+        <Field>
           Đến ngày
-          <input type="date" value={value.endDate} min={value.startDate || undefined} onChange={(event) => update('endDate', event.target.value)} />
-        </label>
-        <label>
+          <DateInput value={value.endDate} min={value.startDate || undefined} onChange={(event) => update('endDate', event.target.value)} />
+        </Field>
+        <Field>
           Ngành phát thải
-          <select value={value.sector} onChange={(event) => update('sector', event.target.value)}>
+          <Select value={value.sector} onChange={(event) => update('sector', event.target.value)}>
             <option value="all">Tất cả ngành</option>
             {sectors.map((sector) => <option key={sector} value={sector}>{sector}</option>)}
-          </select>
-        </label>
+          </Select>
+        </Field>
       </div>
     </section>
   )

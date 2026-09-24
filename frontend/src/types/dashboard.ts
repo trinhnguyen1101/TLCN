@@ -21,39 +21,6 @@ export interface ProvinceSnapshot {
   updatedAt: string
 }
 
-export interface AirQualityReading {
-  provinceCode: ProvinceCode
-  timestamp: string
-  aqi: number
-  pm25: number
-  pm10: number
-  o3: number
-  no2: number
-  so2: number
-  co: number
-  temperature: number
-  humidity: number
-  windSpeed: number
-}
-
-export interface PeriodComparison {
-  metric: 'aqi' | 'pm25' | 'pm10'
-  currentLabel: string
-  previousLabel: string
-  currentValue: number
-  previousValue: number
-  changePercent: number
-}
-
-export interface MonthlyTrend {
-  provinceCode: ProvinceCode | 'VNM'
-  month: string
-  pm25Average: number
-  pm10Average: number
-  aqiAverage: number
-  exceedanceDays: number
-}
-
 export interface EmissionRecord {
   provinceCode: ProvinceCode
   provinceName: string
@@ -65,16 +32,6 @@ export interface EmissionRecord {
   sourceType: 'point-source' | 'gadm-aggregation'
   emissionTonnes: number
   sourceCount: number
-}
-
-export interface PriorityArea {
-  provinceCode: ProvinceCode
-  provinceName: string
-  pm25Average: number
-  yearOverYearPercent: number
-  exceedanceDays: number
-  priorityLevel: 'Cần chú ý' | 'Theo dõi' | 'Cải thiện'
-  priorityScore: number
 }
 
 export type DashboardProvince = ProvinceCode | 'all'

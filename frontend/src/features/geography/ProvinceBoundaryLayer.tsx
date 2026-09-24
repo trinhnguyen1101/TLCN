@@ -15,18 +15,18 @@ interface ProvinceBoundaryLayerProps {
 }
 
 const selectedProvinceStyle: PolylineOptions = {
-  color: 'var(--accent)', weight: 3, opacity: 1, fill: false,
+  color: 'var(--color-accent)', weight: 3, opacity: 1, fill: false,
   lineCap: 'round', lineJoin: 'round', smoothFactor: 0,
 }
 
 function getProvinceStyle(metrics: ProvinceSnapshot | undefined, metric: MapMetric, layerVisible: boolean): PolylineOptions {
   if (!metrics || !layerVisible) {
-    return { color: 'var(--map-province-border)', fillColor: 'var(--map-province-fill)', fillOpacity: layerVisible ? .65 : .18, weight: 1, smoothFactor: 0, className: 'province-boundary' }
+    return { color: 'var(--color-map-province-border)', fillColor: 'var(--color-map-province-fill)', fillOpacity: layerVisible ? .65 : .18, weight: 1, smoothFactor: 0, className: 'focus:outline-none focus-visible:stroke-accent focus-visible:stroke-3' }
   }
   const value = metrics[metric]
   const limits = metric === 'aqi' ? [50, 100, 150] : metric === 'pm25' ? [15, 25, 35] : [30, 50, 75]
   const fillColor = value <= limits[0] ? '#22c55e' : value <= limits[1] ? '#eab308' : value <= limits[2] ? '#f97316' : '#dc2626'
-  return { color: 'var(--surface-subtle)', fillColor, fillOpacity: .82, weight: 1.2, smoothFactor: 0, className: 'province-boundary' }
+  return { color: 'var(--color-surface-subtle)', fillColor, fillOpacity: .82, weight: 1.2, smoothFactor: 0, className: 'focus:outline-none focus-visible:stroke-accent focus-visible:stroke-3' }
 }
 
 // The parent keys this layer by the dashboard selection so filters reset local selection.
@@ -67,8 +67,8 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metric, laye
               },
             }}
           >
-            <Tooltip sticky>
-              <strong>{feature.properties.name}</strong><br />
+            <Tooltip sticky className="rounded-lg border-border bg-surface px-3.5 py-[11px] font-sans text-[.75rem] leading-[1.9] text-secondary shadow-[0_4px_16px_rgb(0_0_0/32%)] [&.leaflet-tooltip-left]:before:border-l-surface [&.leaflet-tooltip-right]:before:border-r-surface [&.leaflet-tooltip-top]:before:border-t-surface [&.leaflet-tooltip-bottom]:before:border-b-surface">
+              <strong className="font-semibold text-heading">{feature.properties.name}</strong><br />
               {metrics ? <>
                 AQI: {metrics.aqi} · {metrics.status}<br />
                 PM2.5: {metrics.pm25} µg/m³<br />

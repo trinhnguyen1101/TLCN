@@ -12,9 +12,11 @@ const icons = {
   layers: <><path d="m12 3 10 5-10 5L2 8Zm-10 9 10 5 10-5M2 16l10 5 10-5" /></>,
 } satisfies Record<string, ReactNode>
 
-export function DashboardIcon({ name, className = '' }: { name: keyof typeof icons; className?: string }) {
+const iconSizes = { default: 'size-[18px]', small: 'size-[15px]', tiny: 'size-3.5', brand: 'size-[27px]' }
+
+export function DashboardIcon({ name, className = '', size = 'default' }: { name: keyof typeof icons; className?: string; size?: keyof typeof iconSizes }) {
   return (
-    <svg className={`dashboard-icon ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+    <svg className={`block shrink-0 ${iconSizes[size]} ${className}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
       {icons[name]}
     </svg>
   )

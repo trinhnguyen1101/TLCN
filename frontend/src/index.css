@@ -1,50 +1,34 @@
-:root {
-  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
-  color: var(--ink);
-  background: var(--page);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color-scheme: dark;
-  --page: #0b1120;
-  --ink: #e2e8f0;
-  --heading: #f8fafc;
-  --secondary: #c1cde0;
-  --muted: #a3b2c7;
-  --accent: #5eead4;
-  --accent-hover: #99f6e4;
-  --accent-soft: #133431;
-  --accent-border: #275c54;
-  --border: #2b3b53;
-  --border-strong: #425773;
-  --surface: #111c2e;
-  --surface-subtle: #17253a;
-  --surface-raised: #203149;
-  --danger: #fda4af;
-  --danger-soft: #3d202d;
-  --success: #6ee7b7;
-  --success-soft: #12382e;
-  --map-background: #0d1828;
-  --map-province-fill: #24364b;
-  --map-province-border: #61768f;
-  --radius: 14px;
-  --shadow-sm: 0 2px 8px rgb(0 0 0 / 18%);
-}
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css" layer(components);
 
-* { box-sizing: border-box; }
-body { min-height: 100vh; margin: 0; }
-button, select, input { font: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
-button, select, input { transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease; }
-button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
-button:disabled { cursor: not-allowed; }
-h1, h2, h3, p { margin-top: 0; }
-h1, h2, h3 { color: var(--heading); }
-strong { font-weight: 650; }
-::selection { color: var(--page); background: var(--accent); }
-.dashboard-icon { display: block; flex: 0 0 auto; width: 18px; height: 18px; }
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+@theme {
+  --font-sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --color-page: #0b1120;
+  --color-ink: #e2e8f0;
+  --color-heading: #f8fafc;
+  --color-secondary: #c1cde0;
+  --color-muted: #a3b2c7;
+  --color-accent: #5eead4;
+  --color-accent-hover: #99f6e4;
+  --color-accent-soft: #133431;
+  --color-accent-border: #275c54;
+  --color-border: #2b3b53;
+  --color-border-strong: #425773;
+  --color-surface: #111c2e;
+  --color-surface-subtle: #17253a;
+  --color-surface-raised: #203149;
+  --color-danger: #fda4af;
+  --color-danger-soft: #3d202d;
+  --color-success: #6ee7b7;
+  --color-success-soft: #12382e;
+  --color-map-background: #0d1828;
+  --color-map-province-fill: #24364b;
+  --color-map-province-border: #61768f;
+  --color-aqi-good: #22c55e;
+  --color-aqi-moderate: #eab308;
+  --color-aqi-poor: #f97316;
+  --color-aqi-bad: #dc2626;
+  --radius-card: 14px;
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 18%);
+  --shadow-control: 0 1px 3px rgb(0 0 0 / 24%);
 }
