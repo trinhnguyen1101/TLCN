@@ -1,4 +1,4 @@
-export interface ProvinceGeoJsonProperties {
+interface ProvinceGeoJsonProperties {
   code: string
   name: string
   nameEn: string
@@ -8,7 +8,7 @@ export interface ProvinceGeoJsonProperties {
   areaKm2: number
 }
 
-export interface ProvinceGeoJsonFeature {
+interface ProvinceGeoJsonFeature {
   type: 'Feature'
   id: string
   properties: ProvinceGeoJsonProperties

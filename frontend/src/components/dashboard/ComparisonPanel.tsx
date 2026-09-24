@@ -2,7 +2,7 @@ import type { ProvinceSnapshot } from '../../types/dashboard'
 import { Button, SegmentedControl } from '../ui/Button'
 import { Field, Select } from '../ui/FormControls'
 
-export type ComparisonDimension = 'province' | 'year'
+type ComparisonDimension = 'province' | 'year'
 
 export interface ComparisonValue {
   dimension: ComparisonDimension

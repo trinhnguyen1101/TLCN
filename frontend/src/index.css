@@ -16,12 +16,13 @@
   --color-border-strong: #425773;
   --color-surface: #111c2e;
   --color-surface-subtle: #17253a;
-  --color-surface-raised: #203149;
   --color-danger: #fda4af;
   --color-danger-soft: #3d202d;
   --color-success: #6ee7b7;
   --color-success-soft: #12382e;
   --color-map-background: #0d1828;
+  --color-map-land: #30343b;
+  --color-map-country-border: #59616a;
   --color-map-province-fill: #24364b;
   --color-map-province-border: #61768f;
   --color-aqi-good: #22c55e;

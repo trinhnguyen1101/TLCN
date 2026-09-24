@@ -7,6 +7,7 @@ import { provinceSnapshots } from '../../services/mockDashboardData'
 import type { ProvinceCode, ProvinceSnapshot } from '../../types/dashboard'
 import { loadVietnamProvinceMapData, type ProvinceFeatureCollection } from './provinceMapData'
 import { ProvinceBoundaryLayer } from './ProvinceBoundaryLayer'
+import { WorldBasemap } from './WorldBasemap'
 
 export type MapMetric = 'aqi' | 'pm25' | 'pm10'
 
@@ -30,7 +31,6 @@ const mapClasses = [
   '[&_.leaflet-control-zoom_a:focus-visible]:outline-3 [&_.leaflet-control-zoom_a:focus-visible]:outline-offset-[-3px] [&_.leaflet-control-zoom_a:focus-visible]:outline-accent',
   '[&_.leaflet-control-zoom_a.leaflet-disabled]:bg-surface-subtle [&_.leaflet-control-zoom_a.leaflet-disabled]:text-muted [&_.leaflet-control-zoom_a.leaflet-disabled]:opacity-45',
   '[&_.leaflet-control-zoom-in]:border-b-border',
-  '[&_.leaflet-control-attribution]:bg-surface [&_.leaflet-control-attribution]:text-[10px] [&_.leaflet-control-attribution]:text-muted [&_.leaflet-control-attribution_a]:text-accent',
 ].join(' ')
 
 export function VietnamProvinceMap({
@@ -73,7 +73,8 @@ export function VietnamProvinceMap({
 
       <DataState className="flex-1" loading={!geoJson && !error} error={error}>
         {geoJson && (
-          <MapContainer center={[16.2, 107.7]} zoom={5.35} scrollWheelZoom className={mapClasses}>
+          <MapContainer center={[16.2, 107.7]} zoom={5.35} minZoom={0} maxZoom={19} scrollWheelZoom attributionControl={false} className={mapClasses}>
+            <WorldBasemap />
             <Pane name="province-selection" className="pointer-events-none z-[450]" />
             <ProvinceBoundaryLayer
               key={selectedProvinceCode}
