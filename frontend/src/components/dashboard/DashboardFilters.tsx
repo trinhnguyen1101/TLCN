@@ -4,6 +4,9 @@ import { Button } from '../ui/Button'
 import { DateInput, Field, Select } from '../ui/FormControls'
 
 interface DashboardFiltersProps {
+  years: number[]
+  pollutantOptions: Array<{ value: Pollutant; label: string }>
+  dataReady?: boolean
   value: DashboardFiltersValue
   provinces: ProvinceSnapshot[]
   sectors: string[]
@@ -11,16 +14,7 @@ interface DashboardFiltersProps {
   onReset: () => void
 }
 
-const pollutantOptions: Array<{ value: Pollutant; label: string }> = [
-  { value: 'pm25', label: 'PM2.5' },
-  { value: 'pm10', label: 'PM10' },
-  { value: 'o3', label: 'O₃' },
-  { value: 'no2', label: 'NO₂' },
-  { value: 'so2', label: 'SO₂' },
-  { value: 'co', label: 'CO' },
-]
-
-export function DashboardFilters({ value, provinces, sectors, onChange, onReset }: DashboardFiltersProps) {
+export function DashboardFilters({ years, pollutantOptions, dataReady = true, value, provinces, sectors, onChange, onReset }: DashboardFiltersProps) {
   const update = <K extends keyof DashboardFiltersValue>(key: K, nextValue: DashboardFiltersValue[K]) => {
     onChange({ ...value, [key]: nextValue })
   }
@@ -35,13 +29,13 @@ export function DashboardFilters({ value, provinces, sectors, onChange, onReset 
       <div className="grid grid-cols-[1.3fr_1fr_.8fr_.9fr_1.15fr_1.15fr_1.3fr] gap-3.5 max-[1250px]:grid-cols-4 max-[760px]:grid-cols-2 max-[480px]:grid-cols-1">
         <Field>
           Tỉnh / thành
-          <Select value={value.provinceCode} onChange={(event) => update('provinceCode', event.target.value as DashboardFiltersValue['provinceCode'])}>
+          <Select disabled={!dataReady} value={value.provinceCode} onChange={(event) => update('provinceCode', event.target.value as DashboardFiltersValue['provinceCode'])}>
             <option value="all">Toàn quốc</option>
             {provinces.map((province) => <option key={province.provinceCode} value={province.provinceCode}>{province.provinceName}</option>)}
           </Select>
         </Field>
         <Field>
-          Chất ô nhiễm
+          Chỉ số
           <Select value={value.pollutant} onChange={(event) => update('pollutant', event.target.value as Pollutant)}>
             {pollutantOptions.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
           </Select>
@@ -50,8 +44,7 @@ export function DashboardFilters({ value, provinces, sectors, onChange, onReset 
           Năm
           <Select value={value.year} onChange={(event) => update('year', event.target.value === 'all' ? 'all' : Number(event.target.value))}>
             <option value="all">Tất cả</option>
-            <option value="2026">2026</option>
-            <option value="2025">2025</option>
+            {years.map((year) => <option key={year} value={year}>{year}</option>)}
           </Select>
         </Field>
         <Field>
@@ -71,7 +64,7 @@ export function DashboardFilters({ value, provinces, sectors, onChange, onReset 
         </Field>
         <Field>
           Ngành phát thải
-          <Select value={value.sector} onChange={(event) => update('sector', event.target.value)}>
+          <Select disabled={!dataReady} value={value.sector} onChange={(event) => update('sector', event.target.value)}>
             <option value="all">Tất cả ngành</option>
             {sectors.map((sector) => <option key={sector} value={sector}>{sector}</option>)}
           </Select>
