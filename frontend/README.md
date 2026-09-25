@@ -2,7 +2,12 @@
 
 React, TypeScript, Vite, Tailwind CSS 4, and React Leaflet.
 
+Quick setup in Vietnamese: [Thiết lập web dashboard](../docs/setup-web-dashboard.md).
+
 ## Development
+
+Start the [FastAPI backend](../backend/README.md) on port 8000 first, then run
+these commands from `frontend/` in a second terminal:
 
 ```sh
 npm ci
@@ -15,6 +20,28 @@ npm run build
 npm run preview
 ```
 
+The dashboard loads its data from `GET /api/dashboard` once per page session.
+The request is shared across React StrictMode mounts; filter/map interactions
+use the same in-memory response without additional API requests. The dashboard
+layout and local GeoJSON map render independently of that request. While it is
+pending, data cards, chart, comparison and emissions show animated skeletons
+(respecting reduced-motion preferences). A failed request leaves static
+placeholders and an inline error with a retry button; it never replaces the
+whole dashboard. The request has a 15-second timeout.
+
+Province/sector selectors and exports remain unavailable until their data is
+ready. Map exploration and other filters stay usable. Retrying preserves the
+map instance, zoom, local highlight and filter choices; recovered readings
+update the existing map layers. Successful empty responses use the normal
+empty-data UI, not error/loading placeholders. There is no local mock fallback.
+Reload the page to fetch a fresh snapshot after a successful load.
+
+Vite dev and preview proxy `/api` to `http://127.0.0.1:8000`. To override it,
+copy `.env.example` to `.env.local`, change `API_PROXY_TARGET`, and restart Vite.
+Production output is `dist/app/`, so builds preserve `dist/.gitkeep`. Deploy
+that directory and configure your web server to reverse-proxy `/api/*` to
+FastAPI, preserving the prefix.
+
 ## Structure
 
 - `src/main.tsx`: React entry point and global stylesheet import.
@@ -23,7 +50,10 @@ npm run preview
 - `src/components/ui/`: reusable buttons and form controls.
 - `src/features/analytics/`: interactive trend chart.
 - `src/features/geography/`: map layers and province-data loading.
-- `src/services/mockDashboardData.ts`: deterministic sample data used by the current dashboard; it is not live monitoring data.
+- `src/services/dashboardApi.ts`: shared HTTP request to the backend.
+- `src/hooks/useDashboardData.ts`: request lifecycle, loading/error state, and retry.
+- `../backend/data/samples/`: current temporary CAMS sample, served by the API; not validated Gold data.
+- `../backend/app/repositories/mock/dashboard.py`: older five-province demo, enabled only with `DASHBOARD_DATA_SOURCE=mock`.
 - `src/types/dashboard.ts`: shared dashboard data types.
 - `public/data/`: prepared map GeoJSON served as static assets.
 - `public/favicon.svg`: application icon.
