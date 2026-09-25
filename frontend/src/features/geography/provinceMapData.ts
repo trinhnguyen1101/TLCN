@@ -26,11 +26,17 @@ export interface ProvinceFeatureCollection {
 /** URL served from public/data; load this once in the map page or map service. */
 const VIETNAM_PROVINCES_GEOJSON_URL = `${import.meta.env.BASE_URL}data/vietnam-provinces.geojson`
 
-export async function loadVietnamProvinceMapData(): Promise<ProvinceFeatureCollection> {
-  const response = await fetch(VIETNAM_PROVINCES_GEOJSON_URL)
-  if (!response.ok) {
-    throw new Error('Không thể tải ranh giới tỉnh/thành cho bản đồ.')
-  }
+let provinceDataRequest: Promise<ProvinceFeatureCollection> | undefined
 
-  return (await response.json()) as ProvinceFeatureCollection
+export function loadVietnamProvinceMapData(): Promise<ProvinceFeatureCollection> {
+  provinceDataRequest ??= fetch(VIETNAM_PROVINCES_GEOJSON_URL)
+    .then(async (response) => {
+      if (!response.ok) throw new Error('Không thể tải ranh giới tỉnh/thành cho bản đồ.')
+      return await response.json() as ProvinceFeatureCollection
+    })
+    .catch((error: unknown) => {
+      provinceDataRequest = undefined
+      throw error
+    })
+  return provinceDataRequest
 }
