@@ -27,12 +27,12 @@ export interface EmissionRecord {
 export interface PriorityArea {
   provinceCode: ProvinceCode
   provinceName: string
-  pm25Average: number
-  yearOverYearPercent: number
-  exceedanceDays: number
+  pm25Average: number | null
+  yearOverYearPercent: number | null
+  exceedanceDays: number | null
   totalEmissions: number | null
   mainEmissionSector: string | null
-  trend: 'up' | 'slight-up' | 'steady' | 'down'
+  trend: 'up' | 'slight-up' | 'steady' | 'down' | null
 }
 
 export interface AnnualProvinceSummary {
@@ -40,9 +40,9 @@ export interface AnnualProvinceSummary {
   provinceName: string
   year: number
   pm25Average: number
-  aqiAverage: number
-  yearOverYearPercent: number
-  exceedanceDays: number
+  aqiAverage: number | null
+  yearOverYearPercent: number | null
+  exceedanceDays: number | null
 }
 
 export type DashboardProvince = ProvinceCode | 'all'
@@ -124,5 +124,19 @@ export interface DashboardData {
   emissionRecords: EmissionRecord[]
   emissionSectors: string[]
   dashboardTrendRecords: DashboardTrendRecord[]
+  metadata?: DashboardMetadata | null
+}
+
+export interface AdminTrendRecord extends DashboardTrendRecord {
+  aqi?: number | null
+}
+
+export interface AdminDashboardData {
+  provinceSnapshots: ProvinceSnapshot[]
+  emissionRecords: EmissionRecord[]
+  emissionSectors: string[]
+  dashboardTrendRecords: AdminTrendRecord[]
+  priorityAreas: PriorityArea[]
+  annualProvinceSummaries: AnnualProvinceSummary[]
   metadata?: DashboardMetadata | null
 }

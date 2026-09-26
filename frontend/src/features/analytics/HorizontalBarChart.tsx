@@ -55,7 +55,7 @@ export function HorizontalBarChart({ eyebrow, title, description, points, unit, 
       <DataState isEmpty={points.length === 0} emptyMessage="Không có dữ liệu xếp hạng theo bộ lọc hiện tại.">
         <div className="ranking-card__scroll">
           <svg id={chartId} className="horizontal-bar-chart" viewBox={`0 0 ${WIDTH} ${height}`} role="img" aria-label={`${title}. ${points.length} mục dữ liệu.`}>
-            <rect width={WIDTH} height={height} fill="#fffaf0" />
+            <rect className="horizontal-bar-chart__background" width={WIDTH} height={height} />
             {points.map((point, index) => {
               const y = TOP + index * (BAR_HEIGHT + ROW_GAP)
               const width = Math.max(4, (point.value / maxValue) * barAreaWidth)

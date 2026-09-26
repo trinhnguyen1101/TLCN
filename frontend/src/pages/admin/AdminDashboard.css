@@ -1,79 +1,70 @@
-.admin-dashboard { position: relative; }
+.admin-dashboard { color: var(--color-ink); }
 
 .admin-context {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px 12px;
-  margin: -4px 0 18px;
-  border: 1px dashed var(--border);
-  padding: 10px 13px;
-  color: var(--muted);
-  background: rgb(255 250 240 / 68%);
-  font-size: .76rem;
-  text-transform: uppercase;
+  margin: 18px 0;
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: var(--color-muted);
+  background: var(--color-surface-subtle);
+  font-size: .78rem;
 }
-
-.admin-context strong { color: var(--ink); font-size: .8rem; }
-.admin-context i { color: var(--red); font-style: normal; font-weight: 900; }
+.admin-context strong { color: var(--color-heading); font-weight: 600; }
+.admin-context i { color: var(--color-border-strong); font-style: normal; }
 
 .kpi-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 22px;
 }
-
-.kpi-card {
+.admin-dashboard .kpi-card {
   display: grid;
+  grid-template-rows: auto 1fr auto;
   min-width: 0;
-  min-height: 142px;
-  align-content: space-between;
+  min-height: 140px;
+  align-items: start;
   gap: 10px;
-  border: 2px solid var(--border);
-  border-radius: 2px;
-  padding: 16px;
-  color: var(--ink);
-  background: var(--paper);
-  box-shadow: 4px 4px 0 var(--border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  color: var(--color-ink);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
 }
-
-.kpi-card--yellow { background: var(--yellow); }
-.kpi-card--red { color: #fff8df; background: var(--red); }
-.kpi-card__label { color: var(--muted); font-size: .7rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
-.kpi-card--red .kpi-card__label,
-.kpi-card--red .kpi-card__detail { color: #fff2c2; }
-.kpi-card__value { overflow-wrap: anywhere; font-size: clamp(1.05rem, 2vw, 1.42rem); line-height: 1.08; }
-.kpi-card__detail { color: var(--muted); font-size: .72rem; font-weight: 700; line-height: 1.35; }
-.kpi-card__detail--up { color: var(--red-dark); }
-.kpi-card__detail--down { color: #39733a; }
-.kpi-card--red .kpi-card__detail--up,
-.kpi-card--red .kpi-card__detail--down { color: #fff2c2; }
+.admin-dashboard .kpi-card--yellow { border-color: var(--color-accent-border); background: var(--color-accent-soft); }
+.admin-dashboard .kpi-card--red { border-color: var(--color-border); color: var(--color-ink); background: var(--color-surface); }
+.admin-dashboard .kpi-card__label { color: var(--color-muted); font-size: .75rem; font-weight: 500; letter-spacing: 0; text-transform: none; }
+.admin-dashboard .kpi-card__value { align-self: center; overflow-wrap: anywhere; color: var(--color-heading); font-size: clamp(1.05rem, 1.7vw, 1.4rem); font-weight: 650; line-height: 1.2; }
+.admin-dashboard .kpi-card__detail { color: var(--color-muted); font-size: .75rem; font-weight: 400; line-height: 1.4; }
+.admin-dashboard .kpi-card__detail--up { color: var(--color-danger); }
+.admin-dashboard .kpi-card__detail--down { color: var(--color-success); }
 
 .admin-visual-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(360px, .85fr);
-  align-items: start;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, .9fr);
+  align-items: stretch;
+  gap: 20px;
 }
-
-.admin-visual-grid__map { grid-column: 1; }
-.admin-visual-grid__provinces { grid-column: 2; }
-.admin-visual-grid__trend { grid-column: 1; }
-.admin-visual-grid__sectors { grid-column: 2; }
+.admin-visual-grid__map { grid-column: 1; grid-row: span 2; min-width: 0; }
+.admin-visual-grid__provinces { grid-column: 2; min-width: 0; }
+.admin-visual-grid__trend { grid-column: 1; min-width: 0; }
+.admin-visual-grid__sectors { grid-column: 2; min-width: 0; }
 .admin-visual-grid .leaflet-map { height: 450px; }
 .admin-visual-grid .ranking-card { min-height: 100%; }
 
 .admin-disclaimer {
   margin-top: 22px;
-  border-top: 4px double var(--border);
+  border-top: 1px solid var(--color-border);
   padding-top: 16px;
-  color: var(--muted);
-  font-size: .75rem;
+  color: var(--color-muted);
+  font-size: .76rem;
   line-height: 1.55;
 }
-
-.admin-disclaimer strong { color: var(--ink); }
 
 @media (max-width: 1080px) {
   .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -81,12 +72,11 @@
   .admin-visual-grid__map,
   .admin-visual-grid__provinces,
   .admin-visual-grid__trend,
-  .admin-visual-grid__sectors { grid-column: 1; }
+  .admin-visual-grid__sectors { grid-column: 1; grid-row: auto; }
 }
-
 @media (max-width: 620px) {
-  .kpi-grid { grid-template-columns: 1fr; }
-  .kpi-card { min-height: 126px; }
+  .kpi-grid { grid-template-columns: 1fr; gap: 12px; }
+  .admin-dashboard .kpi-card { min-height: 126px; }
   .admin-context { align-items: flex-start; flex-direction: column; }
   .admin-context i { display: none; }
 }

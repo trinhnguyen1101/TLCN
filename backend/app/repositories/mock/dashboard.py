@@ -91,3 +91,8 @@ class MockDashboardRepository:
     def get_dashboard(self) -> DashboardData:
         # Prevent callers from mutating the cached demo data for later requests.
         return self._snapshot.model_copy(deep=True)
+
+    def get_admin_dashboard(self):
+        from app.repositories.mock.admin_dashboard import make_admin_dashboard
+
+        return make_admin_dashboard(self.get_dashboard())

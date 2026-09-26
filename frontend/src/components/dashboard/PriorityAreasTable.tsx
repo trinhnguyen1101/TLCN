@@ -10,7 +10,7 @@ interface PriorityAreasTableProps {
   onProvinceSelect: (provinceCode: ProvinceCode) => void
 }
 
-const trendMeta: Record<PriorityArea['trend'], { icon: string; label: string }> = {
+const trendMeta: Record<NonNullable<PriorityArea['trend']>, { icon: string; label: string }> = {
   up: { icon: '↑', label: 'Tăng' },
   'slight-up': { icon: '↑', label: 'Tăng nhẹ' },
   steady: { icon: '→', label: 'Ổn định' },
@@ -47,11 +47,11 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
             </thead>
             <tbody>
               {areas.map((area) => {
-                const trend = trendMeta[area.trend]
+                const trend = area.trend ? trendMeta[area.trend] : { icon: '—', label: 'Chưa có dữ liệu' }
                 const isSelected = selectedProvinceCode === area.provinceCode
-                const yoyClass = area.yearOverYearPercent >= 10
+                const yoyClass = (area.yearOverYearPercent ?? 0) >= 10
                   ? 'priority-value--alert'
-                  : area.yearOverYearPercent < 0
+                  : (area.yearOverYearPercent ?? 0) < 0
                     ? 'priority-value--positive'
                     : ''
 
@@ -69,17 +69,17 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
                     </th>
                     <td data-label="PM2.5 trung bình">
                       <div className="priority-pm25">
-                        <strong>{formatDecimal(area.pm25Average)} µg/m³</strong>
+                        <strong>{formatDecimal(area.pm25Average)}{area.pm25Average === null ? '' : ' µg/m³'}</strong>
                         <span className="priority-pm25__track" aria-hidden="true">
-                          <i style={{ width: `${Math.min(100, (area.pm25Average / 50) * 100)}%` }} />
+                          <i style={{ width: `${Math.min(100, ((area.pm25Average ?? 0) / 50) * 100)}%` }} />
                         </span>
                       </div>
                     </td>
                     <td data-label="Thay đổi YoY (%)">
-                      <strong className={yoyClass}>{area.yearOverYearPercent > 0 ? '+' : ''}{formatDecimal(area.yearOverYearPercent)}%</strong>
+                      <strong className={yoyClass}>{area.yearOverYearPercent === null ? 'Chưa có dữ liệu' : `${area.yearOverYearPercent > 0 ? '+' : ''}${formatDecimal(area.yearOverYearPercent)}%`}</strong>
                     </td>
                     <td data-label="Số ngày vượt ngưỡng">
-                      <strong className={area.exceedanceDays >= 30 ? 'priority-value--alert' : ''}>{area.exceedanceDays} ngày</strong>
+                      <strong className={area.exceedanceDays !== null && area.exceedanceDays >= 30 ? 'priority-value--alert' : ''}>{area.exceedanceDays === null ? 'Chưa có dữ liệu' : `${area.exceedanceDays} ngày`}</strong>
                     </td>
                     <td data-label="Tổng phát thải">
                       <strong>{area.totalEmissions === null ? 'Chưa có dữ liệu' : `${Math.round(area.totalEmissions).toLocaleString('vi-VN')} tấn`}</strong>

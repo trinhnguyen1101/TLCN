@@ -24,6 +24,10 @@ from `backend` with `python -m app.etl.eac4` instead of setting `PYTHONPATH`.
 `OPENBLAS_NUM_THREADS=1` limits overhead for the small aggregation matrices.
 
 - `GET /api/dashboard`: province snapshots, monthly trends and source metadata.
+- `GET /api/admin/dashboard`: management dashboard trends, province comparisons,
+  priority areas, emissions, and annual summaries. The mock source includes
+  illustrative management values; the CAMS sample leaves AQI, exceedance days,
+  and emissions unavailable because that source does not provide them.
 - `GET /api/health`: application liveness (not dataset readiness).
 - `/docs`: generated API documentation.
 - `DASHBOARD_DATA_SOURCE=parquet` is the default; `mock` explicitly enables the

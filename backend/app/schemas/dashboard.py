@@ -92,3 +92,38 @@ class DashboardData(ApiModel):
     emission_sectors: list[str]
     dashboard_trend_records: list[DashboardTrendRecord]
     metadata: DashboardMetadata | None = None
+
+
+class AdminDashboardTrendRecord(DashboardTrendRecord):
+    aqi: float | None = None
+
+
+class PriorityArea(ApiModel):
+    province_code: ProvinceCode
+    province_name: str
+    pm25_average: float | None
+    year_over_year_percent: float | None
+    exceedance_days: int | None
+    total_emissions: float | None
+    main_emission_sector: str | None
+    trend: Literal["up", "slight-up", "steady", "down"] | None
+
+
+class AnnualProvinceSummary(ApiModel):
+    province_code: ProvinceCode
+    province_name: str
+    year: int
+    pm25_average: float | None
+    aqi_average: float | None
+    year_over_year_percent: float | None
+    exceedance_days: int | None
+
+
+class AdminDashboardData(ApiModel):
+    province_snapshots: list[ProvinceSnapshot]
+    emission_records: list[EmissionRecord]
+    emission_sectors: list[str]
+    dashboard_trend_records: list[AdminDashboardTrendRecord]
+    priority_areas: list[PriorityArea]
+    annual_province_summaries: list[AnnualProvinceSummary]
+    metadata: DashboardMetadata | None = None

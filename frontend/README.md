@@ -20,7 +20,9 @@ npm run build
 npm run preview
 ```
 
-The dashboard loads its data from `GET /api/dashboard` once per page session.
+`/user` loads its data from `GET /api/dashboard` once per page session. `/admin`
+loads its management view from `GET /api/admin/dashboard` through the same Vite
+API proxy.
 The request is shared across React StrictMode mounts; filter/map interactions
 use the same in-memory response without additional API requests. The dashboard
 layout and local GeoJSON map render independently of that request. While it is
@@ -45,13 +47,16 @@ FastAPI, preserving the prefix.
 ## Structure
 
 - `src/main.tsx`: React entry point and global stylesheet import.
-- `src/App.tsx`: dashboard composition, shared filters, and derived values.
+- `src/App.tsx`: application-level route selection for `/user` and `/admin`.
+- `src/pages/user/UserDashboard.tsx`: user dashboard composition and derived values.
+- `src/pages/admin/AdminDashboard.tsx`: management dashboard presentation and filters.
 - `src/components/dashboard/`: dashboard controls, comparison, loading/error states, and exports.
 - `src/components/ui/`: reusable buttons and form controls.
 - `src/features/analytics/`: interactive trend chart.
 - `src/features/geography/`: map layers and province-data loading.
 - `src/services/dashboardApi.ts`: shared HTTP request to the backend.
 - `src/hooks/useDashboardData.ts`: request lifecycle, loading/error state, and retry.
+- `src/services/adminDashboardApi.ts` and `src/hooks/useAdminDashboardData.ts`: Admin API request lifecycle, loading/error state, and retry.
 - `../backend/data/samples/`: current temporary CAMS sample, served by the API; not validated Gold data.
 - `../backend/app/repositories/mock/dashboard.py`: older five-province demo, enabled only with `DASHBOARD_DATA_SOURCE=mock`.
 - `src/types/dashboard.ts`: shared dashboard data types.
