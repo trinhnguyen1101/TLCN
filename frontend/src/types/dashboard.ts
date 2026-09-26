@@ -1,57 +1,17 @@
 export type AirQualityStatus = 'Tốt' | 'Trung bình' | 'Kém' | 'Xấu'
 
-export type Pollutant = 'pm25' | 'pm10' | 'o3' | 'no2' | 'so2' | 'co'
+export type Pollutant = 'pm25' | 'pm10' | 'o3' | 'no2' | 'so2' | 'co' | 'pm1' | 'aod550' | 'o3Column' | 'no2Column' | 'so2Column' | 'coColumn' | 't2m' | 'd2m' | 'sp' | 'mslp' | 'u10' | 'v10'
 
-export type ProvinceCode = '01' | '22' | '24' | '48' | '79'
+export type ProvinceCode = string
 
 export interface ProvinceSnapshot {
   provinceCode: ProvinceCode
   provinceName: string
-  latitude: number
-  longitude: number
-  aqi: number
-  status: AirQualityStatus
-  pm25: number
-  pm10: number
-  temperature: number
-  humidity: number
-  windSpeed: number
-  primaryPollutant: Pollutant
-  changeFromYesterday: number
-  updatedAt: string
-}
-
-export interface AirQualityReading {
-  provinceCode: ProvinceCode
-  timestamp: string
-  aqi: number
-  pm25: number
-  pm10: number
-  o3: number
-  no2: number
-  so2: number
-  co: number
-  temperature: number
-  humidity: number
-  windSpeed: number
-}
-
-export interface PeriodComparison {
-  metric: 'aqi' | 'pm25' | 'pm10'
-  currentLabel: string
-  previousLabel: string
-  currentValue: number
-  previousValue: number
-  changePercent: number
-}
-
-export interface MonthlyTrend {
-  provinceCode: ProvinceCode | 'VNM'
-  month: string
-  pm25Average: number
-  pm10Average: number
-  aqiAverage: number
-  exceedanceDays: number
+  aqi: number | null
+  status: AirQualityStatus | null
+  pm25: number | null
+  pm10: number | null
+  pm1?: number | null
 }
 
 export interface EmissionRecord {
@@ -59,10 +19,7 @@ export interface EmissionRecord {
   provinceName: string
   year: number
   month: number
-  pollutant: 'pm2_5' | 'so2' | 'co2'
   sector: string
-  subsector: string
-  sourceType: 'point-source' | 'gadm-aggregation'
   emissionTonnes: number
   sourceCount: number
 }
@@ -91,25 +48,64 @@ export interface AnnualProvinceSummary {
 export type DashboardProvince = ProvinceCode | 'all'
 
 export interface DashboardFiltersValue {
-  provinceCode: DashboardProvince
+  provinceCode: ProvinceCode | 'all'
   pollutant: Pollutant
   year: number | 'all'
   month: number | 'all'
   startDate: string
   endDate: string
-  sector: string | 'all'
+  sector: string
 }
 
 export interface DashboardTrendRecord {
   provinceCode: ProvinceCode
   date: string
-  aqi: number
-  pm25: number
-  pm10: number
-  o3: number
-  no2: number
-  so2: number
-  co: number
+  pm25: number | null
+  pm10: number | null
+  o3: number | null
+  no2: number | null
+  so2: number | null
+  co: number | null
+  pm1?: number | null
+  aod550?: number | null
+  o3Column?: number | null
+  no2Column?: number | null
+  so2Column?: number | null
+  coColumn?: number | null
+  t2m?: number | null
+  d2m?: number | null
+  sp?: number | null
+  mslp?: number | null
+  u10?: number | null
+  v10?: number | null
+}
+
+export interface ConcentrationScale {
+  breakpoints: number[]
+  method: 'absolute_concentration'
+  sampleCount: number
+  referenceStart: string
+  referenceEnd: string
+}
+
+export interface MetricMetadata {
+  unit: string
+  quantity: string
+  mapScale?: ConcentrationScale | null
+}
+
+export interface DashboardMetadata {
+  source: string
+  generation: string
+  start: string
+  end: string
+  snapshotDate: string | null
+  temporalAggregation: string
+  timezone: string
+  minimumSpatialCoverage: number
+  minimumMonthlyCoverage: number
+  metrics: Partial<Record<Pollutant, MetricMetadata>>
+  note: string
 }
 
 export interface ChartPoint {
@@ -121,4 +117,12 @@ export interface BreadcrumbItem {
   id: string
   label: string
   onSelect?: () => void
+}
+
+export interface DashboardData {
+  provinceSnapshots: ProvinceSnapshot[]
+  emissionRecords: EmissionRecord[]
+  emissionSectors: string[]
+  dashboardTrendRecords: DashboardTrendRecord[]
+  metadata?: DashboardMetadata | null
 }

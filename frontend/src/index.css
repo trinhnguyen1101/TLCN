@@ -1,23 +1,31 @@
-:root {
-  font-family: "Courier New", Courier, monospace;
-  color: #3b1d16;
-  background-color: #e9b83f;
-  background-image:
-    linear-gradient(rgb(92 35 27 / 7%) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(92 35 27 / 7%) 1px, transparent 1px);
-  background-size: 24px 24px;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css" layer(components);
+
+@theme {
+  --font-sans: "Segoe UI", -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+  --color-page: #0b1120;
+  --color-ink: #e2e8f0;
+  --color-heading: #f8fafc;
+  --color-secondary: #c1cde0;
+  --color-muted: #a3b2c7;
+  --color-accent: #5eead4;
+  --color-accent-hover: #99f6e4;
+  --color-accent-soft: #133431;
+  --color-accent-border: #275c54;
+  --color-border: #2b3b53;
+  --color-border-strong: #425773;
+  --color-surface: #111c2e;
+  --color-surface-subtle: #17253a;
+  --color-danger: #fda4af;
+  --color-danger-soft: #3d202d;
+  --color-success: #6ee7b7;
+  --color-success-soft: #12382e;
+  --color-map-background: #0d1828;
+  --color-map-land: #30343b;
+  --color-map-country-border: #59616a;
+  --color-map-province-fill: #24364b;
+  --color-map-province-border: #61768f;
+  --radius-card: 14px;
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 18%);
+  --shadow-control: 0 1px 3px rgb(0 0 0 / 24%);
 }
-
-* { box-sizing: border-box; }
-body { min-width: 320px; min-height: 100vh; margin: 0; }
-button, select, input { font: inherit; }
-button:focus-visible, select:focus-visible, input:focus-visible, [tabindex]:focus-visible { outline: 3px dashed #b6292e; outline-offset: 3px; }
-
-h1, h2, h3, strong {
-  font-family: Rockwell, "Roboto Slab", "Courier New", serif;
-}
-
-button, select { letter-spacing: .01em; }

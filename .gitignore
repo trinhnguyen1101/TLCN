@@ -1,0 +1,88 @@
+# Environment files and local overrides
+.env
+.env.*
+*.env
+*.env.*
+*.local
+!.env.example
+!.env.sample
+!.env.template
+!*.env.example
+!*.env.sample
+!*.env.template
+
+# Python environments, bytecode and tooling caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+.eggs/
+*.egg-info/
+
+# JavaScript dependencies and tooling caches
+node_modules/
+.vite/
+.next/
+.nuxt/
+.output/
+.turbo/
+.parcel-cache/
+*.tsbuildinfo
+
+# Generated builds and logs (allow placeholder directories below)
+**/build/**
+**/dist/**
+**/dist-ssr/**
+**/logs/**
+!**/build/**/
+!**/dist/**/
+!**/dist-ssr/**/
+!**/logs/**/
+*.log
+*.log.*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Test coverage
+.coverage
+.coverage.*
+coverage/
+htmlcov/
+.nyc_output/
+
+# Temporary files and caches
+.cache/
+*.tmp
+*.temp
+*~
+
+# Editor and operating-system files
+**/.vscode/*
+!**/.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.suo
+*.ntvs*
+*.sln.docstates
+*.swp
+*.swo
+
+# Keep intentional placeholders in generated build/log directories.
+!**/.gitkeep
+
+# Large local sample intermediates; keep the compact monthly serving sample.
+/backend/data/samples/cams/eac4_provinces/.staging-*/
+/backend/data/samples/cams/eac4_provinces/.CURRENT-*
+/backend/data/samples/cams/eac4_provinces/runs/*/observations/
+/backend/data/samples/cams/eac4_provinces/runs/*/weights/

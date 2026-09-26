@@ -1,0 +1,1414 @@
+{
+  "provinceSnapshots": [
+    {
+      "provinceCode": "01",
+      "provinceName": "Hà Nội",
+      "aqi": 145,
+      "status": "Kém",
+      "pm25": 48,
+      "pm10": 71
+    },
+    {
+      "provinceCode": "24",
+      "provinceName": "Bắc Ninh",
+      "aqi": 132,
+      "status": "Kém",
+      "pm25": 43,
+      "pm10": 67
+    },
+    {
+      "provinceCode": "22",
+      "provinceName": "Quảng Ninh",
+      "aqi": 93,
+      "status": "Trung bình",
+      "pm25": 29,
+      "pm10": 51
+    },
+    {
+      "provinceCode": "48",
+      "provinceName": "Đà Nẵng",
+      "aqi": 62,
+      "status": "Trung bình",
+      "pm25": 17,
+      "pm10": 34
+    },
+    {
+      "provinceCode": "79",
+      "provinceName": "TP. Hồ Chí Minh",
+      "aqi": 108,
+      "status": "Kém",
+      "pm25": 34,
+      "pm10": 58
+    }
+  ],
+  "emissionRecords": [
+    {
+      "provinceCode": "01",
+      "provinceName": "Hà Nội",
+      "year": 2026,
+      "month": 6,
+      "sector": "Manufacturing",
+      "emissionTonnes": 880
+    },
+    {
+      "provinceCode": "01",
+      "provinceName": "Hà Nội",
+      "year": 2026,
+      "month": 6,
+      "sector": "Power",
+      "emissionTonnes": 615
+    },
+    {
+      "provinceCode": "01",
+      "provinceName": "Hà Nội",
+      "year": 2026,
+      "month": 6,
+      "sector": "Transport",
+      "emissionTonnes": 490
+    },
+    {
+      "provinceCode": "01",
+      "provinceName": "Hà Nội",
+      "year": 2026,
+      "month": 6,
+      "sector": "Residential",
+      "emissionTonnes": 285
+    },
+    {
+      "provinceCode": "24",
+      "provinceName": "Bắc Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Manufacturing",
+      "emissionTonnes": 706
+    },
+    {
+      "provinceCode": "24",
+      "provinceName": "Bắc Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Power",
+      "emissionTonnes": 561
+    },
+    {
+      "provinceCode": "24",
+      "provinceName": "Bắc Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Transport",
+      "emissionTonnes": 436
+    },
+    {
+      "provinceCode": "24",
+      "provinceName": "Bắc Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Residential",
+      "emissionTonnes": 231
+    },
+    {
+      "provinceCode": "22",
+      "provinceName": "Quảng Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Manufacturing",
+      "emissionTonnes": 652
+    },
+    {
+      "provinceCode": "22",
+      "provinceName": "Quảng Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Power",
+      "emissionTonnes": 507
+    },
+    {
+      "provinceCode": "22",
+      "provinceName": "Quảng Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Transport",
+      "emissionTonnes": 382
+    },
+    {
+      "provinceCode": "22",
+      "provinceName": "Quảng Ninh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Residential",
+      "emissionTonnes": 177
+    },
+    {
+      "provinceCode": "48",
+      "provinceName": "Đà Nẵng",
+      "year": 2026,
+      "month": 6,
+      "sector": "Manufacturing",
+      "emissionTonnes": 598
+    },
+    {
+      "provinceCode": "48",
+      "provinceName": "Đà Nẵng",
+      "year": 2026,
+      "month": 6,
+      "sector": "Power",
+      "emissionTonnes": 453
+    },
+    {
+      "provinceCode": "48",
+      "provinceName": "Đà Nẵng",
+      "year": 2026,
+      "month": 6,
+      "sector": "Transport",
+      "emissionTonnes": 328
+    },
+    {
+      "provinceCode": "48",
+      "provinceName": "Đà Nẵng",
+      "year": 2026,
+      "month": 6,
+      "sector": "Residential",
+      "emissionTonnes": 123
+    },
+    {
+      "provinceCode": "79",
+      "provinceName": "TP. Hồ Chí Minh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Manufacturing",
+      "emissionTonnes": 544
+    },
+    {
+      "provinceCode": "79",
+      "provinceName": "TP. Hồ Chí Minh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Power",
+      "emissionTonnes": 399
+    },
+    {
+      "provinceCode": "79",
+      "provinceName": "TP. Hồ Chí Minh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Transport",
+      "emissionTonnes": 274
+    },
+    {
+      "provinceCode": "79",
+      "provinceName": "TP. Hồ Chí Minh",
+      "year": 2026,
+      "month": 6,
+      "sector": "Residential",
+      "emissionTonnes": 69
+    }
+  ],
+  "emissionSectors": [
+    "Manufacturing",
+    "Power",
+    "Transport",
+    "Residential"
+  ],
+  "dashboardTrendRecords": [
+    {
+      "provinceCode": "01",
+      "date": "2025-01-15",
+      "pm25": 42,
+      "pm10": 62,
+      "o3": 35,
+      "no2": 20,
+      "so2": 7,
+      "co": 5
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-02-15",
+      "pm25": 41,
+      "pm10": 61,
+      "o3": 38,
+      "no2": 22,
+      "so2": 8,
+      "co": 6
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-03-15",
+      "pm25": 39,
+      "pm10": 59,
+      "o3": 41,
+      "no2": 24,
+      "so2": 9,
+      "co": 7
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-04-15",
+      "pm25": 35,
+      "pm10": 55,
+      "o3": 44,
+      "no2": 26,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-05-15",
+      "pm25": 32,
+      "pm10": 52,
+      "o3": 47,
+      "no2": 28,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-06-15",
+      "pm25": 29,
+      "pm10": 49,
+      "o3": 50,
+      "no2": 21,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-07-15",
+      "pm25": 28,
+      "pm10": 48,
+      "o3": 53,
+      "no2": 23,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-08-15",
+      "pm25": 29,
+      "pm10": 49,
+      "o3": 35,
+      "no2": 25,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-09-15",
+      "pm25": 31,
+      "pm10": 51,
+      "o3": 38,
+      "no2": 27,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-10-15",
+      "pm25": 35,
+      "pm10": 55,
+      "o3": 41,
+      "no2": 20,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-11-15",
+      "pm25": 39,
+      "pm10": 59,
+      "o3": 44,
+      "no2": 22,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "01",
+      "date": "2025-12-15",
+      "pm25": 41,
+      "pm10": 61,
+      "o3": 47,
+      "no2": 24,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-01-15",
+      "pm25": 46,
+      "pm10": 66,
+      "o3": 35,
+      "no2": 20,
+      "so2": 7,
+      "co": 5
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-02-15",
+      "pm25": 45,
+      "pm10": 65,
+      "o3": 38,
+      "no2": 22,
+      "so2": 8,
+      "co": 6
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-03-15",
+      "pm25": 43,
+      "pm10": 63,
+      "o3": 41,
+      "no2": 24,
+      "so2": 9,
+      "co": 7
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-04-15",
+      "pm25": 39,
+      "pm10": 59,
+      "o3": 44,
+      "no2": 26,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-05-15",
+      "pm25": 36,
+      "pm10": 56,
+      "o3": 47,
+      "no2": 28,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-06-15",
+      "pm25": 33,
+      "pm10": 53,
+      "o3": 50,
+      "no2": 21,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-07-15",
+      "pm25": 32,
+      "pm10": 52,
+      "o3": 53,
+      "no2": 23,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-08-15",
+      "pm25": 33,
+      "pm10": 53,
+      "o3": 35,
+      "no2": 25,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-09-15",
+      "pm25": 35,
+      "pm10": 55,
+      "o3": 38,
+      "no2": 27,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-10-15",
+      "pm25": 39,
+      "pm10": 59,
+      "o3": 41,
+      "no2": 20,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-11-15",
+      "pm25": 43,
+      "pm10": 63,
+      "o3": 44,
+      "no2": 22,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "01",
+      "date": "2026-12-15",
+      "pm25": 45,
+      "pm10": 65,
+      "o3": 47,
+      "no2": 24,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-01-15",
+      "pm25": 36,
+      "pm10": 56,
+      "o3": 38,
+      "no2": 21,
+      "so2": 8,
+      "co": 6
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-02-15",
+      "pm25": 35,
+      "pm10": 55,
+      "o3": 41,
+      "no2": 23,
+      "so2": 9,
+      "co": 7
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-03-15",
+      "pm25": 33,
+      "pm10": 53,
+      "o3": 44,
+      "no2": 25,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-04-15",
+      "pm25": 29,
+      "pm10": 49,
+      "o3": 47,
+      "no2": 27,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-05-15",
+      "pm25": 26,
+      "pm10": 46,
+      "o3": 50,
+      "no2": 20,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-06-15",
+      "pm25": 23,
+      "pm10": 43,
+      "o3": 53,
+      "no2": 22,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-07-15",
+      "pm25": 22,
+      "pm10": 42,
+      "o3": 35,
+      "no2": 24,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-08-15",
+      "pm25": 23,
+      "pm10": 43,
+      "o3": 38,
+      "no2": 26,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-09-15",
+      "pm25": 25,
+      "pm10": 45,
+      "o3": 41,
+      "no2": 28,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-10-15",
+      "pm25": 29,
+      "pm10": 49,
+      "o3": 44,
+      "no2": 21,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-11-15",
+      "pm25": 33,
+      "pm10": 53,
+      "o3": 47,
+      "no2": 23,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2025-12-15",
+      "pm25": 35,
+      "pm10": 55,
+      "o3": 50,
+      "no2": 25,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-01-15",
+      "pm25": 40,
+      "pm10": 60,
+      "o3": 38,
+      "no2": 21,
+      "so2": 8,
+      "co": 6
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-02-15",
+      "pm25": 39,
+      "pm10": 59,
+      "o3": 41,
+      "no2": 23,
+      "so2": 9,
+      "co": 7
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-03-15",
+      "pm25": 37,
+      "pm10": 57,
+      "o3": 44,
+      "no2": 25,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-04-15",
+      "pm25": 33,
+      "pm10": 53,
+      "o3": 47,
+      "no2": 27,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-05-15",
+      "pm25": 30,
+      "pm10": 50,
+      "o3": 50,
+      "no2": 20,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-06-15",
+      "pm25": 27,
+      "pm10": 47,
+      "o3": 53,
+      "no2": 22,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-07-15",
+      "pm25": 26,
+      "pm10": 46,
+      "o3": 35,
+      "no2": 24,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-08-15",
+      "pm25": 27,
+      "pm10": 47,
+      "o3": 38,
+      "no2": 26,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-09-15",
+      "pm25": 29,
+      "pm10": 49,
+      "o3": 41,
+      "no2": 28,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-10-15",
+      "pm25": 33,
+      "pm10": 53,
+      "o3": 44,
+      "no2": 21,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-11-15",
+      "pm25": 37,
+      "pm10": 57,
+      "o3": 47,
+      "no2": 23,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "24",
+      "date": "2026-12-15",
+      "pm25": 39,
+      "pm10": 59,
+      "o3": 50,
+      "no2": 25,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-01-15",
+      "pm25": 21,
+      "pm10": 41,
+      "o3": 41,
+      "no2": 22,
+      "so2": 9,
+      "co": 7
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-02-15",
+      "pm25": 20,
+      "pm10": 40,
+      "o3": 44,
+      "no2": 24,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-03-15",
+      "pm25": 18,
+      "pm10": 38,
+      "o3": 47,
+      "no2": 26,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-04-15",
+      "pm25": 14,
+      "pm10": 34,
+      "o3": 50,
+      "no2": 28,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-05-15",
+      "pm25": 11,
+      "pm10": 31,
+      "o3": 53,
+      "no2": 21,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-06-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 35,
+      "no2": 23,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-07-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 38,
+      "no2": 25,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-08-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 41,
+      "no2": 27,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-09-15",
+      "pm25": 10,
+      "pm10": 30,
+      "o3": 44,
+      "no2": 20,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-10-15",
+      "pm25": 14,
+      "pm10": 34,
+      "o3": 47,
+      "no2": 22,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-11-15",
+      "pm25": 18,
+      "pm10": 38,
+      "o3": 50,
+      "no2": 24,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2025-12-15",
+      "pm25": 20,
+      "pm10": 40,
+      "o3": 53,
+      "no2": 26,
+      "so2": 10,
+      "co": 6
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-01-15",
+      "pm25": 25,
+      "pm10": 45,
+      "o3": 41,
+      "no2": 22,
+      "so2": 9,
+      "co": 7
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-02-15",
+      "pm25": 24,
+      "pm10": 44,
+      "o3": 44,
+      "no2": 24,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-03-15",
+      "pm25": 22,
+      "pm10": 42,
+      "o3": 47,
+      "no2": 26,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-04-15",
+      "pm25": 18,
+      "pm10": 38,
+      "o3": 50,
+      "no2": 28,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-05-15",
+      "pm25": 15,
+      "pm10": 35,
+      "o3": 53,
+      "no2": 21,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-06-15",
+      "pm25": 12,
+      "pm10": 32,
+      "o3": 35,
+      "no2": 23,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-07-15",
+      "pm25": 11,
+      "pm10": 31,
+      "o3": 38,
+      "no2": 25,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-08-15",
+      "pm25": 12,
+      "pm10": 32,
+      "o3": 41,
+      "no2": 27,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-09-15",
+      "pm25": 14,
+      "pm10": 34,
+      "o3": 44,
+      "no2": 20,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-10-15",
+      "pm25": 18,
+      "pm10": 38,
+      "o3": 47,
+      "no2": 22,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-11-15",
+      "pm25": 22,
+      "pm10": 42,
+      "o3": 50,
+      "no2": 24,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "22",
+      "date": "2026-12-15",
+      "pm25": 24,
+      "pm10": 44,
+      "o3": 53,
+      "no2": 26,
+      "so2": 10,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-01-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 44,
+      "no2": 23,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-02-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 47,
+      "no2": 25,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-03-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 50,
+      "no2": 27,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-04-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 53,
+      "no2": 20,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-05-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 35,
+      "no2": 22,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-06-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 38,
+      "no2": 24,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-07-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 41,
+      "no2": 26,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-08-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 44,
+      "no2": 28,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-09-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 47,
+      "no2": 21,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-10-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 50,
+      "no2": 23,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-11-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 53,
+      "no2": 25,
+      "so2": 10,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2025-12-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 35,
+      "no2": 27,
+      "so2": 11,
+      "co": 7
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-01-15",
+      "pm25": 12,
+      "pm10": 32,
+      "o3": 44,
+      "no2": 23,
+      "so2": 10,
+      "co": 8
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-02-15",
+      "pm25": 11,
+      "pm10": 31,
+      "o3": 47,
+      "no2": 25,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-03-15",
+      "pm25": 9,
+      "pm10": 29,
+      "o3": 50,
+      "no2": 27,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-04-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 53,
+      "no2": 20,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-05-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 35,
+      "no2": 22,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-06-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 38,
+      "no2": 24,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-07-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 41,
+      "no2": 26,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-08-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 44,
+      "no2": 28,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-09-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 47,
+      "no2": 21,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-10-15",
+      "pm25": 8,
+      "pm10": 28,
+      "o3": 50,
+      "no2": 23,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-11-15",
+      "pm25": 9,
+      "pm10": 29,
+      "o3": 53,
+      "no2": 25,
+      "so2": 10,
+      "co": 6
+    },
+    {
+      "provinceCode": "48",
+      "date": "2026-12-15",
+      "pm25": 11,
+      "pm10": 31,
+      "o3": 35,
+      "no2": 27,
+      "so2": 11,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-01-15",
+      "pm25": 24,
+      "pm10": 44,
+      "o3": 47,
+      "no2": 24,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-02-15",
+      "pm25": 23,
+      "pm10": 43,
+      "o3": 50,
+      "no2": 26,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-03-15",
+      "pm25": 21,
+      "pm10": 41,
+      "o3": 53,
+      "no2": 28,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-04-15",
+      "pm25": 17,
+      "pm10": 37,
+      "o3": 35,
+      "no2": 21,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-05-15",
+      "pm25": 14,
+      "pm10": 34,
+      "o3": 38,
+      "no2": 23,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-06-15",
+      "pm25": 11,
+      "pm10": 31,
+      "o3": 41,
+      "no2": 25,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-07-15",
+      "pm25": 10,
+      "pm10": 30,
+      "o3": 44,
+      "no2": 27,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-08-15",
+      "pm25": 11,
+      "pm10": 31,
+      "o3": 47,
+      "no2": 20,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-09-15",
+      "pm25": 13,
+      "pm10": 33,
+      "o3": 50,
+      "no2": 22,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-10-15",
+      "pm25": 17,
+      "pm10": 37,
+      "o3": 53,
+      "no2": 24,
+      "so2": 10,
+      "co": 6
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-11-15",
+      "pm25": 21,
+      "pm10": 41,
+      "o3": 35,
+      "no2": 26,
+      "so2": 11,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2025-12-15",
+      "pm25": 23,
+      "pm10": 43,
+      "o3": 38,
+      "no2": 28,
+      "so2": 7,
+      "co": 8
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-01-15",
+      "pm25": 28,
+      "pm10": 48,
+      "o3": 47,
+      "no2": 24,
+      "so2": 11,
+      "co": 5
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-02-15",
+      "pm25": 27,
+      "pm10": 47,
+      "o3": 50,
+      "no2": 26,
+      "so2": 7,
+      "co": 6
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-03-15",
+      "pm25": 25,
+      "pm10": 45,
+      "o3": 53,
+      "no2": 28,
+      "so2": 8,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-04-15",
+      "pm25": 21,
+      "pm10": 41,
+      "o3": 35,
+      "no2": 21,
+      "so2": 9,
+      "co": 8
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-05-15",
+      "pm25": 18,
+      "pm10": 38,
+      "o3": 38,
+      "no2": 23,
+      "so2": 10,
+      "co": 5
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-06-15",
+      "pm25": 15,
+      "pm10": 35,
+      "o3": 41,
+      "no2": 25,
+      "so2": 11,
+      "co": 6
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-07-15",
+      "pm25": 14,
+      "pm10": 34,
+      "o3": 44,
+      "no2": 27,
+      "so2": 7,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-08-15",
+      "pm25": 15,
+      "pm10": 35,
+      "o3": 47,
+      "no2": 20,
+      "so2": 8,
+      "co": 8
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-09-15",
+      "pm25": 17,
+      "pm10": 37,
+      "o3": 50,
+      "no2": 22,
+      "so2": 9,
+      "co": 5
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-10-15",
+      "pm25": 21,
+      "pm10": 41,
+      "o3": 53,
+      "no2": 24,
+      "so2": 10,
+      "co": 6
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-11-15",
+      "pm25": 25,
+      "pm10": 45,
+      "o3": 35,
+      "no2": 26,
+      "so2": 11,
+      "co": 7
+    },
+    {
+      "provinceCode": "79",
+      "date": "2026-12-15",
+      "pm25": 27,
+      "pm10": 47,
+      "o3": 38,
+      "no2": 28,
+      "so2": 7,
+      "co": 8
+    }
+  ]
+}

@@ -1,4 +1,5 @@
-import './dashboardComponents.css'
+import { DashboardIcon } from './DashboardIcon'
+import { Button } from '../ui/Button'
 
 type CsvValue = string | number | null
 
@@ -36,9 +37,9 @@ export function ExportActions({ fileName, chartId, csvRows }: ExportActionsProps
   }
 
   return (
-    <div className="export-actions" aria-label="Tùy chọn xuất dữ liệu">
-      <button type="button" onClick={exportChart} disabled={csvRows.length === 0}>Xuất biểu đồ</button>
-      <button type="button" onClick={exportCsv} disabled={csvRows.length === 0}>Xuất CSV</button>
+    <div className="inline-flex flex-wrap gap-[7px]" aria-label="Tùy chọn xuất dữ liệu">
+      <Button variant="export" onClick={exportChart} disabled={csvRows.length === 0} aria-label="Xuất biểu đồ SVG"><DashboardIcon name="download" size="tiny" />Xuất SVG</Button>
+      <Button variant="export" onClick={exportCsv} disabled={csvRows.length === 0}><DashboardIcon name="download" size="tiny" />Xuất CSV</Button>
     </div>
   )
 }
