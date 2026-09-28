@@ -2,6 +2,7 @@ import logging
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
+from starlette.middleware.gzip import GZipMiddleware
 
 from app.api.router import api_router
 from app.core.config import Settings
@@ -21,6 +22,7 @@ def create_app(
     )
     application = FastAPI(title="Air Quality API", version="0.1.0")
     application.state.dashboard_service = DashboardService(repository)
+    application.add_middleware(GZipMiddleware, minimum_size=1000)
     application.include_router(api_router)
 
     @application.exception_handler(DataSourceUnavailable)

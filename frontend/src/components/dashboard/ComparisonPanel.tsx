@@ -31,7 +31,7 @@ export function ComparisonPanel({ years, dataReady = true, loading = false, valu
     : null
 
   return (
-    <section className="min-w-0 rounded-card border border-border bg-surface px-6 py-[22px] shadow-card max-[480px]:p-5" aria-labelledby="comparison-title">
+    <section className="mt-5 min-w-0 rounded-card border border-border bg-surface px-6 py-[22px] shadow-card max-[480px]:p-5" aria-labelledby="comparison-title">
       <div className="mb-[18px] flex flex-wrap items-center justify-between gap-3 max-[480px]:gap-3.5">
         <h2 id="comparison-title" className="text-[.98rem] font-semibold text-heading">So sánh dữ liệu</h2>
         <SegmentedControl aria-label="Chiều so sánh">

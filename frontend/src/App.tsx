@@ -1,10 +1,20 @@
-﻿import { AdminDashboard } from './pages/admin/AdminDashboard'
-import UserDashboard from './pages/user/UserDashboard'
+import { lazy, Suspense } from 'react'
 
-/** Application-level route selection; page implementations live under pages/. */
+const AdminDashboard = lazy(() =>
+  import('./pages/admin/AdminDashboard').then((module) => ({ default: module.AdminDashboard })),
+)
+
+/** Keep one dashboard until role-specific routes are introduced. */
 export default function App() {
-  const path = window.location.pathname.replace(/\/$/, '') || '/user'
-
-  if (path === '/admin') return <AdminDashboard />
-  return <UserDashboard />
+  return (
+    <Suspense
+      fallback={
+        <p role="status" className="p-8 text-muted">
+          Đang tải dashboard…
+        </p>
+      }
+    >
+      <AdminDashboard />
+    </Suspense>
+  )
 }

@@ -24,6 +24,8 @@ from `backend` with `python -m app.etl.eac4` instead of setting `PYTHONPATH`.
 `OPENBLAS_NUM_THREADS=1` limits overhead for the small aggregation matrices.
 
 - `GET /api/dashboard`: province snapshots, monthly trends and source metadata.
+- `GET /api/dashboard/analytics`: filtered statistics, pollutant rankings, complete
+  monthly calendar and period-averaged map values (see below).
 - `GET /api/admin/dashboard`: management dashboard trends, province comparisons,
   priority areas, emissions, and annual summaries. The mock source includes
   illustrative management values; the CAMS sample leaves AQI, exceedance days,
@@ -35,7 +37,7 @@ from `backend` with `python -m app.etl.eac4` instead of setting `PYTHONPATH`.
   it never falls back to mock or a stale generation.
 - `DASHBOARD_PARQUET_PATH` overrides `backend/data/samples/cams/eac4_provinces`.
 
-The frontend continues to use `/api/dashboard` through its existing Vite proxy.
+The frontend uses the dashboard and analytics endpoints through its existing Vite proxy.
 Restart an existing backend process after moving samples or changing configuration.
 
 ## Optional sample conversion
@@ -124,8 +126,8 @@ surface `o3`, `no2`, `so2`, `co` fields remain null for this source.
 
 No sectoral emission inventory is present: emission arrays are empty. No AQI
 method with appropriate averaging periods is implemented: snapshot `aqi` and
-`status` are null. The map defaults to PM2.5 and labels its snapshot month;
-this is the latest valid monthly mean, not current air quality.
+`status` are null. The map defaults to PM2.5 and displays the mean over the selected period.
+The original `/dashboard` snapshot contract remains the latest valid month.
 
 Parameter identities/units follow the GRIB headers and the official
 [CAMS reanalysis documentation](https://confluence.ecmwf.int/pages/viewpage.action?pageId=621030809)
@@ -248,3 +250,40 @@ actual synthetic GRIB → Parquet → API, duplicate handling, atomic publicatio
 source errors and cache refresh. ETL imports PROJ before ecCodes because their
 bundled native libraries conflict on shutdown with the reverse import order in
 the verified local environment.
+
+## Filtered analytics
+
+Example: `/api/dashboard/analytics?metric=pm25&year=2025&provinceCode=01`.
+Query fields: `metric`, `provinceCode` (`all` by default), optional `year`,
+`month`, `startDate`, `endDate`. Unknown metrics/provinces, invalid months and
+reversed dates return 422. Source failures remain 503, with no mock fallback.
+
+- Daily bounds select overlapping **months**; they never imply daily resolution.
+  The frontend makes date ranges and year/month selectors mutually exclusive.
+- First normalize to one mean per province/month/metric. Summary mean, median,
+  min and max use valid province–month values with equal weight. They are not
+  population-weighted national concentrations. Missing values remain null.
+- Rankings compare each province's mean of available months, descending.
+  Equal values share competition rank (1, 1, 3). Missing provinces are excluded
+  from ranks and retained in map data and coverage denominators.
+- Province drilldown narrows the summary, while national rankings and map values
+  retain the selected time range for comparison. Each row reports valid versus
+  expected months; unequal coverage can affect comparisons.
+- The source calendar spans the earliest through latest source month, including
+  fully missing months. Coverage counts only the selected overlap with that
+  source calendar. Timeline gaps stay null and are not joined by trend lines.
+- `provinceSnapshots` in this response contains **period means**, without an AQI
+  inferred from them. Total-column gases, aerosol optical depth and surface PM
+  keep their separate units. Weather metrics are available for analysis but
+  excluded from the pollutant leader cards.
+
+Results for versioned sources use a bounded 32-entry LRU cache keyed by source
+`generation` and filter values. Unversioned sources are not cached. JSON responses
+larger than 1 KB support gzip. Frontend analytical requests debounce rapid filter
+changes and abort obsolete requests; old values are hidden during new queries.
+
+Both `/user` and `/admin` include province ranking bars, distribution counts,
+coverage/statistics, a province–time heatmap and leaders by pollutant. Above 24
+selected months, the heatmap displays annual means; selecting a year reveals
+months. Ranking rows select a province, trend points select a month, and heatmap
+cells select both. Rankings can export the full filtered national table as CSV.

@@ -15,7 +15,7 @@ export function useAdminDashboardData() {
     let active = true
     loadAdminDashboardData().then(
       (data) => { if (active) setState({ data, loading: false, error: null }) },
-      () => { if (active) setState({ data: null, loading: false, error: 'Không thể tải dữ liệu quản lý. Vui lòng kiểm tra kết nối và thử lại.' }) },
+      () => { if (active) setState({ data: null, loading: false, error: 'Không thể tải dữ liệu dashboard. Vui lòng kiểm tra kết nối và thử lại.' }) },
     )
     return () => { active = false }
   }, [attempt])

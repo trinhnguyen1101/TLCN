@@ -97,3 +97,20 @@ The frontend consumes these prepared GeoJSON files directly; there is no generat
 The generated asset has 176 country features and 23,839 positions, about 504 KiB uncompressed (172 KiB gzipped). The background is fetched once from the app's own origin and cached in memory. Its geometry stays mounted across province filters and metric changes. Panning and zooming make no additional background requests. Loading runs independently of province data; a failed background request leaves the province layer and dashboard controls available. The background pane sits below province boundaries and does not receive pointer events.
 
 Local Chromium validation covered one background request across filter changes, pan and zoom; absence of image tiles and external map requests; gray country styling; province keyboard selection; widths down to 320px; and slow/failed background loading. With 4x CPU throttling, three runs before and after border alignment measured a pan/zoom frame interval at the 95th percentile of about 17 ms. Province rendering was ready in approximately 0.60–0.62 s in both versions; the maximum observed frame interval increased from 50 ms to 67 ms. These are local measurements, not a guarantee for every device.
+
+## Analytics checks
+
+`npm test` runs the dashboard filter/aggregation regression tests using Node.js
+22.18+ (or 24). `npm run build` checks TypeScript and builds both lazy-loaded routes;
+`npm run lint` checks React hooks and source code.
+
+The analytics panels call `/api/dashboard/analytics` through the Vite proxy.
+See [backend analytics contract](../backend/README.md#filtered-analytics) for
+ranking definitions, missing-data handling, units and filter scope.
+
+Maps calculate period means from the monthly dashboard data already loaded, so an
+analytics endpoint failure does not remove available map values. Empty periods
+remain empty; latest snapshot values are never substituted for the selected time.
+Both province rankings and the priority-area table paginate at 10 rows by default,
+with 5/10/20 rows per page and a reset to page 1 when filters change. CSV ranking
+exports still include every province in the selected period.

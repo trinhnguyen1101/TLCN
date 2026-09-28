@@ -41,7 +41,7 @@ export function HorizontalBarChart({ eyebrow, title, description, points, unit, 
         <div>
           <div className="trend-title-row">
             <p className="eyebrow">{eyebrow}</p>
-            <span className="info-tooltip" tabIndex={0} aria-label={description}>i<span role="tooltip">{description}</span></span>
+            <button type="button" className="info-tooltip" aria-label={description} title={description}>i</button>
           </div>
           <h2 id={`${chartId}-title`}>{title}</h2>
         </div>

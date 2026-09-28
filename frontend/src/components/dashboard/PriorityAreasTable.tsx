@@ -1,3 +1,5 @@
+import { usePagination } from '../../hooks/usePagination'
+import { Pagination } from '../ui/Pagination'
 import { useId } from 'react'
 import type { PriorityArea, ProvinceCode } from '../../types/dashboard'
 import { formatDecimal } from '../../utils/formatters'
@@ -5,6 +7,7 @@ import { DataState } from './DataState'
 import './PriorityAreasTable.css'
 
 interface PriorityAreasTableProps {
+  paginationScope?: string
   areas: PriorityArea[]
   selectedProvinceCode: ProvinceCode | 'all'
   onProvinceSelect: (provinceCode: ProvinceCode) => void
@@ -17,14 +20,17 @@ const trendMeta: Record<NonNullable<PriorityArea['trend']>, { icon: string; labe
   down: { icon: '↓', label: 'Giảm' },
 }
 
-export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSelect }: PriorityAreasTableProps) {
+export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSelect, paginationScope = '' }: PriorityAreasTableProps) {
   const titleId = `priority-areas-${useId().replaceAll(':', '')}`
+
+  const pagination = usePagination(areas.length, `${paginationScope}:${areas.map(area => area.provinceCode).join(',')}`)
+  const visibleAreas = areas.slice(pagination.offset, pagination.offset + pagination.pageSize)
 
   return (
     <section className="priority-areas" aria-labelledby={titleId}>
       <div className="priority-areas__header">
         <div>
-          <p className="eyebrow">Priority Areas · Tổng hợp đa chỉ số</p>
+          <p className="eyebrow">Khu vực ưu tiên · Tổng hợp đa chỉ số</p>
           <h2 id={titleId}>KHU VỰC CẦN ƯU TIÊN THEO DÕI</h2>
           <p>Các khu vực có nhiều chỉ số môi trường cần chú ý trong kỳ báo cáo.</p>
         </div>
@@ -46,7 +52,7 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
               </tr>
             </thead>
             <tbody>
-              {areas.map((area) => {
+              {visibleAreas.map((area) => {
                 const trend = area.trend ? trendMeta[area.trend] : { icon: '—', label: 'Chưa có dữ liệu' }
                 const isSelected = selectedProvinceCode === area.provinceCode
                 const yoyClass = (area.yearOverYearPercent ?? 0) >= 10
@@ -96,6 +102,7 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
             </tbody>
           </table>
         </div>
+        <Pagination {...pagination} label="Phân trang tỉnh cần theo dõi" />
       </DataState>
     </section>
   )

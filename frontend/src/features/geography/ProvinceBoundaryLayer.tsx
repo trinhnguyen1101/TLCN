@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { GeoJSON, Tooltip } from 'react-leaflet'
 import type { Path, PolylineOptions } from 'leaflet'
 import type { ProvinceSnapshot } from '../../types/dashboard'
@@ -28,17 +27,14 @@ function getProvinceStyle(metrics: ProvinceSnapshot | undefined, metric: MapMetr
   return { color: 'var(--color-surface-subtle)', fillColor, fillOpacity: 1, weight: 1.2, smoothFactor: 0, className: 'focus:outline-none focus-visible:stroke-accent focus-visible:stroke-3' }
 }
 
-// The parent keys this layer by the dashboard selection so filters reset local selection.
 export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metric, colorScale, layerVisible, metricsByProvince, onProvinceSelect }: ProvinceBoundaryLayerProps) {
-  const [highlightedCode, setHighlightedCode] = useState(selectedProvinceCode)
-  const highlightedFeature = data.features.find((feature) => feature.id === highlightedCode)
+  const highlightedFeature = data.features.find((feature) => feature.id === selectedProvinceCode)
 
   return (
     <>
       {data.features.map((feature) => {
         const metrics = metricsByProvince.get(feature.id)
         const selectProvince = () => {
-          setHighlightedCode(feature.id)
           if (metrics) onProvinceSelect?.(metrics)
         }
 

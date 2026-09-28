@@ -12,6 +12,9 @@ import { getMapColorScale, MAP_METRIC_LABELS, type MapMetric } from './mapColorS
 export type { MapMetric } from './mapColorScale'
 
 interface VietnamProvinceMapProps {
+  dataLoading?: boolean
+  dataError?: string | null
+  periodLabel?: string
   provinceSnapshots: ProvinceSnapshot[]
   metricMetadata?: DashboardMetadata['metrics']
   selectedProvinceCode?: ProvinceCode | 'all'
@@ -58,6 +61,9 @@ function MapSizeSync() {
 
 export function VietnamProvinceMap({
   provinceSnapshots,
+  dataLoading = false,
+  dataError = null,
+  periodLabel,
   metricMetadata,
   selectedProvinceCode = 'all',
   metric = 'pm25',
@@ -72,6 +78,7 @@ export function VietnamProvinceMap({
 
   const concentrationScale = metric === 'aqi' ? undefined : metricMetadata?.[metric]?.mapScale
   const colorScale = getMapColorScale(metric, concentrationScale)
+  const validProvinceCount = provinceSnapshots.filter(province => typeof province[metric] === 'number' && Number.isFinite(province[metric])).length
 
   useEffect(() => {
     let isMounted = true
@@ -86,6 +93,7 @@ export function VietnamProvinceMap({
       <div className="flex flex-col gap-[18px] p-6 max-[1100px]:flex-row max-[1100px]:flex-wrap max-[1100px]:items-center max-[1100px]:justify-between max-[680px]:gap-4 max-[680px]:p-5">
         <div>
           <h2 className="text-[.98rem] font-semibold text-heading">Bản đồ chất lượng không khí</h2>
+          {periodLabel && <p className="mt-2 text-xs text-muted">Trung bình kỳ · {periodLabel}</p>}
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3 max-[1100px]:justify-start max-[680px]:w-full">
           <SegmentedControl aria-label="Chỉ số hiển thị trên bản đồ">
@@ -99,6 +107,9 @@ export function VietnamProvinceMap({
         </div>
       </div>
 
+      <p className={`px-6 pb-3 text-xs ${dataError ? 'text-danger' : 'text-muted'}`} role={dataError ? 'alert' : 'status'}>
+        {dataLoading ? 'Đang tải số liệu bản đồ…' : dataError ? 'Không tải được số liệu bản đồ. Vui lòng thử lại dữ liệu dashboard.' : validProvinceCount ? `${validProvinceCount}/${provinceSnapshots.length} tỉnh có dữ liệu ${MAP_METRIC_LABELS[metric]} trong kỳ.` : `Không có dữ liệu ${MAP_METRIC_LABELS[metric]} trong kỳ đang chọn.`}
+      </p>
       <DataState className="flex-1" loading={!geoJson && !error} error={error}>
         {geoJson && (
           <MapContainer center={[16.2, 107.7]} zoom={5.35} minZoom={0} maxZoom={19} scrollWheelZoom attributionControl={false} className={mapClasses}>
@@ -106,7 +117,6 @@ export function VietnamProvinceMap({
             <WorldBasemap />
             <Pane name="province-selection" className="pointer-events-none z-[450]" />
             <ProvinceBoundaryLayer
-              key={selectedProvinceCode}
               data={geoJson}
               selectedProvinceCode={selectedProvinceCode}
               metric={metric}

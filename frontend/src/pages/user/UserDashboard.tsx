@@ -1,4 +1,8 @@
-import { useState } from 'react'
+import { usePeriodMapSnapshots } from '../../hooks/usePeriodMapSnapshots'
+import { METRIC_META as metricMeta } from '../../services/metricMetadata'
+import { useDashboardAnalytics } from '../../hooks/useDashboardAnalytics'
+import { PollutionAnalytics } from '../../features/analytics/PollutionAnalytics'
+import { useMemo, useState } from 'react'
 import { ComparisonPanel, type ComparisonValue } from '../../components/dashboard/ComparisonPanel'
 import { DashboardBreadcrumb } from '../../components/dashboard/DashboardBreadcrumb'
 import { DashboardFilters } from '../../components/dashboard/DashboardFilters'
@@ -30,26 +34,7 @@ const DEFAULT_FILTERS: DashboardFiltersValue = {
   sector: 'all',
 }
 
-const metricMeta = {
-  pm25: { label: 'PM2.5', unit: 'µg/m³' },
-  pm10: { label: 'PM10', unit: 'µg/m³' },
-  o3: { label: 'O₃', unit: 'µg/m³' },
-  no2: { label: 'NO₂', unit: 'µg/m³' },
-  so2: { label: 'SO₂', unit: 'µg/m³' },
-  co: { label: 'CO', unit: 'mg/m³' },
-  pm1: { label: 'PM1', unit: 'µg/m³' },
-  aod550: { label: 'AOD 550 nm', unit: '1' },
-  o3Column: { label: 'O₃ tổng cột', unit: 'mg/m²' },
-  no2Column: { label: 'NO₂ tổng cột', unit: 'mg/m²' },
-  so2Column: { label: 'SO₂ tổng cột', unit: 'mg/m²' },
-  coColumn: { label: 'CO tổng cột', unit: 'mg/m²' },
-  t2m: { label: 'Nhiệt độ 2 m', unit: '°C' },
-  d2m: { label: 'Điểm sương 2 m', unit: '°C' },
-  sp: { label: 'Áp suất bề mặt', unit: 'hPa' },
-  mslp: { label: 'Áp suất mực biển', unit: 'hPa' },
-  u10: { label: 'Gió 10 m hướng đông', unit: 'm/s' },
-  v10: { label: 'Gió 10 m hướng bắc', unit: 'm/s' },
-}
+
 
 const isNumber = (value: number | null | undefined): value is number => typeof value === 'number' && Number.isFinite(value)
 
@@ -71,7 +56,7 @@ interface DashboardProps {
 function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
   const dataReady = data !== null
   const { dashboardTrendRecords, emissionRecords, emissionSectors, provinceSnapshots } = data ?? EMPTY_DASHBOARD_DATA
-  const years = [...new Set(dashboardTrendRecords.map((record) => Number(record.date.slice(0, 4))))].sort((a, b) => b - a)
+  const years = useMemo(() => [...new Set(dashboardTrendRecords.map((record) => Number(record.date.slice(0, 4))))].sort((a, b) => b - a), [dashboardTrendRecords])
   const defaultFilters: DashboardFiltersValue = { ...DEFAULT_FILTERS, year: years[0] ?? 'all' }
   const availableMetrics = (data?.metadata ? Object.keys(data.metadata.metrics) : ['pm25', 'pm10', 'o3', 'no2', 'so2', 'co'])
     .filter((value): value is Pollutant => Object.hasOwn(metricMeta, value))
@@ -83,6 +68,8 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
     ...defaultFilters, ...filterSelection,
     pollutant: availableMetrics.includes(selectedPollutant) ? selectedPollutant : availableMetrics[0] ?? 'pm25',
   }
+  const analytics = useDashboardAnalytics(filters, dataReady, data?.metadata?.generation)
+  const mapSnapshots = usePeriodMapSnapshots(data, filters)
   const [comparisonSelection, setComparison] = useState<Partial<ComparisonValue>>({})
   const comparison: ComparisonValue = { dimension: 'province', provinceCode: provinceSnapshots[1]?.provinceCode ?? provinceSnapshots[0]?.provinceCode ?? '', year: years[1] ?? years[0] ?? 0, ...comparisonSelection }
   const [mapMetric, setMapMetric] = useState<MapMetric>('pm25')
@@ -95,28 +82,16 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
     const dateYear = alignDatesToYear && year !== 'all' ? year : null
     const startDate = filters.startDate && dateYear ? `${dateYear}${filters.startDate.slice(4)}` : filters.startDate
     const endDate = filters.endDate && dateYear ? `${dateYear}${filters.endDate.slice(4)}` : filters.endDate
-    if (startDate && record.date < startDate) return false
-    if (endDate && record.date > endDate) return false
+    if (startDate && record.date.slice(0, 7) < startDate.slice(0, 7)) return false
+    if (endDate && record.date.slice(0, 7) > endDate.slice(0, 7)) return false
     return true
   }
 
-  const filteredRecords = dashboardTrendRecords.filter((record) => recordMatches(record))
-
-  const chartPoints: ChartPoint[] = (() => {
-    const grouped = new Map<string, number[]>()
-    filteredRecords.forEach((record) => {
-      const key = record.date.slice(0, 7)
-      const values = grouped.get(key) ?? []
-      const value = record[filters.pollutant]
-      if (!isNumber(value)) return
-      values.push(value)
-      grouped.set(key, values)
-    })
-    return [...grouped.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([date, values]) => ({
-      label: filters.year === 'all' ? `${date.slice(5)}/${date.slice(2, 4)}` : `T${Number(date.slice(5))}`,
-      value: Number((mean(values) ?? 0).toFixed(3)),
-    }))
-  })()
+  const chartPoints: ChartPoint[] = (analytics.data?.timeline ?? []).map(point => ({
+    date: point.date,
+    label: `${point.date.slice(5)}/${point.date.slice(2, 4)}`,
+    value: mean((filters.provinceCode === 'all' ? Object.values(point.values) : [point.values[filters.provinceCode]]).filter(isNumber)),
+  }))
 
   const currentYear = filters.year === 'all' ? years[0] : filters.year
   const currentProvince = filters.provinceCode
@@ -163,8 +138,8 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
 
   const metric = { ...metricMeta[filters.pollutant], ...data?.metadata?.metrics[filters.pollutant] }
   const scopeLabel = filters.provinceCode === 'all' ? 'Toàn quốc' : provinceName(filters.provinceCode)
-  const periodLabel = [filters.month === 'all' ? null : `Tháng ${filters.month}`, filters.year === 'all' ? 'Tất cả các năm' : `Năm ${filters.year}`].filter(Boolean).join(' · ')
-  const averageConcentration = mean(filteredRecords.map((record) => record[filters.pollutant]).filter(isNumber))
+  const periodLabel = [filters.startDate || filters.endDate ? `${filters.startDate || 'Đầu kỳ'} → ${filters.endDate || 'Cuối kỳ'}` : null, filters.month === 'all' ? null : `Tháng ${filters.month}`, filters.year === 'all' ? 'Tất cả các năm' : `Năm ${filters.year}`].filter(Boolean).join(' · ')
+  const averageConcentration = analytics.data?.summary.mean ?? null
 
   return (
     <main className="mx-auto w-full max-w-[1440px] px-12 pt-9 pb-14 max-[1100px]:px-7 max-[1100px]:pt-7 max-[1100px]:pb-10 max-[680px]:px-4 max-[680px]:pt-6 max-[680px]:pb-8">
@@ -180,7 +155,7 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
       </header>
 
       <DashboardBreadcrumb items={breadcrumbItems} />
-      {data?.metadata && <p className="mb-6 text-[.83rem] text-muted">{data.metadata.note} Bản đồ: {data.metadata.snapshotDate?.slice(0, 7) ?? 'chưa có dữ liệu'} (UTC).</p>}
+      {data?.metadata && <p className="mb-6 text-[.83rem] text-muted">{data.metadata.note} Bản đồ hiển thị trung bình theo kỳ đang chọn (UTC).</p>}
 
       {error && (
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger/25 bg-danger-soft px-5 py-4 text-[.83rem] text-danger" role="alert">
@@ -194,7 +169,7 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
         <article className="flex min-w-0 flex-col items-start rounded-card border px-6 py-5 shadow-card max-[1100px]:p-[18px] max-[680px]:px-5 border-border bg-surface">
           <div className="flex w-full items-center justify-between gap-3 text-[.82rem] font-medium text-secondary"><span>Khu vực theo dõi</span><span className="grid size-[34px] shrink-0 place-items-center rounded-[9px] bg-accent-soft text-accent"><DashboardIcon name="location" /></span></div>
           <strong className="mt-2.5 flex flex-wrap gap-2 font-[650] leading-[1.3] tabular-nums wrap-anywhere max-[680px]:mt-[5px] min-h-[45px] items-center text-[1.6rem] tracking-[-.025em] text-heading">{scopeLabel}</strong>
-          <p className="mt-[7px] text-[.77rem] leading-normal text-muted">{!dataReady ? <><Skeleton animated={loading} className="h-3.5 w-40" /><span className="sr-only">{loading ? 'Đang tải số tỉnh, thành có dữ liệu…' : 'Chưa tải được số tỉnh, thành có dữ liệu.'}</span></> : filters.provinceCode === 'all' ? `${provinceSnapshots.filter((province) => province.pm25 !== null || province.pm10 !== null).length} tỉnh, thành có dữ liệu PM` : 'Việt Nam'}</p>
+          <p className="mt-[7px] text-[.77rem] leading-normal text-muted">{!dataReady ? <><Skeleton animated={loading} className="h-3.5 w-40" /><span className="sr-only">{loading ? 'Đang tải số tỉnh, thành có dữ liệu…' : 'Chưa tải được số tỉnh, thành có dữ liệu.'}</span></> : filters.provinceCode === 'all' ? `${analytics.data?.provinceCount ?? '…'} tỉnh, thành có dữ liệu ${metric.label} trong kỳ` : 'Việt Nam'}</p>
         </article>
         <article className="flex min-w-0 flex-col items-start rounded-card border px-6 py-5 shadow-card max-[1100px]:p-[18px] max-[680px]:px-5 border-accent-border bg-[#102c2c]">
           <div className="flex w-full items-center justify-between gap-3 text-[.82rem] font-medium text-secondary"><span>{metric.label} trung bình</span><span className="grid size-[34px] shrink-0 place-items-center rounded-[9px] bg-[#1c4841] text-accent"><DashboardIcon name="chart" /></span></div>
@@ -218,21 +193,23 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
 
       <div className="mt-6 grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] items-stretch gap-6 max-[1100px]:grid-cols-1 max-[680px]:mt-4 max-[680px]:gap-4">
         <VietnamProvinceMap
+          periodLabel={periodLabel} dataLoading={loading} dataError={error}
           metricMetadata={data?.metadata?.metrics}
-          provinceSnapshots={provinceSnapshots}
+          provinceSnapshots={mapSnapshots}
           selectedProvinceCode={filters.provinceCode}
           metric={mapMetric}
           layerVisible={mapLayerVisible}
-          onMetricChange={setMapMetric}
+          onMetricChange={(value) => { setMapMetric(value); if (value !== 'aqi') setFilters(current => ({ ...current, pollutant: value })) }}
           onLayerVisibilityChange={setMapLayerVisible}
           onProvinceSelect={(province) => setFilters((current) => ({ ...current, provinceCode: province.provinceCode }))}
         />
 
         <TrendChart
-          dataReady={dataReady}
-          loading={loading}
+          dataReady={Boolean(analytics.data)}
+          loading={analytics.loading}
+          onPointSelect={(point) => { if (point.date) setFilters(current => ({ ...current, year: Number(point.date!.slice(0, 4)), month: Number(point.date!.slice(5)), startDate: '', endDate: '' })) }}
           title={`${metric.label} · ${scopeLabel}`}
-          description="Giá trị trung bình theo tháng trong phạm vi đang chọn."
+          description="Trung bình theo tháng trong phạm vi đang chọn. Chọn điểm để xem tháng; khoảng trống biểu thị dữ liệu thiếu."
           points={chartPoints}
           metricLabel={metric.label}
           unit={metric.unit}
@@ -281,6 +258,7 @@ function Dashboard({ data, loading, error, onRetry }: DashboardProps) {
           )}
         </section>
       </div>
+      <PollutionAnalytics {...analytics} filters={filters} onChange={setFilters} onRetry={analytics.retry} />
     </main>
   )
 }

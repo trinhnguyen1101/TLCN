@@ -12,6 +12,24 @@
   gap: 16px;
   padding: 20px 20px 4px;
 }
+.trend-title-row { display: flex; align-items: center; gap: 8px; }
+.info-tooltip {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--color-border-strong);
+  border-radius: 50%;
+  color: var(--color-secondary);
+  background: var(--color-surface-subtle);
+  font-size: .68rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: help;
+}
+.info-tooltip:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.info-tooltip:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
 .ranking-card__header h2 { margin: 4px 0 0; color: var(--color-heading); font-size: 1.02rem; font-weight: 600; }
 .ranking-card__scroll { overflow-x: auto; padding: 4px 12px 12px; }
 .horizontal-bar-chart { display: block; min-width: 0; width: 100%; height: auto; }
