@@ -98,7 +98,7 @@ class ParquetDashboardRepository:
                 "minimum_spatial_coverage": manifest["minimum_coverage"],
                 "minimum_monthly_coverage": 0.75,
                 "note": "Dữ liệu mẫu tạm thời, chưa qua pipeline xử lý và kiểm định chính thức. "
-                        f"Tái phân tích CAMS EAC4, trung bình tháng theo diện tích trên ranh giới {manifest['province_count']} tỉnh hiện có. "
+                        f"Tái phân tích CAMS EAC4, trung bình tháng theo diện tích trên ranh giới {manifest['province_count']} vùng báo cáo; đất liền và quần đảo được tính riêng. "
                         "Các chỉ số *_column là tổng cột khí quyển (mg/m²). "
                         "Không có dữ liệu phát thải theo ngành; không suy AQI từ trung bình tháng.",
             },
