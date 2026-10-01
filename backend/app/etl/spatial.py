@@ -10,6 +10,7 @@ from pyproj import Transformer
 from shapely import make_valid, segmentize
 from shapely.geometry import box, shape
 from shapely.ops import transform
+from app.etl.regions import region_features
 
 AREA_CRS = "EPSG:6933"
 PROJECT = Transformer.from_crs("EPSG:4326", AREA_CRS, always_xy=True).transform
@@ -31,21 +32,17 @@ def equal_area(geometry):
 
 
 def load_provinces(path: Path) -> tuple[list[Province], str]:
-    files = sorted(path.glob("*/*.geojson")) if path.is_dir() else [path]
-    if not files:
-        raise ValueError(f"No province GeoJSON files in {path}")
     provinces, digest = [], hashlib.sha256()
-    for file in files:
-        content = file.read_bytes()
-        digest.update(content)
-        for feature in json.loads(content)["features"]:
-            props = feature["properties"]
-            geometry = make_valid(shape(feature["geometry"]))
-            if geometry.is_empty or geometry.geom_type not in ("Polygon", "MultiPolygon"):
-                raise ValueError(f"Invalid polygon for province {props['code']}")
-            point = geometry.representative_point()
-            provinces.append(Province(str(props["code"]).zfill(2), props["name"], geometry,
-                                      point.y, point.x, equal_area(geometry).area))
+    for feature in region_features(path):
+        digest.update(json.dumps(feature, sort_keys=True, ensure_ascii=False).encode("utf-8"))
+        props = feature["properties"]
+        geometry = make_valid(shape(feature["geometry"]))
+        if geometry.is_empty or geometry.geom_type not in ("Polygon", "MultiPolygon"):
+            raise ValueError(f"Invalid polygon for province {props['code']}")
+        point = geometry.representative_point()
+        region_name = props["fullName"] if props.get("regionKind") == "archipelago" else props["name"]
+        provinces.append(Province(str(props["code"]).zfill(2), region_name, geometry,
+                                  point.y, point.x, equal_area(geometry).area))
     if not provinces:
         raise ValueError("No province features in boundary data")
     provinces.sort(key=lambda p: p.code)
