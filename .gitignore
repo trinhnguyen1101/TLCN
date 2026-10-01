@@ -86,3 +86,7 @@ Desktop.ini
 /backend/data/samples/cams/eac4_provinces/.CURRENT-*
 /backend/data/samples/cams/eac4_provinces/runs/*/observations/
 /backend/data/samples/cams/eac4_provinces/runs/*/weights/
+
+# Ignore heavy landing data directory (allow keeping a placeholder)
+/data/landing/**
+!/data/landing/.gitkeep
