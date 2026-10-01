@@ -22,6 +22,9 @@ interface VietnamProvinceMapProps {
   onLayerVisibilityChange?: (visible: boolean) => void
 }
 
+const MIN_MAP_ZOOM = 4.5
+const VIETNAM_MAP_CENTER: [number, number] = [16.2, 107.7]
+
 // Leaflet creates these controls outside React; Tailwind descendant variants theme them.
 const mapClasses = [
   'w-full min-h-[470px] flex-1 border-t border-border bg-map-background font-sans',
@@ -50,6 +53,36 @@ function MapSizeSync() {
     return () => {
       observer.disconnect()
       cancelAnimationFrame(frame)
+    }
+  }, [map])
+
+  return null
+}
+
+function MinZoomWheelGuard() {
+  const map = useMap()
+
+  useEffect(() => {
+    const container = map.getContainer()
+    const centerVietnamAtMinZoom = () => {
+      if (map.getZoom() <= MIN_MAP_ZOOM) {
+        map.setView(VIETNAM_MAP_CENTER, MIN_MAP_ZOOM, { animate: false })
+      }
+    }
+    const preventScrollAtMinZoom = (event: WheelEvent) => {
+      if (event.deltaY > 0 && map.getZoom() <= MIN_MAP_ZOOM) {
+        event.preventDefault()
+        event.stopImmediatePropagation()
+        centerVietnamAtMinZoom()
+      }
+    }
+
+    map.on('zoomend', centerVietnamAtMinZoom)
+    container.addEventListener('wheel', preventScrollAtMinZoom, { capture: true, passive: false })
+    centerVietnamAtMinZoom()
+    return () => {
+      map.off('zoomend', centerVietnamAtMinZoom)
+      container.removeEventListener('wheel', preventScrollAtMinZoom, true)
     }
   }, [map])
 
@@ -101,8 +134,9 @@ export function VietnamProvinceMap({
 
       <DataState className="flex-1" loading={!geoJson && !error} error={error}>
         {geoJson && (
-          <MapContainer center={[16.2, 107.7]} zoom={5.35} minZoom={0} maxZoom={19} scrollWheelZoom attributionControl={false} className={mapClasses}>
+          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} className={mapClasses}>
             <MapSizeSync />
+            <MinZoomWheelGuard />
             <WorldBasemap />
             <Pane name="province-selection" className="pointer-events-none z-[450]" />
             <ProvinceBoundaryLayer
