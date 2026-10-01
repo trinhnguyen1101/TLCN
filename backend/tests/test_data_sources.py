@@ -124,7 +124,15 @@ async def test_bundled_sample_runs_without_etl():
         response = await client.get("/api/dashboard")
     assert response.status_code == 200
     body = response.json()
-    assert len(body["provinceSnapshots"]) == 34
+    assert len(body["provinceSnapshots"]) == 36
+    regions = {row["provinceCode"]: row for row in body["provinceSnapshots"]}
+    assert {"48", "56", "20333", "22736"} <= regions.keys()
+    assert regions["48"]["provinceName"] == "Đà Nẵng"
+    assert regions["56"]["provinceName"] == "Khánh Hoà"
+    assert regions["20333"]["provinceName"] == "Quần đảo Hoàng Sa (Đà Nẵng, Việt Nam)"
+    assert regions["22736"]["provinceName"] == "Quần đảo Trường Sa (Khánh Hoà, Việt Nam)"
+    assert regions["48"]["pm25"] != regions["20333"]["pm25"]
+    assert regions["56"]["pm25"] != regions["22736"]["pm25"]
     assert body["dashboardTrendRecords"]
     assert body["metadata"]["source"] == "CAMS EAC4 sample"
     assert "Dữ liệu mẫu tạm thời" in body["metadata"]["note"]
