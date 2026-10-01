@@ -172,6 +172,46 @@ scale change to refresh cached responses.
 
 ## Parquet layout and provenance
 
+### Separate mainland and archipelago regions
+
+The default boundary loader (`app/etl/regions.py`) subtracts the supplied
+special-region polygons from their parent provinces before computing weights:
+
+- `48`: Đà Nẵng; `20333`: Quần đảo Hoàng Sa (Đà Nẵng, Việt Nam).
+- `56`: Khánh Hoà; `22736`: Quần đảo Trường Sa (Khánh Hoà, Việt Nam).
+
+Nearby coastal islands remain in the mainland reporting region. These are
+reporting identities, not a change to administrative province codes. The default
+CAMS sample now has 36 reporting regions. Each has its own area denominator,
+grid intersections, coverage checks and monthly series. Missing offshore grid
+coverage stays null; it never falls back to the parent province's value.
+
+`app/etl/spatial.py` computes fractional cell overlap in EPSG:6933 and aggregates
+only valid values, requiring 95% spatial coverage. The API also requires 75%
+monthly temporal coverage. Existing combined averages cannot be split correctly
+after aggregation, so rebuild from the supplied GRIB sample:
+
+```powershell
+$env:PYTHONPATH = 'backend'
+backend/.venv/Scripts/python -m app.etl.export_regions
+backend/.venv/Scripts/python -m app.etl.eac4
+```
+
+If only display labels change, run `python -m app.etl.relabel` with
+`PYTHONPATH=backend`. It publishes a new generation with the same observations
+and numeric monthly values, updating region names in the manifest and serving
+tables.
+
+The map exporter uses the same region boundaries and identifiers as the ETL.
+`frontend/src/features/geography/ProvinceBoundaryLayer.tsx` selects each polygon
+and joins its metrics by feature ID. A custom `--boundaries` GeoJSON file is
+treated as an already prepared reporting-region collection; the default directory
+loader performs the split using `wards/20333_hoang_sa.geojson` and
+`wards/22736_truong_sa.geojson`. Boundary hashes cover the resulting features.
+
+The row counts below describe the older 34-province generation; inspect the
+active generation's manifest for current counts and coverage.
+
 ```text
 backend/data/samples/cams/eac4_provinces/
 ├── CURRENT                         # published generation UUID
