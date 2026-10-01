@@ -67,7 +67,7 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metric, colo
             }}
           >
             <Tooltip sticky className="rounded-lg border-border bg-surface px-3.5 py-[11px] font-sans text-[.75rem] leading-[1.9] text-secondary shadow-[0_4px_16px_rgb(0_0_0/32%)] [&.leaflet-tooltip-left]:before:border-l-surface [&.leaflet-tooltip-right]:before:border-r-surface [&.leaflet-tooltip-top]:before:border-t-surface [&.leaflet-tooltip-bottom]:before:border-b-surface">
-              <strong className="font-semibold text-heading">{feature.properties.name}</strong><br />
+              <strong className="font-semibold text-heading">{feature.properties.fullName}</strong><br />
               {metrics ? <>
                 AQI: {metrics.aqi ?? 'Chưa có dữ liệu'} {metrics.status ?? ''}<br />
                 PM1: {metrics.pm1?.toFixed(1) ?? '—'} µg/m³<br />
