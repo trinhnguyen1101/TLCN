@@ -28,7 +28,7 @@ export function DashboardFilters({ years, pollutantOptions, dataReady = true, va
 
       <div className="grid grid-cols-[1.3fr_1fr_.8fr_.9fr_1.15fr_1.15fr_1.3fr] gap-3.5 max-[1250px]:grid-cols-4 max-[760px]:grid-cols-2 max-[480px]:grid-cols-1">
         <Field>
-          Tỉnh / thành
+          Tỉnh / thành / quần đảo
           <Select disabled={!dataReady} value={value.provinceCode} onChange={(event) => update('provinceCode', event.target.value as DashboardFiltersValue['provinceCode'])}>
             <option value="all">Toàn quốc</option>
             {provinces.map((province) => <option key={province.provinceCode} value={province.provinceCode}>{province.provinceName}</option>)}
