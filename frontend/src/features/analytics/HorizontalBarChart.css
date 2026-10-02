@@ -10,7 +10,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 16px;
-  padding: 20px 20px 4px;
+  padding: 16px 16px 4px;
 }
 .ranking-card__header h2 { margin: 4px 0 0; color: var(--color-heading); font-size: 1.02rem; font-weight: 600; }
 .ranking-card__scroll { overflow-x: auto; padding: 4px 12px 12px; }
@@ -28,5 +28,5 @@
 .horizontal-bar-chart__row.is-selected .horizontal-bar-chart__track { stroke: var(--color-accent); stroke-width: 2px; }
 @media (max-width: 620px) {
   .ranking-card__header { align-items: flex-start; flex-direction: column; padding: 16px 16px 4px; }
-  .horizontal-bar-chart { min-width: 520px; }
+  .horizontal-bar-chart { min-width: 0; }
 }

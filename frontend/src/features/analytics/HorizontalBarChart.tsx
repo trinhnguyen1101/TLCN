@@ -1,4 +1,5 @@
 import { useId } from 'react'
+import { DashboardSkeleton } from '../../components/dashboard/DashboardSkeleton'
 import { DataState } from '../../components/dashboard/DataState'
 import { ExportActions } from '../../components/dashboard/ExportActions'
 import './HorizontalBarChart.css'
@@ -10,6 +11,9 @@ export interface HorizontalBarPoint {
 }
 
 interface HorizontalBarChartProps {
+  compact?: boolean
+  dataReady?: boolean
+  loading?: boolean
   eyebrow: string
   title: string
   description: string
@@ -29,9 +33,10 @@ const TOP = 22
 
 const shortenLabel = (label: string) => label.length > 22 ? `${label.slice(0, 21)}…` : label
 
-export function HorizontalBarChart({ eyebrow, title, description, points, unit, fileName, selectedId, onSelect }: HorizontalBarChartProps) {
+export function HorizontalBarChart({ compact = false, dataReady = true, loading = false, eyebrow, title, description, points, unit, fileName, selectedId, onSelect }: HorizontalBarChartProps) {
   const chartId = `bars-${useId().replaceAll(':', '')}`
-  const maxValue = Math.max(...points.map((point) => point.value), 1)
+  const maxValue = Math.max(...points.map((point) => Math.abs(point.value)), 1)
+  const hasNegative = points.some((point) => point.value < 0)
   const height = Math.max(170, TOP * 2 + points.length * (BAR_HEIGHT + ROW_GAP) - ROW_GAP)
   const barAreaWidth = WIDTH - LABEL_WIDTH - VALUE_WIDTH
 
@@ -39,10 +44,7 @@ export function HorizontalBarChart({ eyebrow, title, description, points, unit, 
     <section className="ranking-card" aria-labelledby={`${chartId}-title`}>
       <div className="ranking-card__header">
         <div>
-          <div className="trend-title-row">
-            <p className="eyebrow">{eyebrow}</p>
-            <span className="info-tooltip" tabIndex={0} aria-label={description}>i<span role="tooltip">{description}</span></span>
-          </div>
+          <p className="text-xs text-muted">{eyebrow}</p>
           <h2 id={`${chartId}-title`}>{title}</h2>
         </div>
         <ExportActions
@@ -52,13 +54,14 @@ export function HorizontalBarChart({ eyebrow, title, description, points, unit, 
         />
       </div>
 
-      <DataState isEmpty={points.length === 0} emptyMessage="Không có dữ liệu xếp hạng theo bộ lọc hiện tại.">
+      {!dataReady ? <DashboardSkeleton variant="chart" loading={loading} /> : <DataState isEmpty={points.length === 0} emptyMessage="Không có dữ liệu xếp hạng theo bộ lọc hiện tại.">
         <div className="ranking-card__scroll">
-          <svg id={chartId} className="horizontal-bar-chart" viewBox={`0 0 ${WIDTH} ${height}`} role="img" aria-label={`${title}. ${points.length} mục dữ liệu.`}>
+          <svg id={chartId} className={`horizontal-bar-chart ${compact ? 'max-h-[175px]' : 'max-h-[300px]'}`} viewBox={`0 0 ${WIDTH} ${height}`} role="img" aria-label={`${title}. ${points.length} mục dữ liệu.`}><desc>{description}</desc>
             <rect className="horizontal-bar-chart__background" width={WIDTH} height={height} />
             {points.map((point, index) => {
               const y = TOP + index * (BAR_HEIGHT + ROW_GAP)
-              const width = Math.max(4, (point.value / maxValue) * barAreaWidth)
+              const width = Math.max(0, (Math.abs(point.value) / maxValue) * barAreaWidth / (hasNegative ? 2 : 1))
+              const baseline = LABEL_WIDTH + (hasNegative ? barAreaWidth / 2 : 0)
               const isSelected = selectedId === point.id
               return (
                 <g
@@ -78,14 +81,15 @@ export function HorizontalBarChart({ eyebrow, title, description, points, unit, 
                   <title>{point.label}: {point.value.toLocaleString('vi-VN')} {unit}</title>
                   <text x={LABEL_WIDTH - 14} y={y + 22} textAnchor="end">{index + 1}. {shortenLabel(point.label)}</text>
                   <rect className="horizontal-bar-chart__track" x={LABEL_WIDTH} y={y} width={barAreaWidth} height={BAR_HEIGHT} />
-                  <rect className="horizontal-bar-chart__bar" x={LABEL_WIDTH} y={y} width={width} height={BAR_HEIGHT} />
+                  <rect className="horizontal-bar-chart__bar" x={point.value < 0 ? baseline - width : baseline} y={y} width={width} height={BAR_HEIGHT} />
+                  {hasNegative && <line x1={baseline} x2={baseline} y1={y} y2={y + BAR_HEIGHT} stroke="#a3b2c7" />}
                   <text className="horizontal-bar-chart__value" x={LABEL_WIDTH + barAreaWidth + 12} y={y + 22}>{point.value.toLocaleString('vi-VN')}</text>
                 </g>
               )
             })}
           </svg>
         </div>
-      </DataState>
+      </DataState>}
     </section>
   )
 }
