@@ -1,10 +1,10 @@
-export type AirQualityStatus = 'Tốt' | 'Trung bình' | 'Kém' | 'Xấu'
+export type AirQualityStatus = 'Tốt' | 'Trung bình' | 'Kém' | 'Xấu' | 'Rất xấu' | 'Nguy hại'
 
-export type Pollutant = 'pm25' | 'pm10' | 'o3' | 'no2' | 'so2' | 'co' | 'pm1' | 'aod550' | 'o3Column' | 'no2Column' | 'so2Column' | 'coColumn' | 't2m' | 'd2m' | 'sp' | 'mslp' | 'u10' | 'v10'
+export type Pollutant = 'aqi' | 'pm25' | 'pm10' | 'o3' | 'no2' | 'so2' | 'co' | 'pm1' | 'aod550' | 'o3Column' | 'no2Column' | 'so2Column' | 'coColumn' | 't2m' | 'd2m' | 'sp' | 'mslp' | 'u10' | 'v10'
 
 export type ProvinceCode = string
 
-export interface ProvinceSnapshot {
+export interface ProvinceSnapshot extends Partial<Record<Pollutant, number | null>> {
   provinceCode: ProvinceCode
   provinceName: string
   aqi: number | null
@@ -58,6 +58,7 @@ export interface DashboardFiltersValue {
 }
 
 export interface DashboardTrendRecord {
+  aqi?: number | null
   provinceCode: ProvinceCode
   date: string
   pm25: number | null
