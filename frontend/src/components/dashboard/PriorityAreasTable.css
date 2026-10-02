@@ -1,6 +1,6 @@
 .priority-areas {
   overflow: hidden;
-  margin-top: 18px;
+  margin-top: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
   background: var(--color-surface);
@@ -18,12 +18,12 @@
 .priority-areas__header h2 { margin: 4px 0 7px; color: var(--color-heading); font-size: clamp(1.05rem, 2vw, 1.25rem); line-height: 1.25; }
 .priority-areas__header > div > p:last-child { max-width: 720px; margin: 0; color: var(--color-muted); font-size: .78rem; line-height: 1.45; }
 .priority-areas__note { flex: 0 0 auto; border: 1px solid var(--color-border); border-radius: 999px; padding: 7px 10px; color: var(--color-secondary); background: var(--color-surface); font-size: .68rem; }
-.priority-areas__scroll { overflow-x: auto; }
+.priority-areas__scroll { max-height: 350px; overflow: auto; }
 .priority-areas table { width: 100%; min-width: 1030px; border-collapse: collapse; }
 .priority-areas th, .priority-areas td { border-right: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); padding: 13px 12px; text-align: left; vertical-align: middle; }
 .priority-areas tr > :last-child { border-right: 0; }
 .priority-areas tbody tr:last-child > * { border-bottom: 0; }
-.priority-areas thead th { color: var(--color-muted); background: var(--color-surface-subtle); font-size: .68rem; font-weight: 600; letter-spacing: .02em; line-height: 1.35; text-transform: uppercase; }
+.priority-areas thead th { position: sticky; top: 0; z-index: 1; color: var(--color-muted); background: var(--color-surface-subtle); font-size: .68rem; font-weight: 600; letter-spacing: .02em; line-height: 1.35; text-transform: uppercase; }
 .priority-areas tbody tr:nth-child(even) { background: rgb(255 255 255 / 2%); }
 .priority-areas tbody tr:hover, .priority-areas tbody tr.is-selected { background: var(--color-accent-soft); }
 .priority-areas tbody th { width: 178px; }
@@ -44,7 +44,7 @@
 .priority-trend--steady { color: var(--color-secondary); }
 @media (max-width: 760px) {
   .priority-areas__header { flex-direction: column; padding: 16px; }
-  .priority-areas__scroll { overflow: visible; padding: 12px; }
+  .priority-areas__scroll { max-height: 420px; overflow: auto; padding: 12px; }
   .priority-areas table { min-width: 0; }
   .priority-areas thead { position: absolute; overflow: hidden; width: 1px; height: 1px; clip: rect(0 0 0 0); white-space: nowrap; }
   .priority-areas tbody { display: grid; gap: 12px; }

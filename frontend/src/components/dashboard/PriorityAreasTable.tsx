@@ -1,6 +1,7 @@
-import { useId } from 'react'
+import { useId, useMemo, useState } from 'react'
 import type { PriorityArea, ProvinceCode } from '../../types/dashboard'
 import { formatDecimal } from '../../utils/formatters'
+import { Field, Select } from '../ui/FormControls'
 import { DataState } from './DataState'
 import './PriorityAreasTable.css'
 
@@ -18,6 +19,9 @@ const trendMeta: Record<NonNullable<PriorityArea['trend']>, { icon: string; labe
 }
 
 export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSelect }: PriorityAreasTableProps) {
+  const [search, setSearch] = useState('')
+  const [sort, setSort] = useState('pm25-desc')
+  const displayed = useMemo(() => areas.filter((area) => area.provinceName.toLocaleLowerCase('vi').includes(search.toLocaleLowerCase('vi'))).sort((a, b) => sort === 'name' ? a.provinceName.localeCompare(b.provinceName, 'vi') : sort === 'pm25-asc' ? (a.pm25Average ?? Infinity) - (b.pm25Average ?? Infinity) : (b.pm25Average ?? -Infinity) - (a.pm25Average ?? -Infinity)), [areas, search, sort])
   const titleId = `priority-areas-${useId().replaceAll(':', '')}`
 
   return (
@@ -31,8 +35,12 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
         <span className="priority-areas__note">Không chấm điểm ưu tiên</span>
       </div>
 
-      <DataState isEmpty={areas.length === 0} emptyMessage="Không có khu vực phù hợp với bộ lọc hiện tại.">
-        <div className="priority-areas__scroll">
+      <div className="grid grid-cols-2 gap-3 border-b border-border p-3">
+        <Field>Tìm tỉnh / thành<input type="search" value={search} onChange={(event) => setSearch(event.target.value)} className="h-10 w-full min-w-0 rounded-md border border-border-strong bg-surface px-3 text-xs text-ink focus-visible:outline-2 focus-visible:outline-accent" /></Field>
+        <Field>Sắp xếp<Select aria-label="Sắp xếp" value={sort} onChange={(event) => setSort(event.target.value)}><option value="pm25-desc">PM2.5 cao đến thấp</option><option value="pm25-asc">PM2.5 thấp đến cao</option><option value="name">Tên tỉnh A–Z</option></Select></Field>
+      </div>
+      <DataState isEmpty={displayed.length === 0} emptyMessage="Không có khu vực phù hợp với bộ lọc hiện tại.">
+        <div className="priority-areas__scroll" tabIndex={0} role="region" aria-label="Bảng khu vực ưu tiên">
           <table>
             <thead>
               <tr>
@@ -46,7 +54,7 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
               </tr>
             </thead>
             <tbody>
-              {areas.map((area) => {
+              {displayed.map((area) => {
                 const trend = area.trend ? trendMeta[area.trend] : { icon: '—', label: 'Chưa có dữ liệu' }
                 const isSelected = selectedProvinceCode === area.provinceCode
                 const yoyClass = (area.yearOverYearPercent ?? 0) >= 10

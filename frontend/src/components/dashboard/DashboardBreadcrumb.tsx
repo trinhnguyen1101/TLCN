@@ -6,7 +6,7 @@ interface DashboardBreadcrumbProps {
 
 export function DashboardBreadcrumb({ items }: DashboardBreadcrumbProps) {
   return (
-    <nav className="my-[22px]" aria-label="Vị trí phân tích">
+    <nav className="my-3" aria-label="Vị trí phân tích">
       <ol className="flex list-none flex-wrap items-center gap-[9px] p-0">
         {items.map((item, index) => (
           <li key={item.id} className="inline-flex items-center gap-[9px] text-[.78rem] text-muted">
