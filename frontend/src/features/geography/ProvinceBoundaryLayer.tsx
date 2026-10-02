@@ -3,11 +3,13 @@ import { GeoJSON, Tooltip } from 'react-leaflet'
 import type { Path, PolylineOptions } from 'leaflet'
 import type { ProvinceSnapshot } from '../../types/dashboard'
 import type { ProvinceFeatureCollection } from './provinceMapData'
-import { concentrationColor, type MapColorScale, type MapMetric } from './mapColorScale'
+import { METRIC_META } from '../../services/dashboardSelectors'
+import { aqiLevel, concentrationColor, type MapColorScale, type MapMetric } from './mapColorScale'
 
 interface ProvinceBoundaryLayerProps {
   data: ProvinceFeatureCollection
   selectedProvinceCode: string
+  metricUnit: string
   metric: MapMetric
   colorScale: MapColorScale | null
   layerVisible: boolean
@@ -21,7 +23,7 @@ const selectedProvinceStyle: PolylineOptions = {
 }
 
 function getProvinceStyle(metrics: ProvinceSnapshot | undefined, metric: MapMetric, layerVisible: boolean, colorScale: MapColorScale | null): PolylineOptions {
-  const fillColor = concentrationColor(metrics?.[metric], colorScale)
+  const fillColor = concentrationColor(metrics?.[metric], colorScale) ?? (metric !== 'aqi' && typeof metrics?.[metric] === 'number' && Number.isFinite(metrics[metric]) ? 'var(--color-accent)' : null)
   if (!fillColor || !layerVisible) {
     return { color: 'var(--color-map-province-border)', fillColor: 'var(--color-map-province-fill)', fillOpacity: layerVisible ? .65 : .18, weight: 1, smoothFactor: 0, className: 'focus:outline-none focus-visible:stroke-accent focus-visible:stroke-3' }
   }
@@ -29,7 +31,7 @@ function getProvinceStyle(metrics: ProvinceSnapshot | undefined, metric: MapMetr
 }
 
 // The parent keys this layer by the dashboard selection so filters reset local selection.
-export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metric, colorScale, layerVisible, metricsByProvince, onProvinceSelect }: ProvinceBoundaryLayerProps) {
+export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, metric, colorScale, layerVisible, metricsByProvince, onProvinceSelect }: ProvinceBoundaryLayerProps) {
   const [highlightedCode, setHighlightedCode] = useState(selectedProvinceCode)
   const highlightedFeature = data.features.find((feature) => feature.id === highlightedCode)
 
@@ -69,10 +71,8 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metric, colo
             <Tooltip sticky className="rounded-lg border-border bg-surface px-3.5 py-[11px] font-sans text-[.75rem] leading-[1.9] text-secondary shadow-[0_4px_16px_rgb(0_0_0/32%)] [&.leaflet-tooltip-left]:before:border-l-surface [&.leaflet-tooltip-right]:before:border-r-surface [&.leaflet-tooltip-top]:before:border-t-surface [&.leaflet-tooltip-bottom]:before:border-b-surface">
               <strong className="font-semibold text-heading">{feature.properties.fullName}</strong><br />
               {metrics ? <>
-                AQI: {metrics.aqi ?? 'Chưa có dữ liệu'} {metrics.status ?? ''}<br />
-                PM1: {metrics.pm1?.toFixed(1) ?? '—'} µg/m³<br />
-                PM2.5: {metrics.pm25?.toFixed(1) ?? '—'} µg/m³<br />
-                PM10: {metrics.pm10?.toFixed(1) ?? '—'} µg/m³
+                <span style={{ color: aqiLevel(metrics.aqi)?.color }}>AQI: {metrics.aqi == null ? 'Chưa có dữ liệu' : Math.round(metrics.aqi)} {aqiLevel(metrics.aqi)?.label}</span><br />
+                {metric !== 'aqi' && <>{METRIC_META[metric].label}: {metrics[metric]?.toLocaleString('vi-VN', { maximumFractionDigits: 3 }) ?? 'Chưa có dữ liệu'} {metricUnit}</>}
               </> : 'Chưa có dữ liệu'}
             </Tooltip>
           </GeoJSON>
