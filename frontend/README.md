@@ -16,6 +16,7 @@ npm run dev
 
 ```sh
 npm run lint
+npm test
 npm run build
 npm run preview
 ```
@@ -26,7 +27,7 @@ API proxy.
 The request is shared across React StrictMode mounts; filter/map interactions
 use the same in-memory response without additional API requests. The dashboard
 layout and local GeoJSON map render independently of that request. While it is
-pending, data cards, chart, comparison and emissions show animated skeletons
+pending, KPI cards, charts, comparison and emissions show animated skeletons
 (respecting reduced-motion preferences). A failed request leaves static
 placeholders and an inline error with a retry button; it never replaces the
 whole dashboard. The request has a 15-second timeout.
@@ -48,8 +49,12 @@ FastAPI, preserving the prefix.
 
 - `src/main.tsx`: React entry point and global stylesheet import.
 - `src/App.tsx`: application-level route selection for `/user` and `/admin`.
-- `src/pages/user/UserDashboard.tsx`: user dashboard composition and derived values.
-- `src/pages/admin/AdminDashboard.tsx`: management dashboard presentation and filters.
+- `src/pages/user/UserDashboard.tsx`: map-first monitoring, current AQI, compact pollutants and one trend.
+- `src/pages/admin/AdminDashboard.tsx`: five KPIs, smaller map with adjacent trend/ranking, and analytics tabs.
+- `src/pages/admin/AdminAnalytics.tsx`: overview/comparison, pollutants, provinces, emissions, QCVN and data quality panels.
+- `src/services/dashboardSelectors.ts`: shared period, province and metric selectors; no generated readings.
+- `src/services/adminDashboardModel.ts`: scoped YoY, emissions and annual exceedance summaries.
+- `tests/dashboard-model.test.mjs`: selector regression checks run by `npm test` with existing TypeScript tooling.
 - `src/components/dashboard/`: dashboard controls, comparison, loading/error states, and exports.
 - `src/components/ui/`: reusable buttons and form controls.
 - `src/features/analytics/`: interactive trend chart.
@@ -69,7 +74,7 @@ Directories containing `.gitkeep` are intentional placeholders and are retained.
 
 Use Tailwind utility classes in React components. The Vite integration follows the [official Tailwind setup](https://tailwindcss.com/docs/installation/using-vite).
 
-- `src/index.css` is the single stylesheet entry: Tailwind imports, theme tokens, and Leaflet's vendor stylesheet. Do not add component stylesheets or custom selector rules.
+- `src/index.css` is the stylesheet entry for Tailwind, theme tokens and Leaflet. Dashboard layouts and shared controls use Tailwind; the existing ranking chart and priority table retain their component stylesheets.
 - Theme tokens use `@theme`, for example `bg-surface`, `text-accent`, `border-border`, `rounded-card`, and `shadow-card`.
 - `src/components/ui/Button.tsx` provides buttons and segmented controls. `FormControls.tsx` provides labeled fields, selects, and date inputs. These include focus, disabled, and reduced-motion states.
 - Keep conditional utility names complete so Tailwind can detect them at build time. Use `aria-pressed` for segmented control selection.
@@ -97,3 +102,35 @@ The frontend consumes these prepared GeoJSON files directly; there is no generat
 The generated asset has 176 country features and 23,839 positions, about 504 KiB uncompressed (172 KiB gzipped). The background is fetched once from the app's own origin and cached in memory. Its geometry stays mounted across province filters and metric changes. Panning and zooming make no additional background requests. Loading runs independently of province data; a failed background request leaves the province layer and dashboard controls available. The background pane sits below province boundaries and does not receive pointer events.
 
 Local Chromium validation covered one background request across filter changes, pan and zoom; absence of image tiles and external map requests; gray country styling; province keyboard selection; widths down to 320px; and slow/failed background loading. With 4x CPU throttling, three runs before and after border alignment measured a pan/zoom frame interval at the 95th percentile of about 17 ms. Province rendering was ready in approximately 0.60–0.62 s in both versions; the maximum observed frame interval increased from 50 ms to 67 ms. These are local measurements, not a guarantee for every device.
+
+## Dashboard behavior
+
+Both routes share a sticky filter toolbar. Below 768px it collapses to a button;
+open it to edit filters. Province selection, pollutant, year/month and custom
+range feed the same selectors for metrics, charts, map values and tables.
+The map keeps the national view while highlighting the selected province.
+It stays mounted through tab changes, exports, and request retry.
+
+User monitoring defaults to the source snapshot (not a claim of live readings),
+with a 550–600px desktop map and the latest 12 monthly trend points. Choose a
+year or a date range to inspect history. AQI is selectable when supplied; a
+historical period without AQI never inherits the latest snapshot AQI. Snapshot
+pollutants without fields stay unavailable. The source does not identify a
+dominant pollutant or provide an update timestamp separate from its data period.
+
+Admin defaults to the latest available year, with five compact KPIs and a 400px
+desktop map next to time-series and province ranking charts. Advanced panels
+appear one at a time in accessible tabs. Province ranking uses the selected
+metric. The priority table retains its PM2.5-specific columns and supports search,
+sorting and internal scrolling; emission details also scroll internally.
+Sector filtering applies to emission panels, while province/period applies to
+all panels. Weather/column metrics remain available on Admin when supported.
+
+AQI uses six shared color levels across its map, tooltip, summary and KPI.
+Concentration maps use a separate blue palette and source-supplied cutoffs.
+Without cutoffs, available values use a single neutral accent and tooltip values;
+no thresholds or AQI are inferred. Data quality counts finite values in received
+records, not absent upstream observations or station availability. Annual
+exceedance totals are shown only for a complete year selection and are never
+prorated. The QCVN panel awaits source thresholds, averaging intervals and the
+applicable standard version before claiming compliance.
