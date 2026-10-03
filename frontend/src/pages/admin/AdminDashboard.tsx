@@ -32,8 +32,8 @@ export function AdminDashboard() {
 
   return <main className="mx-auto w-full max-w-[1800px] px-8 pt-6 pb-8 max-md:px-4 max-md:pt-4">
     <header className="mb-3 flex flex-wrap items-center justify-between gap-3">
-      <div><p className="text-[.7rem] font-semibold tracking-wider text-muted">AIR QUALITY INTELLIGENCE · ADMIN</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Tổng quan điều hành</h1></div>
-      <span className="rounded-full border border-border px-3 py-1.5 text-xs text-muted">{data?.metadata?.source ?? 'Giám sát & phân tích'}</span>
+      <div><p className="text-[.7rem] font-semibold tracking-wider text-accent">AIR QUALITY INTELLIGENCE · ADMIN</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Tổng quan điều hành</h1></div>
+      <span className="rounded-full border border-accent-border bg-accent-soft px-3 py-1.5 text-xs text-accent">{data?.metadata?.source ?? 'Giám sát & phân tích'}</span>
     </header>
     <DashboardBreadcrumb items={[{ id: 'country', label: 'Việt Nam', onSelect: filters.provinceCode === 'all' ? undefined : () => selectProvinceCode('all') }, ...(filters.provinceCode === 'all' ? [] : [{ id: 'province', label: scopeLabel }]), { id: 'period', label: period }]} />
     {error && <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger/25 bg-danger-soft p-4 text-sm text-danger" role="alert"><span>{error}</span><Button onClick={retry}>Thử lại</Button></div>}
@@ -41,7 +41,7 @@ export function AdminDashboard() {
     <DashboardFilters variant="admin" value={filters} years={view.years} pollutantOptions={view.pollutantOptions} dataReady={Boolean(data)} provinces={data?.provinceSnapshots ?? []} sectors={data?.emissionSectors ?? []} onChange={setFilters} onReset={() => setFilters({})} />
     <section className="mb-4 grid grid-cols-5 gap-3 max-[1199px]:grid-cols-3 max-md:grid-cols-2" aria-label="Chỉ số điều hành chính" aria-busy={loading}>
       <KpiCard icon="chart" label={`${metric.label} trung bình`} value={formatDecimal(monitoring.metrics[selectedPollutant], metric.unit)} detail={scopeLabel} tone="yellow" loading={loading} />
-      <KpiCard icon="air" label="AQI trung bình" value={formatDecimal(view.currentAqi)} detail={aqi?.label ?? 'Nguồn chưa cung cấp AQI'} valueColor={aqi?.color} loading={loading} />
+      <KpiCard icon="air" label="AQI trung bình" value={formatDecimal(view.currentAqi)} detail={aqi?.label ?? 'Nguồn chưa cung cấp AQI'} valueColor={aqi?.textColor} loading={loading} />
       <KpiCard icon="location" label={`Tỉnh có ${metric.label} cao nhất`} value={monitoring.ranking[0]?.label ?? 'Chưa có dữ liệu'} detail={monitoring.ranking[0] ? formatDecimal(monitoring.ranking[0].value, metric.unit) : period} loading={loading} />
       <KpiCard icon="layers" label={`Tỉnh có dữ liệu ${metric.label}`} value={data ? `${monitoring.reportingProvinces}` : 'Chưa có dữ liệu'} detail="Trong phạm vi bộ lọc" loading={loading} />
       <KpiCard icon="chart" label="YoY PM2.5" value={view.yoy === null ? 'Chưa có dữ liệu' : `${view.yoy > 0 ? '+' : ''}${view.yoy.toFixed(1)}%`} detail={filters.year === 'all' ? 'Chọn một năm để so sánh cùng kỳ' : `So với cùng kỳ ${filters.year - 1}`} trend={view.yoy === null ? 'neutral' : view.yoy > 0 ? 'up' : 'down'} loading={loading} />

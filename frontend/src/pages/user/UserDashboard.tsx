@@ -28,10 +28,10 @@ export default function UserDashboard() {
   return <main className="mx-auto w-full max-w-[1800px] px-8 pt-6 pb-8 max-md:px-4 max-md:pt-4">
     <header className="mb-3 flex flex-wrap items-center justify-between gap-3">
       <div className="flex items-center gap-3">
-        <span className="rounded-xl border border-accent-border bg-accent-soft p-3 text-accent"><DashboardIcon name="air" /></span>
-        <div><p className="text-[.7rem] font-semibold tracking-wider text-muted">AIR QUALITY · VIỆT NAM</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Chất lượng không khí</h1></div>
+        <span className="rounded-2xl bg-accent p-3 text-surface shadow-control"><DashboardIcon name="air" /></span>
+        <div><p className="text-[.7rem] font-semibold tracking-wider text-accent">AIR QUALITY · VIỆT NAM</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Chất lượng không khí</h1></div>
       </div>
-      <span className="rounded-full border border-border px-3 py-1.5 text-xs text-muted">{data?.metadata?.source ?? 'Theo dõi không khí'}</span>
+      <span className="rounded-full border border-accent-border bg-accent-soft px-3 py-1.5 text-xs text-accent">{data?.metadata?.source ?? 'Theo dõi không khí'}</span>
     </header>
     <DashboardBreadcrumb items={[{ id: 'country', label: 'Việt Nam', onSelect: filters.provinceCode === 'all' ? undefined : () => setFilters((value) => ({ ...value, provinceCode: 'all' })) }, ...(filters.provinceCode === 'all' ? [] : [{ id: 'province', label: view.scopeLabel }])]} />
     {error && <div role="alert" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger/25 bg-danger-soft p-4 text-sm text-danger"><p>{error}</p><Button onClick={retry}>Thử lại</Button></div>}
@@ -42,7 +42,7 @@ export default function UserDashboard() {
       <aside className="grid min-w-0 gap-4 max-[1023px]:grid-cols-2 max-[640px]:grid-cols-1">
         <AQISummaryCard aqi={view.aqi} scopeLabel={view.scopeLabel} period={period} snapshotDate={current ? data?.metadata?.snapshotDate : null} loading={loading} />
         <section className="min-w-0" aria-label="Các chất ô nhiễm chính"><h2 className="mb-3 text-sm font-semibold text-heading">Chất ô nhiễm chính</h2><PollutantMetrics metrics={view.metrics} metadata={data?.metadata?.metrics} selected={pollutant} onSelect={selectPollutant} /><p className="mt-2 text-[.7rem] leading-relaxed text-muted">{current ? 'Giá trị từ bản ghi mới nhất; trường chưa có được để trống.' : 'Nồng độ trung bình trong kỳ đang chọn.'}</p></section>
-        <p className="rounded-lg border border-border bg-surface-subtle p-3 text-xs leading-relaxed text-muted max-[1023px]:col-span-full">Chọn tỉnh trên bản đồ để xem thông tin khu vực. Màu nồng độ và mức AQI có chú giải riêng.</p>
+        <p className="rounded-xl border border-accent-border bg-accent-soft p-3 text-xs leading-relaxed text-secondary max-[1023px]:col-span-full">Chọn tỉnh trên bản đồ để xem thông tin khu vực. Màu nồng độ và mức AQI có chú giải riêng.</p>
       </aside>
     </div>
     <div className="mt-4"><TrendChart dataReady={Boolean(data)} loading={loading} title={`${view.metric.label} · ${view.scopeLabel}`} description="Trung bình theo tháng. Bản ghi mới nhất hiển thị xu hướng 12 tháng gần nhất; chọn năm hoặc khoảng ngày để xem lịch sử." points={current ? view.chartPoints.slice(-12) : view.chartPoints} metricLabel={view.metric.label} unit={view.metric.unit} fileName={`xu-huong-${pollutant}-${filters.provinceCode}`} /></div>
