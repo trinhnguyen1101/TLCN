@@ -74,12 +74,13 @@ Directories containing `.gitkeep` are intentional placeholders and are retained.
 
 Use Tailwind utility classes in React components. The Vite integration follows the [official Tailwind setup](https://tailwindcss.com/docs/installation/using-vite).
 
-- `src/index.css` is the stylesheet entry for Tailwind, theme tokens and Leaflet. Dashboard layouts and shared controls use Tailwind; the existing ranking chart and priority table retain their component stylesheets.
+- `src/index.css` is the stylesheet entry for Tailwind, theme tokens and Leaflet. All application styling uses Tailwind utilities, including the ranking chart and responsive priority table; no component stylesheets are needed.
 - Theme tokens use `@theme`, for example `bg-surface`, `text-accent`, `border-border`, `rounded-card`, and `shadow-card`.
+- The dashboard uses a single light theme with a pale mint page, white cards, dark green text and teal controls/charts. Active controls, the AQI summary and important KPIs use teal, AQI-colored or amber highlights. The light blue map has neutral land and a dark blue selected-province outline. Missing/unclassified readings remain neutral. AQI map colors run from green to deep red; companion text colors preserve readability on light cards and tooltips.
 - `src/components/ui/Button.tsx` provides buttons and segmented controls. `FormControls.tsx` provides labeled fields, selects, and date inputs. These include focus, disabled, and reduced-motion states.
 - Keep conditional utility names complete so Tailwind can detect them at build time. Use `aria-pressed` for segmented control selection.
 - Leaflet's vendor stylesheet is imported into the `components` layer so Tailwind utilities can override it. Map controls and tooltips use Tailwind descendant variants. Leaflet still handles geographic geometry, positioning, and dynamic path styles; those styles reference the same `--color-*` theme tokens.
-- The trend chart retains SVG presentation attributes so exported SVG files work independently of the dashboard stylesheet.
+- Charts use the shared theme tokens. SVG export resolves computed colors, strokes, gradients and typography so downloads work independently of the dashboard stylesheet.
 
 ## Province map boundaries
 
@@ -91,7 +92,7 @@ Clicking a province draws its geometry in a separate, non-interactive highlight 
 
 ## World basemap
 
-`WorldBasemap.tsx` draws a muted gray, non-interactive vector background from `public/data/world-countries.geojson`. It contains country outlines only: no roads, place labels, satellite images, or provincial boundaries outside Vietnam. Vietnam is excluded from the background and drawn exclusively from the existing detailed province asset above it.
+`WorldBasemap.tsx` draws pale neutral land on a light blue sea, using a non-interactive vector background from `public/data/world-countries.geojson`. It contains country outlines only: no roads, place labels, satellite images, or provincial boundaries outside Vietnam. Vietnam is excluded from the background and drawn exclusively from the existing detailed province asset above it.
 
 The background source is [Natural Earth Admin 0 at 1:110m](https://www.naturalearthdata.com/downloads/110m-cultural-vectors/110m-admin-0-countries/), pinned to the `v5.1.2` repository release. Natural Earth data is [public domain](https://www.naturalearthdata.com/about/terms-of-use/). Its coarse Vietnam outline differs from the province dataset, so using it directly would leave gaps and overlaps along the land border.
 
@@ -101,7 +102,7 @@ The frontend consumes these prepared GeoJSON files directly; there is no generat
 
 The generated asset has 176 country features and 23,839 positions, about 504 KiB uncompressed (172 KiB gzipped). The background is fetched once from the app's own origin and cached in memory. Its geometry stays mounted across province filters and metric changes. Panning and zooming make no additional background requests. Loading runs independently of province data; a failed background request leaves the province layer and dashboard controls available. The background pane sits below province boundaries and does not receive pointer events.
 
-Local Chromium validation covered one background request across filter changes, pan and zoom; absence of image tiles and external map requests; gray country styling; province keyboard selection; widths down to 320px; and slow/failed background loading. With 4x CPU throttling, three runs before and after border alignment measured a pan/zoom frame interval at the 95th percentile of about 17 ms. Province rendering was ready in approximately 0.60–0.62 s in both versions; the maximum observed frame interval increased from 50 ms to 67 ms. These are local measurements, not a guarantee for every device.
+Local Chromium validation covered one background request across filter changes, pan and zoom; absence of image tiles and external map requests; country outlines; province keyboard selection; widths down to 320px; and slow/failed background loading. With 4x CPU throttling, three runs before and after border alignment measured a pan/zoom frame interval at the 95th percentile of about 17 ms. Province rendering was ready in approximately 0.60–0.62 s before and after alignment; the maximum observed frame interval increased from 50 ms to 67 ms. These are local measurements, not a guarantee for every device.
 
 ## Dashboard behavior
 
@@ -126,9 +127,9 @@ sorting and internal scrolling; emission details also scroll internally.
 Sector filtering applies to emission panels, while province/period applies to
 all panels. Weather/column metrics remain available on Admin when supported.
 
-AQI uses six shared color levels across its map, tooltip, summary and KPI.
-Concentration maps use a separate blue palette and source-supplied cutoffs.
-Without cutoffs, available values use a single neutral accent and tooltip values;
+AQI uses six shared levels with a custom green → yellow-green → yellow → orange → red → deep red display palette across its map, tooltip, summary and KPI. The light-theme text uses darker companion colors.
+Concentration maps use four saturated colors (green → yellow → orange → deep red) and source-supplied cutoffs. These colors indicate increasing values, not AQI categories.
+Without cutoffs, available values use a single neutral gray-blue fill and tooltip values;
 no thresholds or AQI are inferred. Data quality counts finite values in received
 records, not absent upstream observations or station availability. Annual
 exceedance totals are shown only for a complete year selection and are never
