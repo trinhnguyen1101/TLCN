@@ -33,6 +33,19 @@ export function ExportActions({ fileName, chartId, csvRows }: ExportActionsProps
     if (!(chart instanceof SVGElement)) return
     const clone = chart.cloneNode(true) as SVGElement
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
+    // Resolve theme variables and Tailwind styles so downloaded SVGs keep their colors.
+    const originals = [chart, ...chart.querySelectorAll('*')]
+    const copies = [clone, ...clone.querySelectorAll('*')]
+    originals.forEach((element, index) => {
+      const computed = getComputedStyle(element)
+      const copy = copies[index] as SVGElement
+      for (const property of ['fill', 'fill-opacity', 'stroke', 'stroke-width', 'stroke-opacity', 'stroke-dasharray', 'stroke-linecap', 'stroke-linejoin', 'stop-color', 'stop-opacity', 'font-family', 'font-size', 'font-weight']) {
+        copy.style.setProperty(property, computed.getPropertyValue(property))
+      }
+      // A computed gradient URL can include the dashboard URL; keep it local to the SVG.
+      const fill = element.getAttribute('fill')
+      if (fill?.startsWith('url(#')) copy.style.setProperty('fill', fill)
+    })
     downloadBlob(new Blob([new XMLSerializer().serializeToString(clone)], { type: 'image/svg+xml;charset=utf-8' }), `${fileName}.svg`)
   }
 

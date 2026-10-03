@@ -3,7 +3,6 @@ import type { PriorityArea, ProvinceCode } from '../../types/dashboard'
 import { formatDecimal } from '../../utils/formatters'
 import { Field, Select } from '../ui/FormControls'
 import { DataState } from './DataState'
-import './PriorityAreasTable.css'
 
 interface PriorityAreasTableProps {
   areas: PriorityArea[]
@@ -11,12 +10,23 @@ interface PriorityAreasTableProps {
   onProvinceSelect: (provinceCode: ProvinceCode) => void
 }
 
-const trendMeta: Record<NonNullable<PriorityArea['trend']>, { icon: string; label: string }> = {
-  up: { icon: '↑', label: 'Tăng' },
-  'slight-up': { icon: '↑', label: 'Tăng nhẹ' },
-  steady: { icon: '→', label: 'Ổn định' },
-  down: { icon: '↓', label: 'Giảm' },
+const trendMeta: Record<NonNullable<PriorityArea['trend']>, { icon: string; label: string; className: string }> = {
+  up: { icon: '↑', label: 'Tăng', className: 'text-danger bg-danger-soft' },
+  'slight-up': { icon: '↑', label: 'Tăng nhẹ', className: 'text-danger bg-danger-soft' },
+  steady: { icon: '→', label: 'Ổn định', className: 'text-secondary bg-surface-subtle' },
+  down: { icon: '↓', label: 'Giảm', className: 'text-success bg-success-soft' },
 }
+
+const cellClasses = 'border-r border-b border-border px-3 py-[13px] text-left align-middle last:border-r-0'
+const bodyCellClasses = [
+  cellClasses,
+  '[@media(max-width:760px)]:grid [@media(440px<width<=760px)]:grid-cols-[minmax(115px,.8fr)_minmax(0,1.2fr)] [@media(max-width:760px)]:items-center [@media(440px<width<=760px)]:gap-3 [@media(max-width:760px)]:border-r-0 [@media(max-width:760px)]:px-[11px] [@media(max-width:760px)]:py-2.5',
+  '[@media(max-width:760px)]:before:text-[.64rem] [@media(max-width:760px)]:before:font-semibold [@media(max-width:760px)]:before:tracking-[.02em]',
+  '[@media(max-width:760px)]:before:text-muted [@media(max-width:760px)]:before:uppercase [@media(max-width:760px)]:before:content-[attr(data-label)]',
+  '[@media(max-width:440px)]:grid-cols-1 [@media(max-width:440px)]:gap-1.5',
+].join(' ')
+const headingCellClasses = `${cellClasses} sticky top-0 z-1 bg-surface-subtle text-[.68rem] leading-[1.35] font-semibold tracking-[.02em] text-muted uppercase`
+const dataCellClasses = `${bodyCellClasses} text-[.75rem] text-secondary`
 
 export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSelect }: PriorityAreasTableProps) {
   const [search, setSearch] = useState('')
@@ -25,14 +35,14 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
   const titleId = `priority-areas-${useId().replaceAll(':', '')}`
 
   return (
-    <section className="priority-areas" aria-labelledby={titleId}>
-      <div className="priority-areas__header">
+    <section className="mt-0 overflow-hidden rounded-card border border-border bg-surface shadow-card" aria-labelledby={titleId}>
+      <div className="flex items-start justify-between gap-[18px] border-b border-border bg-surface-subtle p-5 [@media(max-width:760px)]:flex-col [@media(max-width:760px)]:p-4">
         <div>
-          <p className="eyebrow">Priority Areas · Tổng hợp đa chỉ số</p>
-          <h2 id={titleId}>KHU VỰC CẦN ƯU TIÊN THEO DÕI</h2>
-          <p>Các khu vực có nhiều chỉ số môi trường cần chú ý trong kỳ báo cáo.</p>
+          <p>Priority Areas · Tổng hợp đa chỉ số</p>
+          <h2 id={titleId} className="mt-1 mb-[7px] text-[clamp(1.05rem,2vw,1.25rem)] leading-[1.25] text-heading">KHU VỰC CẦN ƯU TIÊN THEO DÕI</h2>
+          <p className="m-0 max-w-[720px] text-[.78rem] leading-[1.45] text-muted">Các khu vực có nhiều chỉ số môi trường cần chú ý trong kỳ báo cáo.</p>
         </div>
-        <span className="priority-areas__note">Không chấm điểm ưu tiên</span>
+        <span className="flex-none rounded-full border border-border bg-surface px-2.5 py-[7px] text-[.68rem] text-secondary">Không chấm điểm ưu tiên</span>
       </div>
 
       <div className="grid grid-cols-2 gap-3 border-b border-border p-3">
@@ -40,62 +50,63 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
         <Field>Sắp xếp<Select aria-label="Sắp xếp" value={sort} onChange={(event) => setSort(event.target.value)}><option value="pm25-desc">PM2.5 cao đến thấp</option><option value="pm25-asc">PM2.5 thấp đến cao</option><option value="name">Tên tỉnh A–Z</option></Select></Field>
       </div>
       <DataState isEmpty={displayed.length === 0} emptyMessage="Không có khu vực phù hợp với bộ lọc hiện tại.">
-        <div className="priority-areas__scroll" tabIndex={0} role="region" aria-label="Bảng khu vực ưu tiên">
-          <table>
-            <thead>
+        <div className="max-h-[350px] overflow-auto [@media(max-width:760px)]:max-h-[420px] [@media(max-width:760px)]:p-3" tabIndex={0} role="region" aria-label="Bảng khu vực ưu tiên">
+          <table className="w-full min-w-[1030px] border-collapse [@media(max-width:760px)]:min-w-0 [&_tbody_strong]:text-[.78rem] [&_tbody_strong]:font-semibold [&_tbody_strong]:text-heading">
+            <thead className="[@media(max-width:760px)]:absolute [@media(max-width:760px)]:size-px [@media(max-width:760px)]:overflow-hidden [@media(max-width:760px)]:[clip:rect(0,0,0,0)] [@media(max-width:760px)]:whitespace-nowrap">
               <tr>
-                <th scope="col">Tỉnh / Thành</th>
-                <th scope="col">PM2.5 trung bình</th>
-                <th scope="col">Thay đổi YoY (%)</th>
-                <th scope="col">Số ngày vượt ngưỡng</th>
-                <th scope="col">Tổng phát thải</th>
-                <th scope="col">Ngành phát thải chính</th>
-                <th scope="col">Xu hướng</th>
+                <th scope="col" className={headingCellClasses}>Tỉnh / Thành</th>
+                <th scope="col" className={headingCellClasses}>PM2.5 trung bình</th>
+                <th scope="col" className={headingCellClasses}>Thay đổi YoY (%)</th>
+                <th scope="col" className={headingCellClasses}>Số ngày vượt ngưỡng</th>
+                <th scope="col" className={headingCellClasses}>Tổng phát thải</th>
+                <th scope="col" className={headingCellClasses}>Ngành phát thải chính</th>
+                <th scope="col" className={headingCellClasses}>Xu hướng</th>
               </tr>
             </thead>
-            <tbody>
-              {displayed.map((area) => {
-                const trend = area.trend ? trendMeta[area.trend] : { icon: '—', label: 'Chưa có dữ liệu' }
+            <tbody className="[@media(max-width:760px)]:grid [@media(max-width:760px)]:gap-3 [&>tr:last-child>*]:border-b-0">
+              {displayed.map((area, index) => {
+                const trend = area.trend ? trendMeta[area.trend] : { icon: '—', label: 'Chưa có dữ liệu', className: 'text-secondary bg-surface-subtle' }
                 const isSelected = selectedProvinceCode === area.provinceCode
                 const yoyClass = (area.yearOverYearPercent ?? 0) >= 10
-                  ? 'priority-value--alert'
+                  ? 'text-danger!'
                   : (area.yearOverYearPercent ?? 0) < 0
-                    ? 'priority-value--positive'
+                    ? 'text-success!'
                     : ''
 
                 return (
-                  <tr key={area.provinceCode} className={isSelected ? 'is-selected' : undefined}>
-                    <th scope="row" data-label="Tỉnh / Thành">
+                  <tr key={area.provinceCode} className={`hover:bg-accent-soft [@media(max-width:760px)]:grid [@media(max-width:760px)]:rounded-[10px] [@media(max-width:760px)]:border [@media(max-width:760px)]:border-border [@media(max-width:760px)]:shadow-card ${isSelected ? 'bg-accent-soft' : index % 2 === 1 ? 'bg-[rgb(255_255_255_/_2%)]' : '[@media(max-width:760px)]:bg-surface'}`}>
+                    <th scope="row" data-label="Tỉnh / Thành" className={`${bodyCellClasses} w-[178px] [@media(max-width:760px)]:w-auto`}>
                       <button
                         type="button"
+                        className="grid w-full cursor-pointer gap-1 border-0 bg-transparent p-0 text-left font-semibold text-accent no-underline hover:text-accent-hover hover:underline hover:underline-offset-[3px] [@media(max-width:760px)]:min-w-0"
                         aria-pressed={isSelected}
                         onClick={() => onProvinceSelect(area.provinceCode)}
                       >
                         {area.provinceName}
-                        <span>Chọn để lọc dashboard →</span>
+                        <span className="text-[.62rem] font-normal text-muted">Chọn để lọc dashboard →</span>
                       </button>
                     </th>
-                    <td data-label="PM2.5 trung bình">
-                      <div className="priority-pm25">
+                    <td data-label="PM2.5 trung bình" className={dataCellClasses}>
+                      <div className="grid min-w-[120px] gap-[7px] [@media(max-width:760px)]:min-w-0">
                         <strong>{formatDecimal(area.pm25Average)}{area.pm25Average === null ? '' : ' µg/m³'}</strong>
-                        <span className="priority-pm25__track" aria-hidden="true">
-                          <i style={{ width: `${Math.min(100, ((area.pm25Average ?? 0) / 50) * 100)}%` }} />
+                        <span className="block h-[7px] overflow-hidden rounded-[99px] bg-surface-subtle" aria-hidden="true">
+                          <i className="block h-full rounded-[inherit] bg-accent" style={{ width: `${Math.min(100, ((area.pm25Average ?? 0) / 50) * 100)}%` }} />
                         </span>
                       </div>
                     </td>
-                    <td data-label="Thay đổi YoY (%)">
+                    <td data-label="Thay đổi YoY (%)" className={dataCellClasses}>
                       <strong className={yoyClass}>{area.yearOverYearPercent === null ? 'Chưa có dữ liệu' : `${area.yearOverYearPercent > 0 ? '+' : ''}${formatDecimal(area.yearOverYearPercent)}%`}</strong>
                     </td>
-                    <td data-label="Số ngày vượt ngưỡng">
-                      <strong className={area.exceedanceDays !== null && area.exceedanceDays >= 30 ? 'priority-value--alert' : ''}>{area.exceedanceDays === null ? 'Chưa có dữ liệu' : `${area.exceedanceDays} ngày`}</strong>
+                    <td data-label="Số ngày vượt ngưỡng" className={dataCellClasses}>
+                      <strong className={area.exceedanceDays !== null && area.exceedanceDays >= 30 ? 'text-danger!' : ''}>{area.exceedanceDays === null ? 'Chưa có dữ liệu' : `${area.exceedanceDays} ngày`}</strong>
                     </td>
-                    <td data-label="Tổng phát thải">
+                    <td data-label="Tổng phát thải" className={dataCellClasses}>
                       <strong>{area.totalEmissions === null ? 'Chưa có dữ liệu' : `${Math.round(area.totalEmissions).toLocaleString('vi-VN')} tấn`}</strong>
                     </td>
-                    <td data-label="Ngành phát thải chính">{area.mainEmissionSector ?? 'Chưa có dữ liệu'}</td>
-                    <td data-label="Xu hướng">
-                      <span className={`priority-trend priority-trend--${area.trend}`} aria-label={`Xu hướng ${trend.label.toLowerCase()}`}>
-                        <b aria-hidden="true">{trend.icon}</b> {trend.label}
+                    <td data-label="Ngành phát thải chính" className={dataCellClasses}>{area.mainEmissionSector ?? 'Chưa có dữ liệu'}</td>
+                    <td data-label="Xu hướng" className={dataCellClasses}>
+                      <span className={`inline-flex items-center gap-[5px] rounded-full border border-border px-2 py-[5px] whitespace-nowrap ${trend.className}`} aria-label={`Xu hướng ${trend.label.toLowerCase()}`}>
+                        <b className="text-[.9rem] leading-[.7]" aria-hidden="true">{trend.icon}</b> {trend.label}
                       </span>
                     </td>
                   </tr>

@@ -24,7 +24,7 @@ export function DashboardFilters({ variant = 'admin', years, pollutantOptions, d
   const period = customRange || value.startDate || value.endDate ? 'custom' : value.year === 'all' ? 'current' : String(value.year)
 
   return (
-    <section className="sticky top-2 z-[600] mb-5 min-w-0 rounded-card border border-border bg-surface p-3 shadow-card max-[767px]:top-0" aria-label="Bộ lọc dashboard">
+    <section className="sticky top-2 z-[600] mb-5 min-w-0 rounded-card border border-border border-t-2 border-t-accent-border bg-surface p-3 shadow-card max-[767px]:top-0" aria-label="Bộ lọc dashboard">
       <div className="flex items-center justify-between gap-3 md:hidden">
         <Button aria-expanded={expanded} aria-controls={`${id}-fields`} onClick={() => setExpanded(!expanded)}><DashboardIcon name="filter" />Bộ lọc · {value.provinceCode === 'all' ? 'Toàn quốc' : provinces.find((p) => p.provinceCode === value.provinceCode)?.provinceName ?? value.provinceCode}</Button>
         <Button onClick={() => { setCustomRange(false); onReset() }} aria-label="Đặt lại bộ lọc"><DashboardIcon name="reset" /></Button>

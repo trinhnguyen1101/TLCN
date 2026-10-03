@@ -66,30 +66,30 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
         <DataState isEmpty={points.length === 0} emptyMessage="Hãy thay đổi tỉnh, năm, tháng hoặc khoảng ngày.">
           {geometry && (
             <div className="overflow-x-auto px-4 pt-2 pb-[18px] max-[680px]:px-2">
-              <svg id={chartId} className={`block w-full ${compact ? 'h-[170px]' : 'h-[230px] max-md:h-auto'}`} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={`${title}. ${points.length} điểm dữ liệu.`} fontFamily="Arial, sans-serif" fontSize="11" fill="#a3b2c7">
+              <svg id={chartId} className={`block w-full ${compact ? 'h-[170px]' : 'h-[230px] max-md:h-auto'}`} viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="xMidYMid meet" role="img" aria-label={`${title}. ${points.length} điểm dữ liệu.`} fontFamily="Arial, sans-serif" fontSize="11" fill="var(--color-muted)">
                 <desc>{description}</desc>
                 <defs>
                   <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-                    <stop offset="0%" stopColor="#2dd4bf" stopOpacity=".18" />
-                    <stop offset="100%" stopColor="#2dd4bf" stopOpacity=".01" />
+                    <stop offset="0%" stopColor="var(--color-accent)" stopOpacity=".18" />
+                    <stop offset="100%" stopColor="var(--color-accent)" stopOpacity=".01" />
                   </linearGradient>
                 </defs>
-                <rect width={WIDTH} height={HEIGHT} fill="#111c2e" />
+                <rect width={WIDTH} height={HEIGHT} fill="var(--color-surface)" />
                 {[0, .25, .5, .75, 1].map((ratio) => {
                   const y = PADDING.top + ratio * (HEIGHT - PADDING.top - PADDING.bottom)
                   const value = geometry.max - ratio * (geometry.max - geometry.min)
-                  return <g key={ratio}><line x1={PADDING.left} x2={WIDTH - PADDING.right} y1={y} y2={y} stroke="#2b3b53" strokeDasharray="4 4" /><text x={PADDING.left - 9} y={y + 4} textAnchor="end">{value.toFixed(unit === '1' ? 3 : 1)}</text></g>
+                  return <g key={ratio}><line x1={PADDING.left} x2={WIDTH - PADDING.right} y1={y} y2={y} stroke="var(--color-border)" strokeDasharray="4 4" /><text x={PADDING.left - 9} y={y + 4} textAnchor="end">{value.toFixed(unit === '1' ? 3 : 1)}</text></g>
                 })}
                 <path d={`${geometry.path} L ${geometry.coordinates.at(-1)!.x} ${HEIGHT - PADDING.bottom} L ${geometry.coordinates[0].x} ${HEIGHT - PADDING.bottom} Z`} fill={`url(#${gradientId})`} />
-                <path d={geometry.path} fill="none" stroke="#5eead4" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+                <path d={geometry.path} fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
                 {geometry.coordinates.map((coordinate, index) => (
                   <g key={`${points[index].label}-${index}`} onMouseEnter={() => setActiveIndex(index)} onMouseLeave={() => setActiveIndex(null)} onFocus={() => setActiveIndex(index)} onBlur={() => setActiveIndex(null)} tabIndex={0} className="focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-accent" role="img" aria-label={`${points[index].label}: ${points[index].value} ${unit}`}>
                     <circle cx={coordinate.x} cy={coordinate.y} r="11" fill="transparent" />
-                    <circle cx={coordinate.x} cy={coordinate.y} r={activeIndex === index ? 5 : points.length > 30 ? 0 : 3.5} fill="#111c2e" stroke="#5eead4" strokeWidth="2" />
+                    <circle cx={coordinate.x} cy={coordinate.y} r={activeIndex === index ? 5 : points.length > 30 ? 0 : 3.5} fill="var(--color-surface)" stroke="var(--color-accent)" strokeWidth="2" />
                     {activeIndex === index && (
                       <g className="pointer-events-none">
-                        <rect x={Math.max(4, Math.min(coordinate.x - 72, WIDTH - 148))} y={Math.max(4, coordinate.y - 48)} width="144" height="36" rx="7" fill="#203149" />
-                        <text x={Math.max(76, Math.min(coordinate.x, WIDTH - 76))} y={Math.max(27, coordinate.y - 25)} textAnchor="middle" fill={metricLabel === 'AQI' ? aqiLevel(points[index].value)?.color : '#f8fafc'} fontSize="11">{points[index].label}: {points[index].value} {unit}</text>
+                        <rect x={Math.max(4, Math.min(coordinate.x - 72, WIDTH - 148))} y={Math.max(4, coordinate.y - 48)} width="144" height="36" rx="7" fill="var(--color-surface-subtle)" />
+                        <text x={Math.max(76, Math.min(coordinate.x, WIDTH - 76))} y={Math.max(27, coordinate.y - 25)} textAnchor="middle" fill={metricLabel === 'AQI' ? aqiLevel(points[index].value)?.textColor : 'var(--color-heading)'} fontSize="11">{points[index].label}: {points[index].value} {unit}</text>
                       </g>
                     )}
                   </g>

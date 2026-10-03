@@ -2,7 +2,7 @@ import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
 const variants = {
   secondary: 'min-h-9 gap-1.5 rounded-[7px] border border-border bg-surface px-2.5 py-[7px] text-[.76rem] text-secondary enabled:hover:border-accent-border enabled:hover:bg-accent-soft enabled:hover:text-accent',
-  segment: 'min-h-7.5 rounded-[5px] border-0 bg-transparent px-3 py-1.5 text-[.76rem] text-muted hover:text-accent aria-pressed:bg-surface aria-pressed:text-accent aria-pressed:shadow-control',
+  segment: 'min-h-7.5 rounded-[5px] border-0 bg-transparent px-3 py-1.5 text-[.76rem] text-muted hover:text-accent aria-pressed:bg-accent aria-pressed:text-surface aria-pressed:shadow-control',
   export: 'min-h-8.5 gap-1.5 rounded-[7px] border border-border bg-surface px-[9px] py-[7px] text-[.73rem] whitespace-nowrap text-secondary enabled:hover:border-accent-border enabled:hover:bg-accent-soft enabled:hover:text-accent',
 }
 

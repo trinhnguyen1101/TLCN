@@ -31,7 +31,7 @@ const VIETNAM_MAP_CENTER: [number, number] = [16.2, 107.7]
 const mapClasses = [
   'w-full border-t border-border bg-map-background font-sans',
   'motion-reduce:[&_*]:transition-none motion-reduce:[&_*]:animate-none',
-  '[&_.leaflet-control-zoom]:overflow-hidden [&_.leaflet-control-zoom]:rounded-lg [&_.leaflet-control-zoom]:border [&_.leaflet-control-zoom]:border-border-strong [&_.leaflet-control-zoom]:shadow-[0_2px_8px_rgb(0_0_0/24%)]',
+  '[&_.leaflet-control-zoom]:overflow-hidden [&_.leaflet-control-zoom]:rounded-lg [&_.leaflet-control-zoom]:border [&_.leaflet-control-zoom]:border-border-strong [&_.leaflet-control-zoom]:shadow-control',
   '[&_.leaflet-control-zoom_a]:bg-surface [&_.leaflet-control-zoom_a]:text-[19px] [&_.leaflet-control-zoom_a]:font-normal [&_.leaflet-control-zoom_a]:text-secondary',
   '[&_.leaflet-control-zoom_a:hover]:bg-surface-subtle [&_.leaflet-control-zoom_a:hover]:text-accent',
   '[&_.leaflet-control-zoom_a:focus-visible]:outline-3 [&_.leaflet-control-zoom_a:focus-visible]:outline-offset-[-3px] [&_.leaflet-control-zoom_a:focus-visible]:outline-accent',
@@ -120,9 +120,9 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
 
   return (
     <section className="isolate flex min-w-0 flex-col overflow-hidden rounded-card border border-border bg-surface shadow-card" data-map-variant={variant} aria-label="Bản đồ chất lượng không khí Việt Nam">
-      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
+      <div className="flex flex-wrap items-center justify-between gap-3 bg-accent-soft/40 px-4 py-3">
         <div>
-          <h2 className="text-sm font-semibold text-heading">Việt Nam · {MAP_METRIC_LABELS[metric]}</h2>
+          <h2 className="flex items-center gap-2 text-sm font-semibold text-heading"><span className="inline-flex rounded-lg bg-accent-soft p-1.5 text-accent"><DashboardIcon name="location" size="small" /></span>Việt Nam · {MAP_METRIC_LABELS[metric]}</h2>
           <p className="mt-1 text-xs text-muted">{periodLabel ?? 'Chọn một tỉnh để xem chi tiết'}</p>
         </div>
         <Button aria-pressed={layerVisible} onClick={() => onLayerVisibilityChange?.(!layerVisible)}>
@@ -154,10 +154,10 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
 
       <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border px-4 py-3 text-[.7rem]" aria-label="Chú giải màu">
         <p className="basis-full font-medium text-secondary">{MAP_METRIC_LABELS[metric]} {unit && `(${unit})`}</p>
-        {colorScale?.labels.map((label, index) => <span key={label} className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 shrink-0 rounded-sm" style={{ backgroundColor: colorScale.colors[index] }} />{label} · {colorScale.ranges[index]}</span>)}
-        {!colorScale && <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 rounded-sm bg-accent" />Có giá trị · chưa có thang nồng độ</span>}
+        {colorScale?.labels.map((label, index) => <span key={label} className="inline-flex items-center gap-1.5 text-secondary"><i className="size-3.5 shrink-0 rounded-sm" style={{ backgroundColor: colorScale.colors[index] }} />{label} · {colorScale.ranges[index]}</span>)}
+        {!colorScale && <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 rounded-sm bg-map-unclassified" />Có giá trị · chưa có thang nồng độ</span>}
         <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 shrink-0 rounded-sm border border-map-province-border bg-map-province-fill" />Chưa có dữ liệu</span>
-        {metric !== 'aqi' && <p className="basis-full text-muted">{concentrationScale ? 'Thang nồng độ từ nguồn dữ liệu; không phải mức AQI.' : 'Nguồn chưa cung cấp thang nồng độ. Xem giá trị khi trỏ hoặc chọn tỉnh.'}</p>}
+        {metric === 'aqi' ? <p className="basis-full text-muted">Dải màu hiển thị tùy chỉnh: xanh lá (tốt) → đỏ đậm (nguy hại).</p> : <p className="basis-full text-muted">{colorScale ? 'Xanh lá → vàng → cam → đỏ: nồng độ tăng dần theo thang nguồn dữ liệu; không phải mức AQI.' : 'Nguồn chưa cung cấp thang nồng độ hợp lệ. Xem giá trị khi trỏ hoặc chọn tỉnh.'}</p>}
       </div>
     </section>
   )
