@@ -154,8 +154,8 @@ services:
       - "7077:7077"
     volumes:
       - ./spark/jobs:/opt/spark/work-dir/jobs:ro
+      - ./data/landing:/opt/spark/work-dir/landing:ro
       - ./spark/config:/opt/spark/conf:ro
-      - ./spark/jars:/opt/spark/custom-jars
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080 || exit 1"]
       interval: 15s
@@ -180,8 +180,8 @@ services:
       - "${SPARK_WORKER_UI_PORT}:8081"
     volumes:
       - ./spark/jobs:/opt/spark/work-dir/jobs:ro
+      - ./data/landing:/opt/spark/work-dir/landing:ro
       - ./spark/config:/opt/spark/conf:ro
-      - ./spark/jars:/opt/spark/custom-jars
     depends_on:
       spark-master:
         condition: service_healthy

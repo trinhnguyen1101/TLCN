@@ -15,6 +15,9 @@ The dashboard does not require the Docker Compose lakehouse services below.
 
 ## Architecture
 
+For the independent Landing → Bronze Spark ingestion and MinIO verification,
+see [docs/landing-to-bronze.md](docs/landing-to-bronze.md).
+
 `Airflow` orchestrates future jobs. `Spark` will read/write Iceberg tables.
 Iceberg metadata is catalogued by `Nessie`, while the physical data lives in
 the `lakehouse` bucket in `MinIO` (`bronze/`, `silver/`, and `gold/` prefixes).

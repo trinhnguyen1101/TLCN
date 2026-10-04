@@ -5,7 +5,7 @@ FROM apache/spark:3.5.4-scala2.12-java11-ubuntu
 
 USER root
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl \
+    && apt-get install -y --no-install-recommends curl python3 \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt/spark/custom-jars \
     && curl -fL --retry 3 -o /opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.7.1/iceberg-spark-runtime-3.5_2.12-1.7.1.jar \
