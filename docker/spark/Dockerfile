@@ -4,8 +4,11 @@
 FROM apache/spark:3.5.4-scala2.12-java11-ubuntu
 
 USER root
+COPY requirements-silver.txt /tmp/requirements-silver.txt
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl python3 \
+    && apt-get install -y --no-install-recommends curl python3 python3-pip \
+    && python3 -m pip install --no-cache-dir -r /tmp/requirements-silver.txt \
+    && rm -f /tmp/requirements-silver.txt \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt/spark/custom-jars \
     && curl -fL --retry 3 -o /opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.7.1/iceberg-spark-runtime-3.5_2.12-1.7.1.jar \
