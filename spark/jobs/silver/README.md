@@ -35,24 +35,90 @@ Build/start the data services and Spark master first:
 docker compose up -d --build minio minio-init nessie spark-master
 ```
 
-Apply a job to one completed Bronze batch. Examples use the verified batches
-documented in `docs/landing-to-bronze.md`:
+The following PowerShell helper discovers the most recently modified completed
+Bronze batch. It selects only batches containing
+`_ingestion_manifest/_SUCCESS`, builds the full `s3a://` path, and passes that
+path to the requested Silver job. The ingestion date and batch ID never need
+to be copied from MinIO manually.
 
 ```powershell
-docker compose exec -T spark-master /opt/spark/bin/spark-submit --master local[1] /opt/spark/work-dir/jobs/silver/waqi_bronze_to_silver.py --bronze-path s3a://lakehouse/bronze/waqi/historical/ingestion_date=2026-10-03/batch_id=raw-waqi-001
+function Invoke-LatestSilverBatch {
+    param(
+        [Parameter(Mandatory)] [string] $BronzePrefix,
+        [Parameter(Mandatory)] [string] $Job,
+        [string] $DriverMemory = "768m"
+    )
 
-docker compose exec -T spark-master /opt/spark/bin/spark-submit --master local[1] /opt/spark/work-dir/jobs/silver/cams_bronze_to_silver.py --bronze-path s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-03/batch_id=raw-cams-001
+    $findCommand = 'mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null && ' +
+        "mc find local/lakehouse/bronze/$BronzePrefix --name _SUCCESS --json"
 
-docker compose exec -T spark-master /opt/spark/bin/spark-submit --master local[1] /opt/spark/work-dir/jobs/silver/climate_trace_bronze_to_silver.py --bronze-path s3a://lakehouse/bronze/climate_trace/climate_trace_vietnam/ingestion_date=2026-10-03/batch_id=raw-climate-trace-001
+    $rawOutput = & docker compose run --rm --no-deps --entrypoint /bin/sh `
+        minio-init -c $findCommand 2>&1
+    if ($LASTEXITCODE -ne 0) {
+        throw "Could not list Bronze batches for $BronzePrefix`: $($rawOutput -join [Environment]::NewLine)"
+    }
 
-docker compose exec -T spark-master /opt/spark/bin/spark-submit --master local[1] /opt/spark/work-dir/jobs/silver/admin_bronze_to_silver.py --bronze-path s3a://lakehouse/bronze/reference/vietnam_administrative_divisions/ingestion_date=2026-10-03/batch_id=raw-reference-admin-001
+    $latest = $rawOutput |
+        ForEach-Object {
+            try { $_ | ConvertFrom-Json -ErrorAction Stop } catch { $null }
+        } |
+        Where-Object {
+            $_.status -eq "success" -and
+            $_.key -like "*/_ingestion_manifest/_SUCCESS"
+        } |
+        Sort-Object { [DateTimeOffset] $_.lastModified } -Descending |
+        Select-Object -First 1
 
-docker compose exec -T spark-master /opt/spark/bin/spark-submit --master local[1] /opt/spark/work-dir/jobs/silver/admin_bronze_to_silver.py --bronze-path s3a://lakehouse/bronze/reference/vietnamese-provinces-database/ingestion_date=2026-10-03/batch_id=raw-reference-geojson-001
+    if (-not $latest) {
+        throw "No completed Bronze batch found below bronze/$BronzePrefix"
+    }
+
+    $relativeBatch = $latest.key -replace '^local/lakehouse/', '' `
+                                      -replace '/_ingestion_manifest/_SUCCESS$', ''
+    $bronzePath = "s3a://lakehouse/$relativeBatch"
+    Write-Host "Running $Job with latest completed batch: $bronzePath"
+
+    & docker compose exec -T spark-master /opt/spark/bin/spark-submit `
+        --master "local[1]" `
+        --driver-memory $DriverMemory `
+        --conf "spark.sql.shuffle.partitions=4" `
+        "/opt/spark/work-dir/jobs/silver/$Job" `
+        --bronze-path $bronzePath
+
+    if ($LASTEXITCODE -ne 0) {
+        throw "Silver ETL failed for $bronzePath"
+    }
+}
 ```
 
-Use `--master spark://spark-master:7077` when the worker is running. The image
-installs ecCodes for streaming GRIB decoding and Shapely for GeoJSON-to-WKB
-conversion on both driver and executors.
+Run the latest completed WAQI batch:
+
+```powershell
+Invoke-LatestSilverBatch -BronzePrefix "waqi/historical" -Job "waqi_bronze_to_silver.py"
+```
+
+Run the latest completed batch for every currently supported Bronze dataset:
+
+```powershell
+Invoke-LatestSilverBatch -BronzePrefix "waqi/historical" -Job "waqi_bronze_to_silver.py"
+Invoke-LatestSilverBatch -BronzePrefix "cams/eac4" -Job "cams_bronze_to_silver.py" -DriverMemory "1g"
+Invoke-LatestSilverBatch -BronzePrefix "climate_trace/climate_trace_vietnam" -Job "climate_trace_bronze_to_silver.py"
+Invoke-LatestSilverBatch -BronzePrefix "reference/vietnam_administrative_divisions" -Job "admin_bronze_to_silver.py"
+Invoke-LatestSilverBatch -BronzePrefix "reference/vietnamese-provinces-database" -Job "admin_bronze_to_silver.py"
+```
+
+Define the helper and call it in the same PowerShell session. Before a large
+local run, optional services can be stopped to leave more memory for Spark:
+
+```powershell
+docker compose stop airflow-webserver airflow-scheduler trino spark-worker postgres
+```
+
+Bring the complete stack back afterwards with `docker compose up -d`. Use
+`--master spark://spark-master:7077` instead of `local[1]` when deliberately
+running against the worker. The image installs ecCodes for streaming GRIB
+decoding and Shapely for GeoJSON-to-WKB conversion on both driver and
+executors.
 
 Every job skips a logical run that already succeeded. A new physical attempt
 gets a UUID run ID; exact duplicates are counted, while conflicting logical
