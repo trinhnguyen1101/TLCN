@@ -7,11 +7,13 @@ USER root
 COPY requirements-silver.txt /tmp/requirements-silver.txt
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl python3 python3-pip \
+    && python3 -m pip install --no-cache-dir --upgrade "pip<25.1" \
     && python3 -m pip install --no-cache-dir -r /tmp/requirements-silver.txt \
     && rm -f /tmp/requirements-silver.txt \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /opt/spark/custom-jars \
     && curl -fL --retry 3 -o /opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-spark-runtime-3.5_2.12/1.7.1/iceberg-spark-runtime-3.5_2.12-1.7.1.jar \
+    && curl -fL --retry 3 -o /opt/spark/custom-jars/iceberg-aws-bundle-1.7.1.jar https://repo1.maven.org/maven2/org/apache/iceberg/iceberg-aws-bundle/1.7.1/iceberg-aws-bundle-1.7.1.jar \
     && curl -fL --retry 3 -o /opt/spark/custom-jars/hadoop-aws-3.3.4.jar https://repo1.maven.org/maven2/org/apache/hadoop/hadoop-aws/3.3.4/hadoop-aws-3.3.4.jar \
     && curl -fL --retry 3 -o /opt/spark/custom-jars/aws-java-sdk-bundle-1.12.262.jar https://repo1.maven.org/maven2/com/amazonaws/aws-java-sdk-bundle/1.12.262/aws-java-sdk-bundle-1.12.262.jar
 USER spark

@@ -1,3 +1,10 @@
-numpy==1.26.4
-eccodes==2.48.0
-shapely==2.1.2
+# Spark's Java 11 Ubuntu image provides Python 3.8. NumPy 1.24.x is the
+# final NumPy line supporting that interpreter.
+numpy==1.24.4
+# ecCodes 2.43+ delegates native binaries to eccodeslib, whose current wheels
+# do not support the Python 3.8/glibc combination in this Spark base image.
+eccodes==2.42.0
+# Newer findlibs releases use Python 3.9+ string/type syntax at runtime.
+findlibs==0.0.5
+# Shapely 2.1 requires Python 3.10; 2.0.7 supports Python 3.8.
+shapely==2.0.7
