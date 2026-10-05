@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -87,7 +88,33 @@ def deterministic_id(namespace: str, *columns) -> F.Column:
 
 
 def create_spark(app_name: str) -> SparkSession:
-    spark = SparkSession.builder.appName(app_name).getOrCreate()
+    access_key = os.environ.get("MINIO_ROOT_USER")
+    secret_key = os.environ.get("MINIO_ROOT_PASSWORD")
+    if not access_key or not secret_key:
+        raise RuntimeError("MINIO_ROOT_USER and MINIO_ROOT_PASSWORD are required")
+
+    # Spark leaves ${env:...} placeholders in spark-defaults.conf unresolved.
+    # Set credentials before the Iceberg catalog is initialized, then also set
+    # Hadoop's S3A configuration for reading the Bronze batch files.
+    spark = (
+        SparkSession.builder.appName(app_name)
+        .config("spark.sql.catalog.nessie.s3.access-key-id", access_key)
+        .config("spark.sql.catalog.nessie.s3.secret-access-key", secret_key)
+        .config("spark.hadoop.fs.s3a.access.key", access_key)
+        .config("spark.hadoop.fs.s3a.secret.key", secret_key)
+        .config(
+            "spark.hadoop.fs.s3a.aws.credentials.provider",
+            "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider",
+        )
+        .getOrCreate()
+    )
+    hadoop_conf = spark.sparkContext._jsc.hadoopConfiguration()
+    hadoop_conf.set("fs.s3a.access.key", access_key)
+    hadoop_conf.set("fs.s3a.secret.key", secret_key)
+    hadoop_conf.set(
+        "fs.s3a.aws.credentials.provider",
+        "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider",
+    )
     spark.sparkContext.setLogLevel("WARN")
     spark.conf.set("spark.sql.session.timeZone", "UTC")
     return spark
@@ -430,4 +457,3 @@ def metadata_rows(batch: BronzeBatch, extensions: Sequence[str] | None = None):
     if extensions:
         query = query.filter(F.lower(F.col("file_format")).isin([x.lower() for x in extensions]))
     return query.collect()
-

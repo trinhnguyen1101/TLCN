@@ -82,3 +82,27 @@ Kết quả cần có 17 file dưới `files/`, Parquet `_file_metadata/part-*`,
 - Sửa: `docker/spark/Dockerfile` cài `python3` cho `spark-submit`.
 - Sửa: `spark/config/spark-defaults.conf` nạp JAR Iceberg/S3A; hai README dưới `spark/config` và `spark/jars` làm rõ cấu hình.
 - Sửa: `README.md` liên kết đến tài liệu này.
+
+
+Lệnh chạy full
+
+$datasets = @(
+  "waqi/historical",
+  "CAMS/EAC4",
+  "climate_trace/climate_trace_vietnam",
+  "reference/vietnam_administrative_divisions",
+  "reference/vietnamese-provinces-database"
+)
+
+foreach ($dataset in $datasets) {
+  docker compose exec -T spark-master `
+    /opt/spark/bin/spark-submit `
+    --master "local[1]" `
+    --driver-memory 512m `
+    /opt/spark/work-dir/jobs/bronze/landing_to_bronze.py `
+    --dataset $dataset
+
+  if ($LASTEXITCODE -ne 0) {
+    throw "Nạp thất bại: $dataset"
+  }
+}
