@@ -1,6 +1,6 @@
 """API contract matching the dashboard's existing JSON field names."""
 
-from datetime import date
+from datetime import date, datetime
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -23,6 +23,14 @@ class ProvinceSnapshot(ApiModel):
     pm25: float | None
     pm10: float | None
     pm1: float | None = None
+    o3: float | None = None
+    no2: float | None = None
+    so2: float | None = None
+    co: float | None = None
+    o3_column: float | None = None
+    no2_column: float | None = None
+    so2_column: float | None = None
+    co_column: float | None = None
 
 
 class EmissionRecord(ApiModel):
@@ -36,7 +44,7 @@ class EmissionRecord(ApiModel):
 
 class DashboardTrendRecord(ApiModel):
     province_code: ProvinceCode
-    date: date
+    date: date | datetime
     pm25: float | None
     pm10: float | None
     o3: float | None
@@ -62,8 +70,8 @@ class ConcentrationScale(ApiModel):
     breakpoints: list[float]
     method: Literal["absolute_concentration"]
     sample_count: int
-    reference_start: date
-    reference_end: date
+    reference_start: date | datetime
+    reference_end: date | datetime
 
 
 class MetricMetadata(ApiModel):
@@ -77,13 +85,18 @@ class DashboardMetadata(ApiModel):
     generation: str
     start: str
     end: str
-    snapshot_date: date | None
+    snapshot_date: date | datetime | None
     metrics: dict[str, MetricMetadata]
     temporal_aggregation: str
     timezone: str
     minimum_spatial_coverage: float
     minimum_monthly_coverage: float
     note: str
+    query_start: datetime | None = None
+    query_end: datetime | None = None
+    available_years: list[int] = Field(default_factory=list)
+    observation_start: str | None = None
+    observation_end: str | None = None
 
 
 class DashboardData(ApiModel):

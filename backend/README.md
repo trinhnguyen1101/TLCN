@@ -3,7 +3,8 @@
 FastAPI serves the **temporary CAMS EAC4 sample** from
 `backend/data/samples/cams/eac4_provinces` by default. This preserves the current
 dashboard values; it is not a validated Gold dataset or an official processing
-pipeline. The compact monthly sample is included in the repository. Python 3.12
+pipeline. Native 3-hour observations for 2024–2025 and the monthly history for
+2003–2025 are included in the repository. Python 3.12
 is used for local verification.
 
 Quick setup in Vietnamese: [Thiết lập web dashboard](../docs/setup-web-dashboard.md).
@@ -23,17 +24,52 @@ On Windows, use `py -3.12` and `backend\.venv\Scripts\python.exe`; run the ETL
 from `backend` with `python -m app.etl.eac4` instead of setting `PYTHONPATH`.
 `OPENBLAS_NUM_THREADS=1` limits overhead for the small aggregation matrices.
 
-- `GET /api/dashboard`: province snapshots, monthly trends and source metadata.
+- `GET /api/dashboard`: province snapshots, 3-hour trends and source metadata.
 - `GET /api/admin/dashboard`: management dashboard trends, province comparisons,
-  priority areas, emissions, and annual summaries. The mock source includes
-  illustrative management values; the CAMS sample leaves AQI, exceedance days,
+  priority areas, emissions, and annual summaries. The CAMS sample leaves AQI, exceedance days,
   and emissions unavailable because that source does not provide them.
 - `GET /api/health`: application liveness (not dataset readiness).
 - `/docs`: generated API documentation.
-- `DASHBOARD_DATA_SOURCE=parquet` is the default; `mock` explicitly enables the
-  old demo for development/tests. Missing/corrupt Parquet returns HTTP 503;
-  it never falls back to mock or a stale generation.
+- `DASHBOARD_DATA_SOURCE=parquet` is the default and the only bundled provider.
+  Missing/corrupt Parquet returns HTTP 503; it never substitutes generated data
+  or a stale generation. The retired `mock` setting is rejected.
 - `DASHBOARD_PARQUET_PATH` overrides `backend/data/samples/cams/eac4_provinces`.
+
+Both dashboard endpoints accept `resolution=3h|daily|monthly`, `start` and `end`.
+The default is `3h`, covering the last seven source days, not the current date.
+Bounds accept ISO dates or date/time strings. Naive times mean UTC; timezone
+offsets are normalized to UTC. An end date includes the whole day, while an end
+instant is inclusive. Native queries allow at most 31 days; daily queries allow
+366 days. Invalid bounds return HTTP 422. Examples:
+
+```text
+/api/dashboard?resolution=3h&start=2025-12-01&end=2025-12-07
+/api/admin/dashboard?resolution=3h&start=2025-12-31T00:00:00Z&end=2025-12-31T21:00:00Z
+/api/dashboard?resolution=daily&start=2025-01-01&end=2025-12-31
+/api/dashboard?resolution=monthly
+```
+
+Native records retain full UTC timestamps in `date`; daily/monthly aggregates
+use calendar dates. One native Parquet row is **region × UTC timestamp × metric**,
+with eight timestamps per day. The API pivots metrics into one row per region
+and timestamp. Daily averages require at least six valid observations out of
+eight. Monthly coverage still requires 75% of expected samples. Neither native
+values nor native snapshots are masked by monthly temporal coverage.
+
+Metadata includes `queryStart`, `queryEnd`, `observationStart`, `observationEnd`
+and `availableYears`. Snapshots use one latest valid timestamp inside the queried
+period across all regions; missing values remain null. Bounded admin windows do
+not become annual summaries. Missing/corrupt native files return 503, with no
+fallback to monthly averages. Queries outside the bundled native period return
+empty records; use monthly resolution for older history or rebuild from GRIB.
+
+The current workspace also retains all 33,872,832 native rows for 2003–2025.
+Only the last two native years (2,947,392 rows) are bundled in Git; older native
+partitions stay local. Metadata and the frontend detect the native years present
+on disk. `python -m app.etl.sample --years 0` preserves full native history;
+`--years 2` creates a portable two-year sample. Use `--source-generation <id>`
+to package a previous full ETL generation. Update the generation-specific
+`.gitignore` exception when replacing the bundled sample.
 
 The frontend continues to use `/api/dashboard` through its existing Vite proxy.
 Restart an existing backend process after moving samples or changing configuration.
@@ -60,7 +96,7 @@ Defaults:
   Only province files are read; ward files are excluded. The supplied collection
   has 34 provinces. Their present boundaries are applied consistently to
   **all historical years**, not treated as historical administrative boundaries.
-- Output: `backend/data/samples/cams/eac4_provinces` (monthly sample is included; large intermediates are ignored).
+- Output: `backend/data/samples/cams/eac4_provinces` (the active portable sample includes two native years and full monthly history).
 
 Override locations with `--input-dir`, `--boundaries` (directory or one GeoJSON
 FeatureCollection), `--output-dir`, and `--minimum-coverage` (default `0.95`).
@@ -124,8 +160,8 @@ surface `o3`, `no2`, `so2`, `co` fields remain null for this source.
 
 No sectoral emission inventory is present: emission arrays are empty. No AQI
 method with appropriate averaging periods is implemented: snapshot `aqi` and
-`status` are null. The map defaults to PM2.5 and labels its snapshot month;
-this is the latest valid monthly mean, not current air quality.
+`status` are null. The map defaults to PM2.5 and labels its snapshot timestamp;
+this is the latest valid observation in the selected source period, not live air quality.
 
 Parameter identities/units follow the GRIB headers and the official
 [CAMS reanalysis documentation](https://confluence.ecmwf.int/pages/viewpage.action?pageId=621030809)
@@ -139,7 +175,7 @@ snapshot month. The map offers all three PM metrics and displays them in tooltip
 The backend publishes `metadata.metrics.<metric>.mapScale` for each PM metric:
 `breakpoints`, `method=absolute_concentration`, `sampleCount`, `referenceStart`,
 and `referenceEnd`. The last three fields describe the available valid monthly
-data; thresholds are fixed and are not derived separately from each distribution.
+data at the selected temporal resolution; thresholds are fixed and are not derived separately from each distribution.
 
 All three PM metrics share these absolute concentration bands (µg/m³):
 
@@ -251,10 +287,41 @@ also records the boundary policy, province coordinates/areas, source date ranges
 duplicate counts and generation time.
 
 Builds use an unpublished `.staging-<UUID>` directory and replace `CURRENT` only
-when every source finishes. Existing generations stay available. Failed staging
+when every source finishes. Existing generations are retained by the ETL until
+explicit cleanup. Only `CURRENT` is served; `parent_generation` is provenance,
+not a runtime dependency. An unused generation can be removed after checking
+that needed observations/aggregates are retained (compare checksums before
+removing duplicate files) and preserving useful weights. Failed staging
 folders may be removed after inspection; they are never served. The repository
-caches only the active monthly view and reloads when `CURRENT` changes, returning
-copies to callers. Never manually edit a published generation.
+caches generation metadata and reads only requested native partitions.
+Native startup reads monthly timestamp columns for available years; full monthly
+values are loaded lazily when monthly history is requested. It reloads when
+`CURRENT` changes, returning isolated copies to callers. Never manually edit a
+published generation.
+
+Native filters push timestamp bounds into the Parquet reader. Identity, unit,
+coverage and value checks run on Arrow columns; daily means are grouped in Arrow
+before creating API records. UTC dates are computed directly from UTC timestamps
+without per-row timezone conversion. A day still requires at least six valid
+3-hour samples, and duplicates across files are rejected before aggregation.
+Filtered requests copy only the requested monthly rows and their own metadata;
+the cached generation remains isolated from response mutations.
+
+Completed temporal queries use an LRU cache limited to 16 windows and 80,000
+trend records. Keys contain the generation, resolution, normalized UTC bounds
+and native file names/sizes/modification times. Source publication clears the
+cache; added, changed or removed native files invalidate the affected window.
+Concurrent identical requests share one computation. Bounded native scans,
+cache copies and waiting happen outside the generation lock, so independent windows can proceed.
+Failed scans are not cached and can be retried. The admin projection omits
+unset optional metric fields to reduce JSON payload size.
+
+Local repository timings on the current sample (milliseconds, excluding HTTP
+serialization and browser rendering): the initial default native request changed
+from 848 to 470; a repeated default window from 152 to 6; a repeated 2025 daily
+window from 814 to 33. The first annual daily scan still takes about 0.9 seconds;
+cache improvements apply after that window is computed. These are local timings,
+not a production latency guarantee.
 
 Example inspection from the repository root:
 
@@ -271,20 +338,17 @@ print(pq.read_table(run / "observations/pm25/2025/part-00000.parquet").schema)
 ## Backend structure and checks
 
 `app/etl` owns normalization, geometry and batch conversion;
-`repositories/parquet` reads the monthly serving view. Routes/services remain
-source-independent. `repositories/mock` retains the explicit test/demo source.
+`app/repositories/parquet` reads bounded native observations and the monthly
+serving view. `app/services/admin_projection.py` derives the management view
+from the chosen source; routes depend on the service contract. Temporal
+validation lives in `app/services/temporal.py`.
 
 ```sh
-backend/.venv/bin/python -m pip install -r backend/requirements-dev.txt
-PYTHONPATH=backend OPENBLAS_NUM_THREADS=1 backend/.venv/bin/python -m pytest backend/tests -q
 backend/.venv/bin/python -m pip check
 npm --prefix frontend run build
 npm --prefix frontend run lint
 ```
 
-Tests cover the old mock contract, area fractions, holes, partial coverage,
-latitude-dependent areas, missing-cell renormalization, unit conversions,
-actual synthetic GRIB → Parquet → API, duplicate handling, atomic publication,
-source errors and cache refresh. ETL imports PROJ before ecCodes because their
+ETL imports PROJ before ecCodes because their
 bundled native libraries conflict on shutdown with the reverse import order in
 the verified local environment.

@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { GeoJSON, Tooltip } from 'react-leaflet'
 import type { Path, PolylineOptions } from 'leaflet'
-import type { ProvinceSnapshot } from '../../types/dashboard'
+import type { ProvinceSnapshot } from '../dashboard/types'
 import type { ProvinceFeatureCollection } from './provinceMapData'
-import { METRIC_META } from '../../services/dashboardSelectors'
+import { METRIC_META } from '../dashboard/model/dashboardSelectors'
 import { aqiLevel, concentrationColor, type MapColorScale, type MapMetric } from './mapColorScale'
 
 interface ProvinceBoundaryLayerProps {

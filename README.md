@@ -4,13 +4,15 @@ This repository contains a local Docker Compose foundation for an air-quality
 Lakehouse, a React dashboard, and a FastAPI backend using Python 3.12.
 The backend serves the current temporary CAMS EAC4 sample from
 `backend/data/samples/`. It has not passed the official processing/validation
-pipeline and is not Gold data. The older five-province demo is available with
-`DASHBOARD_DATA_SOURCE=mock`.
+pipeline and is not Gold data. The dashboard uses the Parquet source directly.
+The dashboard now reads native 3-hour UTC observations by default, with daily
+and monthly views for longer periods. The portable sample includes native
+2024–2025 rows; the local dataset retains full 2003–2025 native history.
 
 ## Run the dashboard
 
 See [Hướng dẫn thiết lập web dashboard](docs/setup-web-dashboard.md) for prerequisites,
-ETL, backend/frontend startup, demo mode, checks, and deployment.
+ETL, backend/frontend startup, time filters, checks, and deployment.
 The dashboard does not require the Docker Compose lakehouse services below.
 
 ## Architecture

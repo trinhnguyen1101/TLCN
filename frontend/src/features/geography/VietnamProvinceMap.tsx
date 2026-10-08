@@ -1,20 +1,22 @@
 import { memo, useEffect, useMemo, useState } from 'react'
-import { MapContainer, Pane, useMap } from 'react-leaflet'
-import { DataState } from '../../components/dashboard/DataState'
-import { DashboardIcon } from '../../components/dashboard/DashboardIcon'
+import { formatDateTime } from '../../utils/dates'
+import { MapContainer, Pane, useMap, ZoomControl } from 'react-leaflet'
+import { DataState } from '../../components/ui/DataState'
+import { DashboardIcon } from '../../components/ui/DashboardIcon'
 import { Button } from '../../components/ui/Button'
-import type { DashboardMetadata, ProvinceCode, ProvinceSnapshot } from '../../types/dashboard'
+import type { DashboardMetadata, ProvinceCode, ProvinceSnapshot } from '../dashboard/types'
 import { loadVietnamProvinceMapData, type ProvinceFeatureCollection } from './provinceMapData'
 import { ProvinceBoundaryLayer } from './ProvinceBoundaryLayer'
 import { WorldBasemap } from './WorldBasemap'
 
-import { METRIC_META } from '../../services/dashboardSelectors'
+import { METRIC_META } from '../dashboard/model/dashboardSelectors'
 import { getMapColorScale, MAP_METRIC_LABELS, type MapMetric } from './mapColorScale'
 export type { MapMetric } from './mapColorScale'
 
 interface VietnamProvinceMapProps {
   variant?: 'user' | 'admin'
   periodLabel?: string
+  snapshotDate?: string | null
   provinceSnapshots: ProvinceSnapshot[]
   metricMetadata?: DashboardMetadata['metrics']
   selectedProvinceCode?: ProvinceCode | 'all'
@@ -46,15 +48,28 @@ function MapSizeSync() {
 
   useEffect(() => {
     let frame = 0
-    map.fitBounds([[8.2, 102], [23.5, 112]], { padding: [16, 16], animate: false, maxZoom: 5.8 })
+    let overview = true
+    let fitting = false
+    const preserveUserView = () => { if (!fitting) overview = false }
+    const syncSize = () => {
+      map.invalidateSize({ animate: false })
+      if (overview) {
+        fitting = true
+        map.fitBounds([[8.2, 102], [23.5, 112]], { padding: [16, 16], animate: false, maxZoom: 5.8 })
+        fitting = false
+      }
+    }
+    syncSize()
+    map.on('dragstart zoomstart', preserveUserView)
     const observer = new ResizeObserver(() => {
       cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => map.invalidateSize({ animate: false }))
+      frame = requestAnimationFrame(syncSize)
     })
     observer.observe(map.getContainer())
     return () => {
       observer.disconnect()
       cancelAnimationFrame(frame)
+      map.off('dragstart zoomstart', preserveUserView)
     }
   }, [map])
 
@@ -94,6 +109,7 @@ function MinZoomWheelGuard() {
 export const VietnamProvinceMap = memo(function VietnamProvinceMap({
   variant = 'user',
   periodLabel,
+  snapshotDate,
   provinceSnapshots,
   metricMetadata,
   selectedProvinceCode = 'all',
@@ -120,10 +136,11 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
 
   return (
     <section className="isolate flex min-w-0 flex-col overflow-hidden rounded-card border border-border bg-surface shadow-card" data-map-variant={variant} aria-label="Bản đồ chất lượng không khí Việt Nam">
-      <div className="flex flex-wrap items-center justify-between gap-3 bg-accent-soft/40 px-4 py-3">
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-3 bg-accent-soft/40 px-4 py-3">
         <div>
           <h2 className="flex items-center gap-2 text-sm font-semibold text-heading"><span className="inline-flex rounded-lg bg-accent-soft p-1.5 text-accent"><DashboardIcon name="location" size="small" /></span>Việt Nam · {MAP_METRIC_LABELS[metric]}</h2>
           <p className="mt-1 text-xs text-muted">{periodLabel ?? 'Chọn một tỉnh để xem chi tiết'}</p>
+          {snapshotDate && <p className="mt-1 text-xs text-muted">Mốc dữ liệu: {formatDateTime(snapshotDate, false, true)}</p>}
         </div>
         <Button aria-pressed={layerVisible} onClick={() => onLayerVisibilityChange?.(!layerVisible)}>
           <DashboardIcon name="layers" size="small" />{layerVisible ? 'Ẩn lớp dữ liệu' : 'Hiện lớp dữ liệu'}
@@ -132,7 +149,8 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
 
       <DataState className="flex-1" loading={!geoJson && !error} error={error}>
         {geoJson && (
-          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} className={`${mapClasses} ${variant === 'user' ? 'h-[550px] min-[1440px]:h-[600px] max-[767px]:h-[450px]' : 'h-[400px] max-[767px]:h-[350px]'}`}>
+          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} zoomSnap={0.1} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} zoomControl={false} className={`${mapClasses} ${variant === 'user' ? 'h-[550px] min-[1440px]:h-[600px] max-md:h-[450px]' : 'h-[440px] min-[1024px]:min-h-[440px] min-[1024px]:flex-1 max-md:h-[350px]'}`}>
+            <ZoomControl position="topleft" zoomInTitle="Phóng to" zoomOutTitle="Thu nhỏ" />
             <MapSizeSync />
             <MinZoomWheelGuard />
             <WorldBasemap />
@@ -152,7 +170,7 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
         )}
       </DataState>
 
-      <div className="flex flex-wrap gap-x-4 gap-y-2 border-t border-border px-4 py-3 text-[.7rem]" aria-label="Chú giải màu">
+      <div className="flex shrink-0 flex-wrap gap-x-4 gap-y-2 border-t border-border px-4 py-3 text-[.7rem]" aria-label="Chú giải màu">
         <p className="basis-full font-medium text-secondary">{MAP_METRIC_LABELS[metric]} {unit && `(${unit})`}</p>
         {colorScale?.labels.map((label, index) => <span key={label} className="inline-flex items-center gap-1.5 text-secondary"><i className="size-3.5 shrink-0 rounded-sm" style={{ backgroundColor: colorScale.colors[index] }} />{label} · {colorScale.ranges[index]}</span>)}
         {!colorScale && <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 rounded-sm bg-map-unclassified" />Có giá trị · chưa có thang nồng độ</span>}

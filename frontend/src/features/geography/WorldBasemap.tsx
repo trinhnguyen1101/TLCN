@@ -17,7 +17,7 @@ let worldDataRequest: Promise<GeoJSONProps['data']> | undefined
 function loadWorldCountries() {
   worldDataRequest ??= fetch(`${import.meta.env.BASE_URL}data/world-countries.geojson`)
     .then(async (response) => {
-      if (!response.ok) throw new Error('Cannot load world boundaries')
+      if (!response.ok) throw new Error('Không thể tải ranh giới bản đồ nền.')
       return (await response.json()) as GeoJSONProps['data']
     })
     .catch((error: unknown) => {

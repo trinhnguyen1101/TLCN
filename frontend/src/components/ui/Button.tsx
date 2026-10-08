@@ -1,6 +1,7 @@
 import type { ButtonHTMLAttributes, HTMLAttributes } from 'react'
 
 const variants = {
+  icon: 'size-10 shrink-0 gap-0 rounded-[7px] border border-border bg-surface p-0 text-secondary enabled:hover:border-accent-border enabled:hover:bg-accent-soft enabled:hover:text-accent',
   secondary: 'min-h-9 gap-1.5 rounded-[7px] border border-border bg-surface px-2.5 py-[7px] text-[.76rem] text-secondary enabled:hover:border-accent-border enabled:hover:bg-accent-soft enabled:hover:text-accent',
   segment: 'min-h-7.5 rounded-[5px] border-0 bg-transparent px-3 py-1.5 text-[.76rem] text-muted hover:text-accent aria-pressed:bg-accent aria-pressed:text-surface aria-pressed:shadow-control',
   export: 'min-h-8.5 gap-1.5 rounded-[7px] border border-border bg-surface px-[9px] py-[7px] text-[.73rem] whitespace-nowrap text-secondary enabled:hover:border-accent-border enabled:hover:bg-accent-soft enabled:hover:text-accent',
@@ -14,7 +15,7 @@ export function Button({ variant = 'secondary', className = '', type = 'button',
   return (
     <button
       type={type}
-      className={`inline-flex cursor-pointer items-center justify-center font-medium transition-[border-color,background-color,box-shadow] duration-150 ease-[ease] [-webkit-tap-highlight-color:transparent] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none ${variants[variant]} ${className}`}
+      className={`inline-flex min-w-0 max-w-full cursor-pointer items-center justify-center font-medium wrap-anywhere [&_svg]:shrink-0 transition-[border-color,background-color,box-shadow] duration-150 ease-[ease] [-webkit-tap-highlight-color:transparent] focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-45 motion-reduce:transition-none ${variants[variant]} ${className}`}
       {...props}
     />
   )

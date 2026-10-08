@@ -1,5 +1,5 @@
-import type { ConcentrationScale, Pollutant } from '../../types/dashboard'
-import { METRIC_META } from '../../services/dashboardSelectors'
+import type { ConcentrationScale, Pollutant } from '../dashboard/types'
+import { METRIC_META } from '../dashboard/model/dashboardSelectors'
 
 export type MapMetric = 'aqi' | Pollutant
 export const MAP_METRIC_LABELS: Record<MapMetric, string> = { aqi: 'AQI', ...Object.fromEntries(Object.entries(METRIC_META).map(([key, metric]) => [key, metric.label])) } as Record<MapMetric, string>

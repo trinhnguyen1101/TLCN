@@ -3,12 +3,6 @@ from app.repositories.base import DashboardRepository
 
 
 def create_dashboard_repository(settings: Settings) -> DashboardRepository:
-    if settings.dashboard_data_source == "mock":
-        # Keep demo implementation imports local to this explicitly chosen path.
-        from app.repositories.mock.dashboard import MockDashboardRepository
-
-        return MockDashboardRepository()
-
     if settings.dashboard_data_source == "parquet":
         from app.repositories.parquet.dashboard import ParquetDashboardRepository
 

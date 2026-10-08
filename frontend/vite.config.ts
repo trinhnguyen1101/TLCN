@@ -15,7 +15,6 @@ export default defineConfig(({ mode }) => {
     plugins: [react(), tailwindcss()],
     server: { proxy },
     preview: { proxy },
-    // Clear generated files without removing the dist/.gitkeep placeholder.
     build: { outDir: 'dist/app' },
   }
 })
