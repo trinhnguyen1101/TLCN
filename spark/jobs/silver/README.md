@@ -1,204 +1,119 @@
 # Bronze to Silver Spark jobs
 
-These jobs implement only Bronze-to-Silver transformation. They read immutable
-raw objects plus `_file_metadata` and `_ingestion_manifest` from a completed
-Bronze batch, and write Apache Iceberg tables in `nessie.silver` with `MERGE
-INTO`. They do not read Landing and do not implement Airflow, Gold, or retry
-orchestration.
+These jobs read completed Bronze batches and write Iceberg tables in
+`nessie.silver`. Spark displays timestamps in `Asia/Ho_Chi_Minh` (UTC+07:00).
+Bronze GRIB validity times are UTC instants; WAQI daily dates are already
+Vietnam-local calendar dates.
 
-## Confirmed Bronze inputs and mappings
+| Job | Input | Main Silver tables |
+| --- | --- | --- |
+| `admin_bronze_to_silver.py` | Administrative JSON/CSV/GeoJSON | `admin_unit`, `admin_unit_source`, `admin_boundary` |
+| `cams_bronze_to_silver.py` | 14 aligned EAC4 GRIB files | `variable`, `cams_grid`, `cams_grid_point`, `cams_cube_source`, `cams_cube` |
+| `waqi_bronze_to_silver.py` | 17 historical CSV files, one station per file | `variable`, `waqi_station`, `waqi_station_source`, `waqi_station_variable`, `waqi_daily_observation` |
+| `climate_trace_bronze_to_silver.py` | Annual/monthly emissions CSV | `variable`, `emission_aggregate`, `emission_source`, `emission_source_observation` |
 
-| Job | Bronze input | Main mapping and transform | Silver targets |
-| --- | --- | --- | --- |
-| `admin_bronze_to_silver.py` | `reference/vietnam_administrative_divisions`: 34 provinces and 3,321 wards in JSON; `reference/vietnamese-provinces-database`: the same entity levels plus 3,355 GeoJSON files | Preserve codes as strings, retain postal codes as arrays, version by code + source snapshot, convert GeoJSON to WKB, retain source bbox/area and EPSG:4326 | `admin_unit`, `admin_unit_source`, `admin_boundary` |
-| `cams_bronze_to_silver.py` | 14 EAC4 GRIB files | Read `paramId`, unit, level, step/data type and `md5GridSection` with ecCodes; separate grid/points from observations; apply only registered physical unit conversions | `variable`, `cams_grid`, `cams_grid_point`, `cams_observation` |
-| `waqi_bronze_to_silver.py` | 17 historical CSV files | Parse `yyyy/M/d`, use normalized full relative filename as missing station identity, preserve blank measurements as NULL, unpivot daily AQI columns, record both present and absent canonical columns | `variable`, `waqi_station`, `waqi_station_source`, `waqi_station_variable`, `waqi_daily_observation` |
-| `climate_trace_bronze_to_silver.py` | Annual/monthly aggregate CSV and annual point-source CSV | Keep totals/sectors/subsectors separate, namespace native source IDs, derive periods and deterministic aggregate IDs, remove exact duplicates and reject conflicts | `variable`, `emission_aggregate`, `emission_source`, `emission_source_observation` |
+## CAMS cube
 
-The current 14 CAMS files contain 940,912 GRIB messages. At 575 native grid
-points per message they expand to 541,024,400 Silver observation rows. The CAMS
-job therefore streams one local Bronze copy at a time and merges bounded
-100,000-row chunks; each chunk is split into input partitions of at most 10,000
-rows so Spark does not serialize the whole chunk into one oversized task. It
-never constructs a whole-file observation list in driver memory.
+The 14 files contain 67,208 time steps per variable on a 23 × 25 grid.
+`cams_cube` stores one row per time/grid with 14 `ARRAY<FLOAT>` columns.
+This is about 67,208 rows rather than 541 million point rows. Index 0 in
+each array is `cams_grid_point.grid_point_id = 0`; the same index convention
+continues through all 575 points. The job validates every file's GRIB
+`paramId` and `shortName`, aligned times, grid identity, coordinates,
+finite values, and complete message counts.
 
-The Climate TRACE CSV does not declare an emissions unit. The native quantity
-is therefore retained and `emission_quantity_standard` remains NULL instead of
-performing an unsupported conversion. `period_status` is `actual` when the
-period is complete at Bronze ingestion time and `partial` when its end date is
-still in the future.
+Native values are stored as float32. GRIB is retained in Bronze for exact
+source values. `cams_cube_source` holds the 14 file paths and hashes plus
+scale/offset for standard units. The job copies each Bronze GRIB file to the
+container's temporary disk, reads the files in lockstep, and commits bounded
+512-time-step Iceberg `MERGE` chunks. Allow roughly 1.8 GB temporary disk.
+Progress appears as `CAMS cube committed N time/grid rows`.
 
-## Run
+The new CAMS pipeline version is `2.0.0`, so an older successful run of
+the point-row ETL does not cause this job to skip. Existing
+`cams_observation` data is left intact and is not read by the new job.
+The new WAQI pipeline version is also `2.0.0` so rerunning it updates
+existing station rows with their Vietnam timezone.
 
-Build/start the data services and Spark master first:
+## Run from Bash
 
-```powershell
-docker compose up -d --build minio minio-init nessie spark-master
+Start the required services:
+
+```bash
+docker compose up -d minio minio-init nessie spark-master
 ```
 
-The following PowerShell helper discovers the most recently modified completed
-Bronze batch. It selects only batches containing
-`_ingestion_manifest/_SUCCESS`, builds the full `s3a://` path, and passes that
-path to the requested Silver job. The ingestion date and batch ID never need
-to be copied from MinIO manually.
+For the current completed CAMS Bronze batch:
 
-
-Tắt các tools ko dùng 
-docker compose stop airflow-webserver airflow-scheduler trino spark-worker postgres
-```powershell
-function Invoke-LatestSilverBatch {
-    param(
-        [Parameter(Mandatory)] [string] $BronzePrefix,
-        [Parameter(Mandatory)] [string] $Job,
-        [string] $DriverMemory = "768m"
-    )
-
-    $findCommand = 'mc alias set local http://minio:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD" >/dev/null && ' +
-        "mc find local/lakehouse/bronze/$BronzePrefix --name _SUCCESS --json"
-
-    $rawOutput = & docker compose run --rm --no-deps --entrypoint /bin/sh `
-        minio-init -c $findCommand 2>&1
-    if ($LASTEXITCODE -ne 0) {
-        throw "Could not list Bronze batches for $BronzePrefix`: $($rawOutput -join [Environment]::NewLine)"
-    }
-
-    $latest = $rawOutput |
-        ForEach-Object {
-            try { $_ | ConvertFrom-Json -ErrorAction Stop } catch { $null }
-        } |
-        Where-Object {
-            $_.status -eq "success" -and
-            $_.key -like "*/_ingestion_manifest/_SUCCESS"
-        } |
-        Sort-Object { [DateTimeOffset] $_.lastModified } -Descending |
-        Select-Object -First 1
-
-    if (-not $latest) {
-        throw "No completed Bronze batch found below bronze/$BronzePrefix"
-    }
-
-    $relativeBatch = $latest.key -replace '^local/lakehouse/', '' `
-                                      -replace '/_ingestion_manifest/_SUCCESS$', ''
-    $bronzePath = "s3a://lakehouse/$relativeBatch"
-    Write-Host "Running $Job with latest completed batch: $bronzePath"
-
-    & docker compose exec -T spark-master /opt/spark/bin/spark-submit `
-        --master "local[1]" `
-        --driver-memory $DriverMemory `
-        --conf "spark.sql.shuffle.partitions=4" `
-        "/opt/spark/work-dir/jobs/silver/$Job" `
-        --bronze-path $bronzePath
-
-    if ($LASTEXITCODE -ne 0) {
-        throw "Silver ETL failed for $bronzePath"
-    }
-}
+```bash
+docker compose exec -T spark-master \
+  /opt/spark/bin/spark-submit \
+  --master 'local[1]' \
+  --driver-memory 1g \
+  --conf spark.sql.shuffle.partitions=4 \
+  --py-files /opt/spark/work-dir/jobs/silver/common.py \
+  /opt/spark/work-dir/jobs/silver/cams_bronze_to_silver.py \
+  --bronze-path 's3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-11/batch_id=426fe0b97df44453a4234cbedea0b672'
 ```
 
+To select the latest completed Bronze batch automatically, use this Bash
+helper in the same terminal session. It requires `jq` on the host:
 
-
+```bash
 invoke_latest_silver_batch() {
-  local bronze_prefix="${1:?Thiếu BronzePrefix}"
-  local job="${2:?Thiếu tên Job}"
-  local driver_memory="${3:-768m}"
+  local prefix="${1:?Bronze prefix required}"
+  local job="${2:?Silver job required}"
+  local memory="${3:-768m}"
+  local command output key bronze_path
 
-  local find_command
-  local raw_output
-  local latest_key
-  local relative_batch
-  local bronze_path
-
-  if ! command -v jq >/dev/null 2>&1; then
-    echo "Thiếu jq. Cài bằng: sudo apt install jq" >&2
+  command="mc alias set local http://minio:9000 \"\$MINIO_ROOT_USER\" \"\$MINIO_ROOT_PASSWORD\" >/dev/null && mc find local/lakehouse/bronze/$prefix --name _SUCCESS --json"
+  output=$(docker compose run --rm --no-deps --entrypoint /bin/sh minio-init -c "$command") || return
+  key=$(printf '%s\n' "$output" |
+    jq -Rr 'fromjson? | select(.status == "success" and (.key | endswith("/_ingestion_manifest/_SUCCESS"))) | [.lastModified, .key] | @tsv' |
+    LC_ALL=C sort -r | head -n 1 | cut -f 2-)
+  if [[ -z "$key" ]]; then
+    echo "No completed Bronze batch under $prefix" >&2
     return 1
   fi
-
-  find_command="mc alias set local http://minio:9000 \"\$MINIO_ROOT_USER\" \"\$MINIO_ROOT_PASSWORD\" >/dev/null && \
-mc find \"local/lakehouse/bronze/$bronze_prefix\" --name _SUCCESS --json"
-
-  if ! raw_output=$(
-    docker compose run --rm --no-deps \
-      --entrypoint /bin/sh \
-      minio-init \
-      -c "$find_command" 2>&1
-  ); then
-    echo "Không thể liệt kê Bronze batch tại bronze/$bronze_prefix:" >&2
-    printf '%s\n' "$raw_output" >&2
-    return 1
-  fi
-
-  latest_key=$(
-    printf '%s\n' "$raw_output" |
-      jq -Rr '
-        fromjson?
-        | select(
-            .status == "success"
-            and (.key | endswith("/_ingestion_manifest/_SUCCESS"))
-          )
-        | [.lastModified, .key]
-        | @tsv
-      ' |
-      LC_ALL=C sort -r |
-      head -n 1 |
-      cut -f 2-
-  )
-
-  if [[ -z "$latest_key" ]]; then
-    echo "Không tìm thấy Bronze batch hoàn tất tại bronze/$bronze_prefix" >&2
-    return 1
-  fi
-
-  relative_batch="${latest_key#local/lakehouse/}"
-  relative_batch="${relative_batch%/_ingestion_manifest/_SUCCESS}"
-  bronze_path="s3a://lakehouse/$relative_batch"
-
-  echo "Đang chạy $job với batch mới nhất: $bronze_path"
-
-  if ! docker compose exec -T spark-master \
-    /opt/spark/bin/spark-submit \
-    --master "local[1]" \
-    --driver-memory "$driver_memory" \
-    --conf "spark.sql.shuffle.partitions=4" \
-    "/opt/spark/work-dir/jobs/silver/$job" \
-    --bronze-path "$bronze_path"
-  then
-    echo "Silver ETL thất bại: $bronze_path" >&2
-    return 1
-  fi
+  bronze_path="s3a://lakehouse/${key#local/lakehouse/}"
+  bronze_path="${bronze_path%/_ingestion_manifest/_SUCCESS}"
+  docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+    --master 'local[1]' --driver-memory "$memory" \
+    --conf spark.sql.shuffle.partitions=4 \
+    --py-files /opt/spark/work-dir/jobs/silver/common.py \
+    "/opt/spark/work-dir/jobs/silver/$job" --bronze-path "$bronze_path"
 }
 
-
-
-
-Run the latest completed WAQI batch:
-
-```powershell
-Invoke-LatestSilverBatch -BronzePrefix "waqi/historical" -Job "waqi_bronze_to_silver.py"
+invoke_latest_silver_batch "cams/eac4" "cams_bronze_to_silver.py" "1g"
+invoke_latest_silver_batch "waqi/historical" "waqi_bronze_to_silver.py"
 ```
 
-Run the latest completed batch for every currently supported Bronze dataset:
+Only one CAMS Silver run should write to `cams_cube` at a time. After
+completion, check `nessie.silver.ingestion_run` for `status='succeeded'`
+and `output_rows` near 67,208. A failed or interrupted attempt may have
+committed earlier chunks; the next attempt uses the cube's logical key to
+update those rows instead of inserting duplicates.
 
-```powershell
-Invoke-LatestSilverBatch -BronzePrefix "waqi/historical" -Job "waqi_bronze_to_silver.py"
-Invoke-LatestSilverBatch -BronzePrefix "cams/eac4" -Job "cams_bronze_to_silver.py" -DriverMemory "1g"
-Invoke-LatestSilverBatch -BronzePrefix "climate_trace/climate_trace_vietnam" -Job "climate_trace_bronze_to_silver.py"
-Invoke-LatestSilverBatch -BronzePrefix "reference/vietnam_administrative_divisions" -Job "admin_bronze_to_silver.py"
-Invoke-LatestSilverBatch -BronzePrefix "reference/vietnamese-provinces-database" -Job "admin_bronze_to_silver.py"
+## Querying one grid point in Trino
+
+Trino array subscripts start at 1; `cams_grid_point.grid_point_id` starts
+at 0:
+
+```sql
+SET TIME ZONE 'Asia/Ho_Chi_Minh';
+
+SELECT c.valid_time, p.latitude, p.longitude,
+       c.pm2p5[CAST(p.grid_point_id + 1 AS integer)] AS pm2p5_native
+FROM iceberg.silver.cams_cube AS c
+JOIN iceberg.silver.cams_grid_point AS p ON c.grid_id = p.grid_id
+WHERE p.grid_point_id = 0
+ORDER BY c.valid_time
+LIMIT 10;
 ```
 
+See [the Silver data contract](../../../lakehouse/silver/README.md) for
+logical keys, provenance, and timezone rules.
 
-invoke_latest_silver_batch \
-  "waqi/historical" \
-  "waqi_bronze_to_silver.py"
-
-invoke_latest_silver_batch \
-  "cams/eac4" \
-  "cams_bronze_to_silver.py" \
-  "1g"
-
-invoke_latest_silver_batch \
-  "climate_trace/climate_trace_vietnam" \
-  "climate_trace_bronze_to_silver.py"
 
 invoke_latest_silver_batch \
   "reference/vietnam_administrative_divisions" \
@@ -208,19 +123,15 @@ invoke_latest_silver_batch \
   "reference/vietnamese-provinces-database" \
   "admin_bronze_to_silver.py"
 
-Define the helper and call it in the same PowerShell session. Before a large
-local run, optional services can be stopped to leave more memory for Spark:
+invoke_latest_silver_batch \
+  "waqi/historical" \
+  "waqi_bronze_to_silver.py"
 
-```powershell
-docker compose stop airflow-webserver airflow-scheduler trino spark-worker postgres
-```
+invoke_latest_silver_batch \
+  "climate_trace/climate_trace_vietnam" \
+  "climate_trace_bronze_to_silver.py"
 
-Bring the complete stack back afterwards with `docker compose up -d`. Use
-`--master spark://spark-master:7077` instead of `local[1]` when deliberately
-running against the worker. The image installs ecCodes for streaming GRIB
-decoding and Shapely for GeoJSON-to-WKB conversion on both driver and
-executors.
-
-Every job skips a logical run that already succeeded. A new physical attempt
-gets a UUID run ID; exact duplicates are counted, while conflicting logical
-keys produce `data_quality_issue` rows and fail the attempt.
+invoke_latest_silver_batch \
+  "cams/eac4" \
+  "cams_bronze_to_silver.py" \
+  "1g"

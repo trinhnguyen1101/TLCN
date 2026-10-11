@@ -3,9 +3,11 @@
 -- Physical primary keys, foreign keys and secondary indexes are intentionally
 -- absent: Iceberg does not enforce them. Every table documents the logical key
 -- that Bronze -> Silver jobs must enforce with validation and MERGE.
--- Timestamps are stored and interpreted in UTC.
+-- Spark displays timestamp instants in Vietnam time (UTC+07:00).
+-- Source UTC instants are converted at the session boundary; DATE columns
+-- such as WAQI daily observations are already local calendar dates.
 
-SET spark.sql.session.timeZone=UTC;
+SET spark.sql.session.timeZone=Asia/Ho_Chi_Minh;
 
 CREATE NAMESPACE IF NOT EXISTS nessie.silver;
 
@@ -268,37 +270,73 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 10. CAMS observations at native grid resolution
--- Logical key:
--- (dataset_id, valid_time, grid_id, grid_point_id, variable_id)
--- Reprocessed values MERGE into this key; Iceberg snapshots retain table-level
--- history. Conflicting duplicates within one run fail data-quality checks.
+-- 10. CAMS source files and their physical unit conversions
+-- Logical key: (dataset_id, bronze_batch_id, column_name).
+-- One row per GRIB file; cams_cube points to this lineage through its batch ID.
 -- ---------------------------------------------------------------------------
-CREATE TABLE IF NOT EXISTS nessie.silver.cams_observation (
+CREATE TABLE IF NOT EXISTS nessie.silver.cams_cube_source (
     dataset_id          STRING NOT NULL,
-    valid_time          TIMESTAMP NOT NULL,
-    grid_id             STRING NOT NULL,
-    grid_point_id       BIGINT NOT NULL,
+    bronze_batch_id     STRING NOT NULL,
+    column_name         STRING NOT NULL,
     variable_id         STRING NOT NULL,
-    value_native        DOUBLE NOT NULL,
-    value_standard      DOUBLE,
-    qc_flag             STRING NOT NULL,
+    param_id            INT NOT NULL,
+    short_name          STRING NOT NULL,
+    native_unit         STRING NOT NULL,
+    standard_unit       STRING,
+    standard_scale      DOUBLE,
+    standard_offset     DOUBLE,
     source_file         STRING NOT NULL,
     source_file_sha256  STRING NOT NULL,
     ingestion_run_id    STRING NOT NULL,
     loaded_at           TIMESTAMP NOT NULL
 )
 USING iceberg
-PARTITIONED BY (month(valid_time), variable_id)
+TBLPROPERTIES (
+    'format-version' = '2',
+    'write.parquet.compression-codec' = 'zstd'
+);
+
+-- ---------------------------------------------------------------------------
+-- 11. CAMS native grid values, one row per time and grid
+-- Logical key: (dataset_id, valid_time, grid_id).
+-- Each array index matches cams_grid_point.grid_point_id (zero based).
+-- All 14 arrays have row_count * column_count finite native values.
+-- valid_time is a UTC source instant displayed in Asia/Ho_Chi_Minh by Spark.
+-- Prior row-based cams_observation tables are legacy and are not modified here.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS nessie.silver.cams_cube (
+    dataset_id          STRING NOT NULL,
+    valid_time          TIMESTAMP NOT NULL,
+    grid_id             STRING NOT NULL,
+    aod550              ARRAY<FLOAT> NOT NULL,
+    co_column           ARRAY<FLOAT> NOT NULL,
+    d2m                 ARRAY<FLOAT> NOT NULL,
+    mslp                ARRAY<FLOAT> NOT NULL,
+    no2_column          ARRAY<FLOAT> NOT NULL,
+    o3_column           ARRAY<FLOAT> NOT NULL,
+    pm10                ARRAY<FLOAT> NOT NULL,
+    pm1                 ARRAY<FLOAT> NOT NULL,
+    pm2p5               ARRAY<FLOAT> NOT NULL,
+    so2_column          ARRAY<FLOAT> NOT NULL,
+    sp                  ARRAY<FLOAT> NOT NULL,
+    t2m                 ARRAY<FLOAT> NOT NULL,
+    u10                 ARRAY<FLOAT> NOT NULL,
+    v10                 ARRAY<FLOAT> NOT NULL,
+    bronze_batch_id     STRING NOT NULL,
+    ingestion_run_id    STRING NOT NULL,
+    loaded_at           TIMESTAMP NOT NULL
+)
+USING iceberg
+PARTITIONED BY (year(valid_time))
 TBLPROPERTIES (
     'format-version' = '2',
     'write.parquet.compression-codec' = 'zstd',
     'write.distribution-mode' = 'hash',
-    'write.target-file-size-bytes' = '268435456'
+    'write.target-file-size-bytes' = '134217728'
 );
 
 -- ---------------------------------------------------------------------------
--- 11. Canonical WAQI stations
+-- 12. Canonical WAQI stations
 -- Logical key: station_id. station_id must not be derived from display name
 -- alone; use the source mapping table when source IDs are missing.
 -- ---------------------------------------------------------------------------
@@ -328,7 +366,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 12. WAQI source identity/alias mapping
+-- 13. WAQI source identity/alias mapping
 -- Logical key: (dataset_id, source_station_key)
 -- source_station_key is source_station_id when available; otherwise it is a
 -- normalized, deterministic key derived from the original file/station label.
@@ -354,7 +392,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 13. Variable availability by station and dataset
+-- 14. Variable availability by station and dataset
 -- Logical key: (dataset_id, station_id, variable_id)
 -- ---------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS nessie.silver.waqi_station_variable (
@@ -375,7 +413,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 14. WAQI daily pollutant AQI observations (long format)
+-- 15. WAQI daily pollutant AQI observations (long format)
 -- Logical key: (dataset_id, station_id, observation_date, variable_id)
 -- Missing source values may be retained with a NULL aqi_value only when
 -- missing_reason is populated; they must never be converted to zero.
@@ -403,7 +441,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 15. WAQI hourly observation header
+-- 16. WAQI hourly observation header
 -- Logical key: (dataset_id, station_id, observation_time_utc)
 -- observation_id is a deterministic hash of that key.
 -- ---------------------------------------------------------------------------
@@ -431,7 +469,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 16. WAQI hourly pollutant/weather measurements (long format)
+-- 17. WAQI hourly pollutant/weather measurements (long format)
 -- Logical key:
 -- (dataset_id, station_id, observation_time_utc, variable_id)
 -- Pollutant AQI, concentration and meteorological values are distinguished by
@@ -461,7 +499,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 17. Climate TRACE aggregate emissions
+-- 18. Climate TRACE aggregate emissions
 -- Logical key: aggregate_id. Generate it from the normalized values of:
 -- (dataset_id, country_code, period_type, period_start, aggregation_level,
 --  coalesce(sector, '<TOTAL>'), coalesce(subsector, '<NONE>'), variable_id).
@@ -496,7 +534,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 18. Climate TRACE point/asset emission sources
+-- 19. Climate TRACE point/asset emission sources
 -- Logical key: source_id. source_id should be namespaced, for example
 -- "climate_trace:25454003", to prevent collisions with future providers.
 -- The current row is updated by MERGE; Iceberg snapshots retain prior versions.
@@ -530,7 +568,7 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
--- 19. Emission observations for individual sources
+-- 20. Emission observations for individual sources
 -- Logical key: (dataset_id, source_id, year_label, variable_id)
 -- Exact duplicate source rows must be removed before MERGE and counted in the
 -- corresponding ingestion_run. Conflicting duplicates must fail the run.

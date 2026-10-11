@@ -13,7 +13,7 @@ import os
 import re
 import unicodedata
 from dataclasses import dataclass
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import PurePosixPath
 from typing import Iterable, Sequence
 from uuid import uuid4
@@ -25,6 +25,8 @@ CATALOG = "nessie"
 NAMESPACE = "silver"
 TABLE_PREFIX = f"{CATALOG}.{NAMESPACE}"
 PIPELINE_VERSION = "1.0.0"
+SILVER_TIMEZONE = "Asia/Ho_Chi_Minh"
+SILVER_TZ = timezone(timedelta(hours=7))
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -100,6 +102,7 @@ def create_spark(app_name: str) -> SparkSession:
         SparkSession.builder.appName(app_name)
         .config("spark.sql.catalog.nessie.s3.access-key-id", access_key)
         .config("spark.sql.catalog.nessie.s3.secret-access-key", secret_key)
+        .config("spark.sql.session.timeZone", SILVER_TIMEZONE)
         .config("spark.hadoop.fs.s3a.access.key", access_key)
         .config("spark.hadoop.fs.s3a.secret.key", secret_key)
         .config(
@@ -108,6 +111,11 @@ def create_spark(app_name: str) -> SparkSession:
         )
         .getOrCreate()
     )
+    # UDFs defined in this module are deserialized in a separate Python worker.
+    # The submit script's sibling modules are not added to that worker's
+    # PYTHONPATH automatically, even in local mode, so distribute this module
+    # before any Spark action can start a Python worker.
+    spark.sparkContext.addPyFile(os.path.abspath(__file__))
     hadoop_conf = spark.sparkContext._jsc.hadoopConfiguration()
     hadoop_conf.set("fs.s3a.access.key", access_key)
     hadoop_conf.set("fs.s3a.secret.key", secret_key)
@@ -116,7 +124,7 @@ def create_spark(app_name: str) -> SparkSession:
         "org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider",
     )
     spark.sparkContext.setLogLevel("WARN")
-    spark.conf.set("spark.sql.session.timeZone", "UTC")
+    spark.conf.set("spark.sql.session.timeZone", SILVER_TIMEZONE)
     return spark
 
 
@@ -339,7 +347,7 @@ def finish_run(
 ) -> None:
     if status not in {"succeeded", "failed", "partial"}:
         raise ValueError(f"Invalid terminal run status: {status}")
-    finished = utc_now().replace(tzinfo=None).isoformat(sep=" ")
+    finished = utc_now().astimezone(SILVER_TZ).replace(tzinfo=None).isoformat(sep=" ")
     error_sql = "NULL" if error_message is None else _sql_literal(error_message[:4000])
     values = {
         "input_rows": "NULL" if input_rows is None else str(int(input_rows)),

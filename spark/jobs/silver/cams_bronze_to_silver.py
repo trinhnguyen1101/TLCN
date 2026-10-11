@@ -1,4 +1,4 @@
-"""Transform one CAMS EAC4 GRIB Bronze batch into ``nessie.silver``."""
+"""Load aligned CAMS EAC4 GRIB fields into a compact Iceberg grid cube."""
 
 from __future__ import annotations
 
@@ -6,16 +6,16 @@ import argparse
 import math
 import os
 import tempfile
+from array import array
+from contextlib import ExitStack
 from datetime import datetime, timezone
 
-from pyspark.sql import functions as F
-
 from common import (
+    SILVER_TZ,
     TABLE_PREFIX,
     DataQualityError,
     bootstrap_schema,
     create_spark,
-    deduplicate_or_fail,
     finish_run,
     load_bronze_batch,
     merge_dataframe,
@@ -24,18 +24,43 @@ from common import (
     sha256_json,
     start_run,
     utc_now,
-    write_quality_issues,
 )
 
 
 PIPELINE = "cams-eac4-bronze-to-silver"
-CAMS_CHUNK_ROWS = 100_000
-CAMS_ROWS_PER_PARTITION = 10_000
+PIPELINE_VERSION = "2.0.0"
+CAMS_CHUNK_TIMESTEPS = 512
+CAMS_INPUT_PARTITIONS = 16
+
+# Match the native GRIB parameter, not the filename, to the fixed cube column.
+# One aligned time/grid record has exactly one message from every field.
+FIELD_SPECS = {
+    "aod550": (210207, "aod550"),
+    "co_column": (210127, "tcco"),
+    "d2m": (168, "2d"),
+    "mslp": (151, "msl"),
+    "no2_column": (210125, "tcno2"),
+    "o3_column": (210206, "gtco3"),
+    "pm10": (210074, "pm10"),
+    "pm1": (210072, "pm1"),
+    "pm2p5": (210073, "pm2p5"),
+    "so2_column": (210126, "tcso2"),
+    "sp": (134, "sp"),
+    "t2m": (167, "2t"),
+    "u10": (165, "10u"),
+    "v10": (166, "10v"),
+}
+PARAM_TO_COLUMN = {param_id: column for column, (param_id, _) in FIELD_SPECS.items()}
 GRIB_KEYS = (
-    "paramId", "shortName", "name", "units", "typeOfLevel", "level", "stepType",
-    "dataType", "md5GridSection", "gridType", "Ni", "Nj",
+    "paramId", "shortName", "name", "units", "typeOfLevel", "level",
+    "stepType", "dataType", "md5GridSection", "gridType", "Ni", "Nj",
     "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees",
     "validityDate", "validityTime", "numberOfMissing",
+)
+REQUIRED_KEYS = (
+    "paramId", "shortName", "name", "units", "typeOfLevel", "level",
+    "stepType", "dataType", "md5GridSection", "gridType", "Ni", "Nj",
+    "validityDate", "validityTime",
 )
 
 
@@ -57,21 +82,22 @@ def ec_value(eccodes, handle, key):
 
 
 def measurement_contract(metadata):
-    unit = metadata["units"]
-    short_name = metadata["shortName"]
+    """Return kind, standard unit, scale and offset for native * scale + offset."""
+    unit = str(metadata["units"])
+    short_name = str(metadata["shortName"])
     if unit == "kg m**-3":
-        return "mass_concentration", "ug m**-3", lambda value: value * 1_000_000_000.0
+        return "mass_concentration", "ug m**-3", 1_000_000_000.0, 0.0
     if unit == "kg m**-2":
-        return "column_mass", "mg m**-2", lambda value: value * 1_000_000.0
+        return "column_mass", "mg m**-2", 1_000_000.0, 0.0
     if unit == "K":
-        return "temperature", "degC", lambda value: value - 273.15
+        return "temperature", "degC", 1.0, -273.15
     if unit == "Pa":
-        return "pressure", "hPa", lambda value: value / 100.0
+        return "pressure", "hPa", 0.01, 0.0
     if unit == "m s**-1":
-        return "wind_component", "m s**-1", lambda value: value
+        return "wind_component", "m s**-1", 1.0, 0.0
     if unit in {"~", "1"} or short_name.startswith("aod"):
-        return "optical_depth", "1", lambda value: value
-    return "native_measurement", None, lambda value: None
+        return "optical_depth", "1", 1.0, 0.0
+    return "native_measurement", None, None, None
 
 
 def source_variable(metadata):
@@ -85,7 +111,8 @@ def source_variable(metadata):
 def valid_time(metadata):
     day = str(int(metadata["validityDate"]))
     clock = f"{int(metadata['validityTime']):04d}"
-    return datetime.strptime(day + clock, "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+    source_utc = datetime.strptime(day + clock, "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+    return source_utc.astimezone(SILVER_TZ)
 
 
 def copy_bronze_file_to_local(spark, bronze_object, local_path):
@@ -95,234 +122,238 @@ def copy_bronze_file_to_local(spark, bronze_object, local_path):
     fs.copyToLocalFile(False, source, target, True)
 
 
-def variable_row(spark, metadata, created_at):
-    kind, standard_unit, _ = measurement_contract(metadata)
-    native_name = source_variable(metadata)
-    variable_id = sha256_json("silver-variable-v1", "cams", native_name, kind)
-    row = [(
-        variable_id, "cams", native_name, str(metadata["name"]), "atmospheric",
-        kind, str(metadata["units"]), standard_unit, int(metadata["paramId"]),
-        str(metadata["shortName"]),
-        f"CAMS GRIB {metadata['typeOfLevel']} level {metadata['level']}; "
-        f"stepType={metadata['stepType']}; dataType={metadata['dataType']}.",
-        created_at,
-    )]
-    return variable_id, spark.createDataFrame(row, spark.table(f"{TABLE_PREFIX}.variable").schema)
+def read_message(eccodes, handle, seen_grids, source_file):
+    grib = eccodes.codes_grib_new_from_file(handle)
+    if grib is None:
+        return None
+    try:
+        metadata = {key: ec_value(eccodes, grib, key) for key in GRIB_KEYS}
+        missing = [key for key in REQUIRED_KEYS if metadata[key] is None]
+        if missing:
+            raise DataQualityError(f"{source_file}: missing GRIB metadata {missing}")
+        if int(metadata.get("numberOfMissing") or 0):
+            raise DataQualityError(f"{source_file}: GRIB field contains missing grid values")
+
+        grid_id = sha256_json("cams-grid-v1", str(metadata["md5GridSection"]).lower())
+        ni, nj = int(metadata["Ni"]), int(metadata["Nj"])
+        raw_values = eccodes.codes_get_array(grib, "values")
+        if len(raw_values) != ni * nj:
+            raise DataQualityError(f"{source_file}: grid size and value count disagree")
+        # Keep one float32 per point, matching the Iceberg ARRAY<FLOAT> schema.
+        values = array("f", (float(value) for value in raw_values)).tolist()
+        if any(not math.isfinite(value) for value in values):
+            raise DataQualityError(f"{source_file}: non-finite native value")
+
+        coordinates = None
+        if grid_id not in seen_grids:
+            latitudes = [float(x) for x in eccodes.codes_get_array(grib, "latitudes")]
+            longitudes = [float(x) for x in eccodes.codes_get_array(grib, "longitudes")]
+            if len(latitudes) != len(values) or len(longitudes) != len(values):
+                raise DataQualityError(f"{source_file}: coordinate/value count mismatch")
+            if any(not -90 <= x <= 90 for x in latitudes):
+                raise DataQualityError(f"{source_file}: latitude outside [-90, 90]")
+            if any(not -180 <= x <= 180 for x in longitudes):
+                raise DataQualityError(f"{source_file}: longitude outside [-180, 180]")
+            coordinates = latitudes, longitudes
+        return metadata, valid_time(metadata), grid_id, values, coordinates
+    finally:
+        eccodes.codes_release(grib)
 
 
-def reject_cross_file_conflicts(spark, incoming, run, keys):
-    scope = incoming.agg(
-        F.min("valid_time").alias("min_time"), F.max("valid_time").alias("max_time")
-    ).first()
-    variable_ids = [row.variable_id for row in incoming.select("variable_id").distinct().collect()]
-    existing = spark.table(f"{TABLE_PREFIX}.cams_observation").filter(
-        (F.col("dataset_id") == run.dataset_id)
-        & (F.col("ingestion_run_id") == run.run_id)
-        & F.col("valid_time").between(scope.min_time, scope.max_time)
-        & F.col("variable_id").isin(variable_ids)
-    )
-    if existing.limit(1).count() == 0:
-        return incoming, 0
-    left = incoming.alias("new")
-    right = existing.alias("old")
-    condition = None
-    for key in keys:
-        part = F.col(f"new.{key}").eqNullSafe(F.col(f"old.{key}"))
-        condition = part if condition is None else condition & part
-    matched = left.join(right, condition, "inner")
-    conflicts = matched.filter(
-        (~F.col("new.value_native").eqNullSafe(F.col("old.value_native")))
-        | (~F.col("new.value_standard").eqNullSafe(F.col("old.value_standard")))
-    ).limit(1).count()
-    if conflicts:
-        write_quality_issues(spark, run, [{
-            "rule_id": "cams_cross_file_conflicting_duplicate",
-            "issue_type": "conflicting_duplicate", "severity": "fatal",
-            "description": "The same CAMS logical key has different values in this Bronze batch.",
-        }])
-        raise DataQualityError("CAMS conflicting duplicate detected across GRIB files")
-    duplicate_count = matched.count()
-    return incoming.join(existing.select(*keys), list(keys), "left_anti"), duplicate_count
-
-
-def merge_observation_chunk(spark, rows, run):
-    if not rows:
-        return 0, 0
-    # createDataFrame(list, schema) otherwise puts the whole local collection
-    # into one task under local[1]. A 100k-row CAMS chunk serializes to roughly
-    # 5.7 MiB, well above Spark's recommended 1 MiB task size. Keep the larger
-    # chunk (and therefore fewer expensive Iceberg MERGEs), but distribute its
-    # payload over bounded input partitions.
-    partition_count = max(1, math.ceil(len(rows) / CAMS_ROWS_PER_PARTITION))
-    row_rdd = spark.sparkContext.parallelize(rows, partition_count)
-    observation_frame = spark.createDataFrame(
-        row_rdd, spark.table(f"{TABLE_PREFIX}.cams_observation").schema
-    )
-    keys = ["dataset_id", "valid_time", "grid_id", "grid_point_id", "variable_id"]
-    observation_frame, duplicates = deduplicate_or_fail(
-        spark, observation_frame, key_columns=keys,
-        compare_columns=["value_native", "value_standard", "qc_flag"], run=run,
-        rule_id="cams_conflicting_duplicate",
-    )
-    observation_frame, prior_duplicates = reject_cross_file_conflicts(
-        spark, observation_frame, run, keys
-    )
-    output_rows = observation_frame.count()
-    if output_rows:
-        merge_dataframe(
-            spark, observation_frame, f"{TABLE_PREFIX}.cams_observation", keys
-        )
-    return output_rows, duplicates + prior_duplicates
-
-
-def transform_file(spark, local_path, meta, run, seen_grids):
-    import eccodes
-
+def register_grid(spark, metadata, grid_id, coordinates, run):
+    latitudes, longitudes = coordinates
+    ni, nj = int(metadata["Ni"]), int(metadata["Nj"])
     now = utc_now()
-    observations = []
-    local_variables = set()
-    local_grids = set()
-    message_count = 0
-    input_rows = output_rows = duplicates = 0
-    with open(local_path, "rb") as handle:
-        while True:
-            grib = eccodes.codes_grib_new_from_file(handle)
-            if grib is None:
-                break
-            message_count += 1
-            try:
-                metadata = {key: ec_value(eccodes, grib, key) for key in GRIB_KEYS}
-                required = (
-                    "paramId", "shortName", "units", "typeOfLevel", "level", "stepType",
-                    "dataType", "md5GridSection", "gridType", "Ni", "Nj", "validityDate",
-                    "validityTime",
-                )
-                missing = [key for key in required if metadata[key] is None]
-                if missing:
-                    raise DataQualityError(f"GRIB message {message_count} missing metadata: {missing}")
-                if int(metadata.get("numberOfMissing") or 0) != 0:
-                    write_quality_issues(spark, run, [{
-                        "source_file": meta.source_file,
-                        "source_record_locator": f"grib:message={message_count}",
-                        "column_name": "values", "rule_id": "cams_missing_grid_values",
-                        "issue_type": "missing_measurement", "severity": "fatal",
-                        "description": "cams_observation.value_native is required; missing GRIB values were not zero-filled.",
-                    }])
-                    raise DataQualityError("CAMS GRIB contains missing grid values")
+    grid = [(
+        grid_id, str(metadata["md5GridSection"]).lower(), str(metadata["gridType"]),
+        nj, ni,
+        float(metadata["jDirectionIncrementInDegrees"])
+        if metadata["jDirectionIncrementInDegrees"] is not None else None,
+        float(metadata["iDirectionIncrementInDegrees"])
+        if metadata["iDirectionIncrementInDegrees"] is not None else None,
+        min(longitudes), min(latitudes), max(longitudes), max(latitudes),
+        4326, run.dataset_id, run.run_id, now,
+    )]
+    points = [
+        (grid_id, index, index // ni, index % ni, latitudes[index], longitudes[index])
+        for index in range(len(latitudes))
+    ]
+    merge_dataframe(
+        spark,
+        spark.createDataFrame(grid, spark.table(f"{TABLE_PREFIX}.cams_grid").schema),
+        f"{TABLE_PREFIX}.cams_grid", ["grid_id"],
+    )
+    merge_dataframe(
+        spark,
+        spark.createDataFrame(points, spark.table(f"{TABLE_PREFIX}.cams_grid_point").schema),
+        f"{TABLE_PREFIX}.cams_grid_point", ["grid_id", "grid_point_id"],
+    )
 
-                md5_grid = str(metadata["md5GridSection"]).lower()
-                grid_id = sha256_json("cams-grid-v1", md5_grid)
-                ni, nj = int(metadata["Ni"]), int(metadata["Nj"])
-                values = eccodes.codes_get_array(grib, "values")
-                if len(values) != ni * nj:
-                    raise DataQualityError(
-                        f"GRIB message {message_count}: {len(values)} values != Ni*Nj {ni * nj}"
-                    )
-                if grid_id not in local_grids:
-                    latitudes = eccodes.codes_get_array(grib, "latitudes")
-                    longitudes = eccodes.codes_get_array(grib, "longitudes")
-                    if len(latitudes) != len(values) or len(longitudes) != len(values):
-                        raise DataQualityError("GRIB coordinate/value arrays have inconsistent lengths")
-                    if any(not -90.0 <= float(value) <= 90.0 for value in latitudes):
-                        raise DataQualityError("CAMS latitude outside [-90, 90]")
-                    if any(not -180.0 <= float(value) <= 180.0 for value in longitudes):
-                        raise DataQualityError("CAMS longitude outside [-180, 180]")
-                    signature = (
-                        str(metadata["gridType"]), nj, ni,
-                        tuple(round(float(value), 10) for value in latitudes),
-                        tuple(round(float(value), 10) for value in longitudes),
-                    )
-                    old_signature = seen_grids.get(grid_id)
-                    if old_signature is not None and old_signature != signature:
-                        raise DataQualityError("One md5GridSection maps to conflicting grid coordinates")
-                    seen_grids[grid_id] = signature
-                    grid = (
-                        grid_id, md5_grid, str(metadata["gridType"]), nj, ni,
-                        float(metadata["jDirectionIncrementInDegrees"])
-                        if metadata["jDirectionIncrementInDegrees"] is not None else None,
-                        float(metadata["iDirectionIncrementInDegrees"])
-                        if metadata["iDirectionIncrementInDegrees"] is not None else None,
-                        min(float(value) for value in longitudes),
-                        min(float(value) for value in latitudes),
-                        max(float(value) for value in longitudes),
-                        max(float(value) for value in latitudes),
-                        4326, run.dataset_id, run.run_id, now,
-                    )
-                    grid_points = [
-                        (grid_id, index, index // ni, index % ni, float(latitudes[index]),
-                         float(longitudes[index]))
-                        for index in range(len(values))
-                    ]
-                    grid_frame = spark.createDataFrame(
-                        [grid], spark.table(f"{TABLE_PREFIX}.cams_grid").schema
-                    )
-                    point_frame = spark.createDataFrame(
-                        grid_points, spark.table(f"{TABLE_PREFIX}.cams_grid_point").schema
-                    )
-                    merge_dataframe(spark, grid_frame, f"{TABLE_PREFIX}.cams_grid", ["grid_id"])
-                    merge_dataframe(
-                        spark, point_frame, f"{TABLE_PREFIX}.cams_grid_point",
-                        ["grid_id", "grid_point_id"],
-                    )
-                    local_grids.add(grid_id)
 
-                native_name = source_variable(metadata)
-                kind, _, convert = measurement_contract(metadata)
-                variable_id = sha256_json("silver-variable-v1", "cams", native_name, kind)
-                if variable_id not in local_variables:
-                    _, variable = variable_row(spark, metadata, now)
-                    merge_dataframe(
-                        spark, variable, f"{TABLE_PREFIX}.variable",
-                        ["source_system", "source_variable", "measurement_kind"],
-                    )
-                    local_variables.add(variable_id)
-                timestamp = valid_time(metadata)
-                for index, raw_value in enumerate(values):
-                    native_value = float(raw_value)
-                    if not math.isfinite(native_value):
-                        raise DataQualityError("CAMS contains a non-finite native value")
-                    standard_value = convert(native_value)
-                    observations.append((
-                        run.dataset_id, timestamp, grid_id, index, variable_id, native_value,
-                        standard_value, "ok", meta.source_file, meta.file_sha256, run.run_id, now,
-                    ))
-                input_rows += len(values)
-                if len(observations) >= CAMS_CHUNK_ROWS:
-                    chunk_output, chunk_duplicates = merge_observation_chunk(
-                        spark, observations, run
-                    )
-                    output_rows += chunk_output
-                    duplicates += chunk_duplicates
-                    observations.clear()
-            finally:
-                eccodes.codes_release(grib)
+def register_sources(spark, files, first_messages, run, batch):
+    now = utc_now()
+    variable_rows = []
+    source_rows = []
+    for column in FIELD_SPECS:
+        metadata = first_messages[column][0]
+        file_meta = files[column]["meta"]
+        kind, standard_unit, scale, offset = measurement_contract(metadata)
+        native_name = source_variable(metadata)
+        variable_id = sha256_json("silver-variable-v1", "cams", native_name, kind)
+        variable_rows.append((
+            variable_id, "cams", native_name, str(metadata["name"]), "atmospheric",
+            kind, str(metadata["units"]), standard_unit, int(metadata["paramId"]),
+            str(metadata["shortName"]),
+            f"CAMS GRIB {metadata['typeOfLevel']} level {metadata['level']}; "
+            f"stepType={metadata['stepType']}; dataType={metadata['dataType']}.",
+            now,
+        ))
+        source_rows.append((
+            run.dataset_id, batch.batch_id, column, variable_id,
+            int(metadata["paramId"]), str(metadata["shortName"]), str(metadata["units"]),
+            standard_unit, scale, offset, file_meta.source_file, file_meta.file_sha256,
+            run.run_id, now,
+        ))
+    merge_dataframe(
+        spark,
+        spark.createDataFrame(variable_rows, spark.table(f"{TABLE_PREFIX}.variable").schema),
+        f"{TABLE_PREFIX}.variable",
+        ["source_system", "source_variable", "measurement_kind"],
+    )
+    merge_dataframe(
+        spark,
+        spark.createDataFrame(source_rows, spark.table(f"{TABLE_PREFIX}.cams_cube_source").schema),
+        f"{TABLE_PREFIX}.cams_cube_source",
+        ["dataset_id", "bronze_batch_id", "column_name"],
+    )
 
-    if message_count == 0:
-        raise DataQualityError(f"No GRIB messages found in {meta.source_file}")
-    chunk_output, chunk_duplicates = merge_observation_chunk(spark, observations, run)
-    output_rows += chunk_output
-    duplicates += chunk_duplicates
-    return input_rows, output_rows, duplicates
+
+def merge_cube_chunk(spark, rows):
+    if not rows:
+        return 0
+    schema = spark.table(f"{TABLE_PREFIX}.cams_cube").schema
+    source = spark.createDataFrame(
+        spark.sparkContext.parallelize(rows, CAMS_INPUT_PARTITIONS), schema
+    )
+    merge_dataframe(
+        spark, source, f"{TABLE_PREFIX}.cams_cube",
+        ["dataset_id", "valid_time", "grid_id"],
+    )
+    return len(rows)
 
 
 def transform(spark, batch, run):
+    import eccodes
+
     grib_files = metadata_rows(batch, ["grib", "grib2", "grb", "grb2"])
-    if not grib_files:
-        raise ValueError("CAMS Bronze batch has no GRIB files")
-    input_rows = output_rows = duplicates = 0
-    seen_grids = {}
-    with tempfile.TemporaryDirectory(prefix="cams-silver-") as temp_dir:
+    if len(grib_files) != len(FIELD_SPECS):
+        raise DataQualityError(
+            f"CAMS cube requires {len(FIELD_SPECS)} GRIB files, got {len(grib_files)}"
+        )
+
+    seen_grids = set()
+    grid_shapes = {}
+    input_rows = output_rows = 0
+    last_time = None
+    chunk = []
+    with tempfile.TemporaryDirectory(prefix="cams-cube-") as temp_dir, ExitStack() as stack:
+        files = {}
+        first_messages = {}
         for index, meta in enumerate(grib_files):
             local_path = os.path.join(temp_dir, f"input-{index}.grib")
             copy_bronze_file_to_local(spark, meta.bronze_object, local_path)
-            file_input, file_output, file_duplicates = transform_file(
-                spark, local_path, meta, run, seen_grids
-            )
-            input_rows += file_input
-            output_rows += file_output
-            duplicates += file_duplicates
-            os.remove(local_path)
-    return input_rows, output_rows, duplicates
+            handle = stack.enter_context(open(local_path, "rb"))
+            message = read_message(eccodes, handle, seen_grids, meta.source_file)
+            if message is None:
+                raise DataQualityError(f"{meta.source_file}: empty GRIB file")
+            metadata = message[0]
+            param_id = int(metadata["paramId"])
+            column = PARAM_TO_COLUMN.get(param_id)
+            if column is None or str(metadata["shortName"]) != FIELD_SPECS[column][1]:
+                raise DataQualityError(
+                    f"{meta.source_file}: unexpected GRIB paramId/shortName "
+                    f"{param_id}/{metadata['shortName']}"
+                )
+            if column in files:
+                raise DataQualityError(f"Two CAMS GRIB files map to {column}")
+            files[column] = {
+                "meta": meta,
+                "handle": handle,
+                "source_variable": source_variable(metadata),
+                "unit": str(metadata["units"]),
+            }
+            first_messages[column] = message
+        if set(files) != set(FIELD_SPECS):
+            raise DataQualityError(f"CAMS fields missing: {sorted(set(FIELD_SPECS) - set(files))}")
+
+        register_sources(spark, files, first_messages, run, batch)
+        messages = first_messages
+        while True:
+            if all(message is None for message in messages.values()):
+                break
+            if any(message is None for message in messages.values()):
+                raise DataQualityError("CAMS GRIB files have different message counts")
+            times = {message[1] for message in messages.values()}
+            grids = {message[2] for message in messages.values()}
+            if len(times) != 1 or len(grids) != 1:
+                raise DataQualityError("CAMS GRIB fields have different times or grids")
+            timestamp = next(iter(times))
+            grid_id = next(iter(grids))
+            shape = (int(messages[next(iter(FIELD_SPECS))][0]["Ni"]),
+                     int(messages[next(iter(FIELD_SPECS))][0]["Nj"]))
+            if grid_id in grid_shapes and grid_shapes[grid_id] != shape:
+                raise DataQualityError("CAMS grid shape changed for the same grid ID")
+            if last_time is not None and timestamp <= last_time:
+                raise DataQualityError("CAMS GRIB times must be strictly increasing")
+            last_time = timestamp
+
+            if grid_id not in seen_grids:
+                first = messages[next(iter(FIELD_SPECS))]
+                metadata, _, _, _, coordinates = first
+                if coordinates is None:
+                    raise DataQualityError("Missing coordinates for a new CAMS grid")
+                for message in messages.values():
+                    other_metadata, _, _, values, other_coordinates = message
+                    if (int(other_metadata["Ni"]), int(other_metadata["Nj"])) != (
+                        int(metadata["Ni"]), int(metadata["Nj"])
+                    ) or len(values) != len(first[3]):
+                        raise DataQualityError("CAMS field grid shape mismatch")
+                    if other_coordinates is not None and other_coordinates != coordinates:
+                        raise DataQualityError("CAMS grid coordinates conflict")
+                register_grid(spark, metadata, grid_id, coordinates, run)
+                seen_grids.add(grid_id)
+                grid_shapes[grid_id] = shape
+            for column, message in messages.items():
+                metadata = message[0]
+                if (int(metadata["Ni"]), int(metadata["Nj"])) != shape:
+                    raise DataQualityError(f"CAMS grid shape differs for {column}")
+                if source_variable(metadata) != files[column]["source_variable"] or str(
+                    metadata["units"]
+                ) != files[column]["unit"]:
+                    raise DataQualityError(f"CAMS GRIB metadata changed for {column}")
+
+            now = utc_now()
+            chunk.append((
+                run.dataset_id, timestamp, grid_id,
+                *(messages[column][3] for column in FIELD_SPECS),
+                batch.batch_id, run.run_id, now,
+            ))
+            input_rows += sum(len(messages[column][3]) for column in FIELD_SPECS)
+            if len(chunk) >= CAMS_CHUNK_TIMESTEPS:
+                output_rows += merge_cube_chunk(spark, chunk)
+                print(f"CAMS cube committed {output_rows} time/grid rows", flush=True)
+                chunk.clear()
+
+            next_messages = {}
+            for column in FIELD_SPECS:
+                file = files[column]
+                message = read_message(eccodes, file["handle"], seen_grids, file["meta"].source_file)
+                next_messages[column] = message
+            messages = next_messages
+
+        output_rows += merge_cube_chunk(spark, chunk)
+        print(f"CAMS cube committed {output_rows} time/grid rows (complete)", flush=True)
+    return input_rows, output_rows, 0
 
 
 def main():
@@ -333,19 +364,23 @@ def main():
         bootstrap_schema(spark, args.schema_sql)
         batch = load_bronze_batch(spark, args.bronze_path)
         if batch.source != "cams" or batch.dataset_name != "eac4":
-            raise ValueError(f"Expected cams/eac4 Bronze batch, got {batch.source}/{batch.dataset_name}")
+            raise ValueError(
+                f"Expected cams/eac4 Bronze batch, got {batch.source}/{batch.dataset_name}"
+            )
         dataset_id = register_dataset(
             spark, batch, source_version=args.source_version,
             source_uri="https://ads.atmosphere.copernicus.eu/",
             description="CAMS EAC4 atmospheric reanalysis at native GRIB grid resolution.",
         )
-        run = start_run(spark, batch, dataset_id, PIPELINE)
+        run = start_run(
+            spark, batch, dataset_id, PIPELINE, pipeline_version=PIPELINE_VERSION
+        )
         if run.skipped:
             return
         input_rows, output_rows, duplicates = transform(spark, batch, run)
         finish_run(
-            spark, run, status="succeeded", input_rows=input_rows, output_rows=output_rows,
-            duplicate_rows=duplicates,
+            spark, run, status="succeeded", input_rows=input_rows,
+            output_rows=output_rows, duplicate_rows=duplicates,
         )
     except Exception as exc:
         if run is not None and not run.skipped:

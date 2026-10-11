@@ -5,18 +5,21 @@ in the `nessie.silver` namespace. It is Spark SQL, not PostgreSQL SQL.
 
 ## Design rules
 
-- Bronze files remain immutable. Every file-derived Silver row must be
-  traceable through `ingestion_run_id`, `source_file`, and
-  `source_file_sha256`; conformed rows trace through their source-mapping table.
+- Bronze files remain immutable. File-derived rows carry source file lineage,
+  or (for CAMS cube rows) join through `bronze_batch_id` and
+  `cams_cube_source` to `source_file` and `source_file_sha256`.
 - Business/entity IDs stored as `STRING` are deterministic UUIDs or hashes.
   `ingestion_run.run_id` is the deliberate exception: it identifies one
   physical attempt and is a new UUID for every retry.
 - Primary and foreign keys in this document are logical constraints. Bronze to
   Silver jobs must validate them because Iceberg does not enforce relational
   constraints.
-- Jobs must use `MERGE INTO` on the logical key of each target table. Replaying
+- Jobs use `MERGE INTO` on the logical key of each target table. Replaying
   an already successful logical run must not add rows or alter fact values.
-- Timestamps are UTC. A source timezone is retained separately when it exists.
+- Spark Silver sessions use `Asia/Ho_Chi_Minh` (UTC+07:00). Source UTC instants
+  are converted for display and calendar partitioning. WAQI `date` is a
+  Vietnam-local calendar date; it must not be shifted. Explicit `*_utc`
+  columns retain their UTC meaning. Store source timezone separately when known.
 - Exact duplicate source rows are removed and counted. Conflicting rows with
   the same logical key fail the run and are written to `data_quality_issue`.
 - Missing measurements remain `NULL` with a `missing_reason`; they are never
@@ -88,7 +91,8 @@ the lists deliberately when onboarding a new source.
 | `admin_boundary` | `boundary_id` |
 | `cams_grid` | `grid_id` |
 | `cams_grid_point` | `grid_id, grid_point_id` |
-| `cams_observation` | `dataset_id, valid_time, grid_id, grid_point_id, variable_id` |
+| `cams_cube_source` | `dataset_id, bronze_batch_id, column_name` |
+| `cams_cube` | `dataset_id, valid_time, grid_id` |
 | `waqi_station` | `station_id` |
 | `waqi_station_source` | `dataset_id, source_station_key` |
 | `waqi_station_variable` | `dataset_id, station_id, variable_id` |
@@ -106,9 +110,13 @@ the lists deliberately when onboarding a new source.
 - Parse `date` explicitly using `yyyy/M/d`; do not rely on locale inference.
 - Trim column names and cell values. Empty strings become `NULL`.
 - The pollutant columns contain daily AQI values, not concentrations.
-- Build `source_station_key` from the provider station ID when available. For
-  the current files, where no ID is present, use a normalized full filename and
-  keep the original filename in `waqi_station_source`.
+- Each historical CSV represents exactly one station. The current files have
+  no provider station ID. Build `station_id` from dataset ID and normalized
+  full relative filename, reject colliding normalized names, and keep the
+  original filename in `waqi_station_source`. This keeps distinct stations
+  separate even if display names are similar.
+- Set `waqi_station.timezone` to `Asia/Ho_Chi_Minh` for these Vietnam files.
+  Their daily `date` values are local dates, not UTC timestamps.
 - Populate `waqi_station_variable` for both present and absent canonical WAQI
   columns so schema differences between station files remain observable.
 
@@ -118,10 +126,19 @@ the lists deliberately when onboarding a new source.
   metadata rather than from the filename.
 - Derive `grid_id` from GRIB `md5GridSection`; never assume all future files use
   the same grid.
-- Convert native values only through the registered `variable` conversion and
-  retain both `value_native` and `value_standard`.
-- Within a run, identical duplicate timestamps may be skipped and counted;
-  conflicting values for the same observation key fail the run.
+- Match all 14 inputs by GRIB `paramId` and `shortName`, then require each
+  time/grid step to have exactly one aligned message from every field.
+- Store one `cams_cube` row per time/grid with 14 `ARRAY<FLOAT>` native fields.
+  Array position is zero-based `cams_grid_point.grid_point_id`. Float32 reduces
+  storage; it can round the decoded native double. The unchanged GRIB is the
+  exact-value source of record.
+- `cams_cube_source` stores one row per original GRIB file, its SHA-256, unit,
+  variable ID, and conversion `native * standard_scale + standard_offset`.
+  `NULL` scale/offset means no documented standard conversion.
+- GRIB validity times are UTC instants. Spark displays `cams_cube.valid_time`
+  in Vietnam time. Duplicate or out-of-order source times fail the run.
+- The old point-per-row `cams_observation` table, if present, is legacy data;
+  this schema does not delete or migrate it.
 
 ### Administrative reference data
 
@@ -168,8 +185,9 @@ At minimum, each pipeline run must validate:
 
 ## Initial physical layout
 
-Large fact tables are partitioned by Iceberg time transforms; CAMS also uses
-the variable identity. `ingestion_run` and small dimensions are intentionally
+Large fact tables are partitioned by Iceberg time transforms. `cams_cube`
+uses `year(valid_time)`; each row holds all 14 variables.
+`ingestion_run` and small dimensions are intentionally
 unpartitioned. `data_quality_issue` remains day-partitioned because row/field
 findings may grow much faster than run metadata; Iceberg partition evolution
 can remove that partition later if measured volume stays small.

@@ -23,6 +23,7 @@ from common import (
     metadata_rows,
     normalize_column_names,
     register_dataset,
+    SILVER_TIMEZONE,
     sha256_json,
     start_run,
     trim_strings,
@@ -32,6 +33,7 @@ from common import (
 
 
 PIPELINE = "waqi-bronze-to-silver"
+PIPELINE_VERSION = "2.0.0"
 CANONICAL_COLUMNS = ("pm25", "pm10", "o3", "no2", "so2", "co", "aqi")
 DISPLAY_NAMES = {
     "pm25": "PM2.5 AQI",
@@ -103,6 +105,7 @@ def transform(spark, batch, run):
 
     source_frames = []
     station_specs = []
+    seen_station_keys = set()
     input_rows = 0
     for meta in csv_files:
         source = spark.read.option("header", True).option("inferSchema", False).csv(meta.bronze_object)
@@ -112,6 +115,11 @@ def transform(spark, batch, run):
         if not present:
             raise ValueError(f"{meta.source_file} has no supported AQI columns")
         source_station_key = normalized_filename(meta.source_file)
+        if source_station_key in seen_station_keys:
+            raise DataQualityError(
+                f"Multiple WAQI CSV files resolve to the same station: {meta.source_file}"
+            )
+        seen_station_keys.add(source_station_key)
         station_name, location_label = station_labels(meta.source_file)
         station_id = sha256_json(
             "waqi-station-v1", run.dataset_id, source_station_key
@@ -232,7 +240,7 @@ def transform(spark, batch, run):
         first_seen, last_seen = date_ranges[spec["station_id"]]
         station_rows.append((
             spec["station_id"], spec["station_name"], spec["location_label"], None, None,
-            None, None, None, "derived", None, None, first_seen, last_seen,
+            None, None, SILVER_TIMEZONE, "derived", None, None, first_seen, last_seen,
             run.run_id, run.run_id, now, now,
         ))
         source_rows.append((
@@ -290,7 +298,9 @@ def main():
             source_uri="https://aqicn.org/data-platform/register/",
             description="WAQI historical daily AQI CSV files.",
         )
-        run = start_run(spark, batch, dataset_id, PIPELINE)
+        run = start_run(
+            spark, batch, dataset_id, PIPELINE, pipeline_version=PIPELINE_VERSION
+        )
         if run.skipped:
             return
         input_rows, output_rows, duplicate_rows = transform(spark, batch, run)

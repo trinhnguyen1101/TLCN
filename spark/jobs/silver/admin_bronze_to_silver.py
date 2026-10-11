@@ -7,6 +7,7 @@ import json
 import os
 from datetime import datetime
 
+from pyspark import StorageLevel
 from pyspark.sql import functions as F, types as T
 
 from common import (
@@ -78,9 +79,17 @@ def read_open_admin(spark, batch, run, snapshot_date):
     for suffix in ("all-province.json", "all-ward.json"):
         meta = one_metadata(batch, suffix)
         frame = spark.read.option("multiline", True).json(meta.bronze_object)
+        # Every province has parent=null, so Spark infers that entire field as
+        # STRING and parent.id is not a valid expression for this file. Wards
+        # have a real parent struct and must retain its province code.
+        parent_code = (
+            F.lit(None).cast("string")
+            if suffix == "all-province.json"
+            else F.col("parent.id").cast("string")
+        )
         frame = frame.select(
             F.coalesce(F.col("code.id"), F.col("id")).cast("string").alias("admin_code"),
-            F.col("parent.id").cast("string").alias("parent_code"),
+            parent_code.alias("parent_code"),
             F.col("level").cast("int").alias("admin_level"),
             F.col("level_name.local").alias("unit_type"),
             F.trim(F.col("name.local")).alias("name_vi"),
@@ -212,15 +221,26 @@ def read_boundaries(spark, batch, run, dataset_id, snapshot_date, admin_units):
     paths = [row.bronze_object for row in geo_meta.select("bronze_object").collect()]
     if not paths:
         return None
-    documents = spark.read.option("wholetext", True).text(paths).withColumn(
+    # Pass wholetext to text() itself. Calling option("wholetext", True)
+    # before text(paths) is ineffective because text() applies its default
+    # wholetext=False afterwards, causing each JSON line to be parsed alone.
+    documents = spark.read.text(paths, wholetext=True).withColumn(
         "bronze_object", F.input_file_name()
     )
     documents = documents.withColumn(
         "source_file", F.regexp_extract("bronze_object", r"/files/(.*)$", 1)
     ).join(geo_meta.select("source_file", "file_sha256"), "source_file", "left")
+    # BatchEvalPython pickles all input strings in a batch on the JVM heap.
+    # Some boundary documents are several MiB, so the default 100 records can
+    # exhaust a 768 MiB driver before Python sees the data.
+    spark.conf.set("spark.sql.execution.pythonUDF.maxRecordsPerBatch", "1")
     parsed = documents.select(
         "source_file", "file_sha256", F.explode(parse_geojson("value")).alias("geometry")
-    ).select("source_file", "file_sha256", "geometry.*")
+    ).select("source_file", "file_sha256", "geometry.*").persist(StorageLevel.DISK_ONLY)
+    # Parse each GeoJSON once. The following validation, de-duplication and
+    # write actions reuse disk-backed WKB instead of repeatedly serializing the
+    # 608 MiB source collection through the Python worker.
+    parsed.count()
     bad = parsed.filter(
         F.col("error").isNotNull() | F.col("admin_code").isNull()
         | F.col("file_sha256").isNull() | F.col("boundary_wkb").isNull()
@@ -287,7 +307,16 @@ def read_boundaries(spark, batch, run, dataset_id, snapshot_date, admin_units):
             "bbox_min_lon", "bbox_min_lat", "bbox_max_lon", "bbox_max_lat", "srid",
         ], run=run, rule_id="admin_boundary_conflicting_duplicate",
     )
-    return boundaries, duplicates
+    cached_boundaries = boundaries.persist(StorageLevel.DISK_ONLY)
+    boundary_count = cached_boundaries.count()
+    # Iceberg MERGE rejects a source plan containing input_file_name(), even
+    # when its result is already cached. A local checkpoint replaces the full
+    # GeoJSON/UDF lineage with a deterministic ExistingRDD while retaining the
+    # disk-backed materialization needed for this large geometry dataset.
+    boundaries = cached_boundaries.localCheckpoint(eager=True)
+    cached_boundaries.unpersist()
+    parsed.unpersist()
+    return boundaries, duplicates, boundary_count
 
 
 def transform(spark, batch, run, dataset_id, source_version, snapshot_date, preferred):
@@ -342,6 +371,11 @@ def transform(spark, batch, run, dataset_id, source_version, snapshot_date, pref
         F.when(F.col("_existing_snapshot_date") > F.col("snapshot_date"), F.lit(False))
         .otherwise(F.col("is_current")),
     ).drop("_existing_snapshot_date").select(*admin_columns)
+    # The plan above reads the same Iceberg table that is updated below. Cut
+    # that lineage before the first MERGE; otherwise the final MERGE can reuse
+    # stale Catalyst attribute IDs after the target table has been refreshed
+    # and fail with "Couldn't find admin_code#...".
+    admin_units = admin_units.localCheckpoint(eager=True)
 
     sources = admin_with_lineage.select(
         "admin_unit_version_id", F.lit(dataset_id).alias("dataset_id"),
@@ -370,9 +404,9 @@ def transform(spark, batch, run, dataset_id, source_version, snapshot_date, pref
     boundary_count = 0
     boundary_duplicates = 0
     if boundary_result:
-        boundaries, boundary_duplicates = boundary_result
+        boundaries, boundary_duplicates, boundary_count = boundary_result
         merge_dataframe(spark, boundaries, f"{TABLE_PREFIX}.admin_boundary", ["boundary_id"])
-        boundary_count = boundaries.count()
+        boundaries.unpersist()
 
     # Snapshot date drives current-version ordering only; it is deliberately
     # not copied into legal valid_from/valid_to dates.
