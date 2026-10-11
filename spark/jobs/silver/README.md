@@ -18,8 +18,9 @@ orchestration.
 The current 14 CAMS files contain 940,912 GRIB messages. At 575 native grid
 points per message they expand to 541,024,400 Silver observation rows. The CAMS
 job therefore streams one local Bronze copy at a time and merges bounded
-100,000-row chunks; it never constructs a whole-file observation list in
-driver memory.
+100,000-row chunks; each chunk is split into input partitions of at most 10,000
+rows so Spark does not serialize the whole chunk into one oversized task. It
+never constructs a whole-file observation list in driver memory.
 
 The Climate TRACE CSV does not declare an emissions unit. The native quantity
 is therefore retained and `emission_quantity_standard` remains NULL instead of
@@ -41,6 +42,9 @@ Bronze batch. It selects only batches containing
 path to the requested Silver job. The ingestion date and batch ID never need
 to be copied from MinIO manually.
 
+
+Tắt các tools ko dùng 
+docker compose stop airflow-webserver airflow-scheduler trino spark-worker postgres
 ```powershell
 function Invoke-LatestSilverBatch {
     param(
@@ -91,6 +95,81 @@ function Invoke-LatestSilverBatch {
 }
 ```
 
+
+
+invoke_latest_silver_batch() {
+  local bronze_prefix="${1:?Thiếu BronzePrefix}"
+  local job="${2:?Thiếu tên Job}"
+  local driver_memory="${3:-768m}"
+
+  local find_command
+  local raw_output
+  local latest_key
+  local relative_batch
+  local bronze_path
+
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "Thiếu jq. Cài bằng: sudo apt install jq" >&2
+    return 1
+  fi
+
+  find_command="mc alias set local http://minio:9000 \"\$MINIO_ROOT_USER\" \"\$MINIO_ROOT_PASSWORD\" >/dev/null && \
+mc find \"local/lakehouse/bronze/$bronze_prefix\" --name _SUCCESS --json"
+
+  if ! raw_output=$(
+    docker compose run --rm --no-deps \
+      --entrypoint /bin/sh \
+      minio-init \
+      -c "$find_command" 2>&1
+  ); then
+    echo "Không thể liệt kê Bronze batch tại bronze/$bronze_prefix:" >&2
+    printf '%s\n' "$raw_output" >&2
+    return 1
+  fi
+
+  latest_key=$(
+    printf '%s\n' "$raw_output" |
+      jq -Rr '
+        fromjson?
+        | select(
+            .status == "success"
+            and (.key | endswith("/_ingestion_manifest/_SUCCESS"))
+          )
+        | [.lastModified, .key]
+        | @tsv
+      ' |
+      LC_ALL=C sort -r |
+      head -n 1 |
+      cut -f 2-
+  )
+
+  if [[ -z "$latest_key" ]]; then
+    echo "Không tìm thấy Bronze batch hoàn tất tại bronze/$bronze_prefix" >&2
+    return 1
+  fi
+
+  relative_batch="${latest_key#local/lakehouse/}"
+  relative_batch="${relative_batch%/_ingestion_manifest/_SUCCESS}"
+  bronze_path="s3a://lakehouse/$relative_batch"
+
+  echo "Đang chạy $job với batch mới nhất: $bronze_path"
+
+  if ! docker compose exec -T spark-master \
+    /opt/spark/bin/spark-submit \
+    --master "local[1]" \
+    --driver-memory "$driver_memory" \
+    --conf "spark.sql.shuffle.partitions=4" \
+    "/opt/spark/work-dir/jobs/silver/$job" \
+    --bronze-path "$bronze_path"
+  then
+    echo "Silver ETL thất bại: $bronze_path" >&2
+    return 1
+  fi
+}
+
+
+
+
 Run the latest completed WAQI batch:
 
 ```powershell
@@ -106,6 +185,28 @@ Invoke-LatestSilverBatch -BronzePrefix "climate_trace/climate_trace_vietnam" -Jo
 Invoke-LatestSilverBatch -BronzePrefix "reference/vietnam_administrative_divisions" -Job "admin_bronze_to_silver.py"
 Invoke-LatestSilverBatch -BronzePrefix "reference/vietnamese-provinces-database" -Job "admin_bronze_to_silver.py"
 ```
+
+
+invoke_latest_silver_batch \
+  "waqi/historical" \
+  "waqi_bronze_to_silver.py"
+
+invoke_latest_silver_batch \
+  "cams/eac4" \
+  "cams_bronze_to_silver.py" \
+  "1g"
+
+invoke_latest_silver_batch \
+  "climate_trace/climate_trace_vietnam" \
+  "climate_trace_bronze_to_silver.py"
+
+invoke_latest_silver_batch \
+  "reference/vietnam_administrative_divisions" \
+  "admin_bronze_to_silver.py"
+
+invoke_latest_silver_batch \
+  "reference/vietnamese-provinces-database" \
+  "admin_bronze_to_silver.py"
 
 Define the helper and call it in the same PowerShell session. Before a large
 local run, optional services can be stopped to leave more memory for Spark:

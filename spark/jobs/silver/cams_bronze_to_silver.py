@@ -30,6 +30,7 @@ from common import (
 
 PIPELINE = "cams-eac4-bronze-to-silver"
 CAMS_CHUNK_ROWS = 100_000
+CAMS_ROWS_PER_PARTITION = 10_000
 GRIB_KEYS = (
     "paramId", "shortName", "name", "units", "typeOfLevel", "level", "stepType",
     "dataType", "md5GridSection", "gridType", "Ni", "Nj",
@@ -147,8 +148,15 @@ def reject_cross_file_conflicts(spark, incoming, run, keys):
 def merge_observation_chunk(spark, rows, run):
     if not rows:
         return 0, 0
+    # createDataFrame(list, schema) otherwise puts the whole local collection
+    # into one task under local[1]. A 100k-row CAMS chunk serializes to roughly
+    # 5.7 MiB, well above Spark's recommended 1 MiB task size. Keep the larger
+    # chunk (and therefore fewer expensive Iceberg MERGEs), but distribute its
+    # payload over bounded input partitions.
+    partition_count = max(1, math.ceil(len(rows) / CAMS_ROWS_PER_PARTITION))
+    row_rdd = spark.sparkContext.parallelize(rows, partition_count)
     observation_frame = spark.createDataFrame(
-        rows, spark.table(f"{TABLE_PREFIX}.cams_observation").schema
+        row_rdd, spark.table(f"{TABLE_PREFIX}.cams_observation").schema
     )
     keys = ["dataset_id", "valid_time", "grid_id", "grid_point_id", "variable_id"]
     observation_frame, duplicates = deduplicate_or_fail(
