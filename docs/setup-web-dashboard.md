@@ -41,8 +41,7 @@ Từ thư mục gốc:
 ```bash
 npm --prefix frontend run lint
 npm --prefix frontend run build
-backend/.venv/bin/python -m pip install -r backend/requirements-dev.txt
-backend/.venv/bin/python -m pytest backend/tests -q
+backend/.venv/bin/python -m pip check
 ```
 
 Xem bản build bằng `npm --prefix frontend run preview` khi API vẫn chạy. Khi triển khai, phục vụ **`frontend/dist/app/`** và cấu hình reverse proxy `/api/*` đến FastAPI, giữ nguyên `/api`. Không dùng Vite preview làm máy chủ production.
@@ -51,6 +50,7 @@ Xem bản build bằng `npm --prefix frontend run preview` khi API vẫn chạy.
 
 - **API trả 503:** kiểm tra log, file `CURRENT` và thư mục `runs/` trong bộ mẫu. Nếu dùng nơi lưu khác, đặt `DASHBOARD_PARQUET_PATH` trước khi chạy API. `/api/health` chỉ kiểm tra tiến trình, không xác nhận dữ liệu sẵn sàng.
 - **Không tải số liệu:** kiểm tra cổng backend và `API_PROXY_TARGET`, sau đó bấm **Thử lại**. Tải lại trang sau khi thay bộ dữ liệu.
-- **AQI/phát thải trống:** bộ CAMS hiện tại không có phát thải theo ngành và chưa tính AQI. Bản đồ dùng trung bình tháng; tỉnh không đủ độ phủ sẽ để trống.
+- **AQI/phát thải trống:** bộ CAMS hiện tại không có phát thải theo ngành và chưa tính AQI. Bản đồ dùng mốc 3 giờ hợp lệ cuối trong khoảng đang chọn; tỉnh không đủ độ phủ sẽ để trống.
+- **Khoảng thời gian:** mặc định xem 7 ngày cuối của nguồn, theo UTC. Chế độ 3 giờ hỗ trợ tối đa 31 ngày mỗi lần, chế độ ngày tối đa 366 ngày. Bộ mẫu kèm repo có quan sát 3 giờ năm 2024–2025; chọn trung bình tháng để xem lịch sử 2003–2025. API hỗ trợ `resolution`, `start`, `end` trên cả `/api/dashboard` và `/api/admin/dashboard`.
 
 Chỉ khi cần tạo lại mẫu từ GRIB mới cài `backend/requirements-etl.txt` và chạy công cụ chuyển đổi theo [backend/README.md](../backend/README.md). Công cụ mặc định cũng ghi vào `backend/data/samples/`.

@@ -6,6 +6,9 @@ interface ProvinceGeoJsonProperties {
   fullNameEn: string
   codeName: string
   areaKm2: number
+  parentProvinceCode?: string
+  parentProvinceName?: string
+  regionKind?: 'mainland' | 'archipelago'
 }
 
 interface ProvinceGeoJsonFeature {

@@ -1,13 +1,26 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.dependencies import get_dashboard_service
 from app.schemas.dashboard import AdminDashboardData, DashboardData
 from app.services.dashboard import DashboardService
-from app.services.analytics import AnalyticsQuery, DashboardAnalytics
+from app.services.temporal import DashboardQuery, InvalidDashboardQuery, Resolution, utc_bound
 
 router = APIRouter(tags=["dashboard"])
+
+
+def dashboard_query(resolution: Resolution = "3h", start: str | None = None, end: str | None = None):
+    query = DashboardQuery(resolution, start, end)
+    try:
+        for value in (start, end):
+            if value:
+                utc_bound(value)
+        if start and end:
+            query.bounds(end)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    return query
 
 
 @router.get(
@@ -18,8 +31,12 @@ router = APIRouter(tags=["dashboard"])
 )
 def get_dashboard(
     service: Annotated[DashboardService, Depends(get_dashboard_service)],
+    query: Annotated[DashboardQuery, Depends(dashboard_query)],
 ) -> DashboardData:
-    return service.get_dashboard()
+    try:
+        return service.get_dashboard(query)
+    except (InvalidDashboardQuery, ValueError) as exc:
+        raise HTTPException(422, str(exc)) from exc
 
 
 @router.get(
@@ -30,17 +47,9 @@ def get_dashboard(
 )
 def get_admin_dashboard(
     service: Annotated[DashboardService, Depends(get_dashboard_service)],
+    query: Annotated[DashboardQuery, Depends(dashboard_query)],
 ) -> AdminDashboardData:
-    return service.get_admin_dashboard()
-
-
-@router.get('/dashboard/analytics', response_model=DashboardAnalytics,
-            responses={503: {'description': 'The configured data source is unavailable'}})
-def get_dashboard_analytics(
-    query: Annotated[AnalyticsQuery, Query()],
-    service: Annotated[DashboardService, Depends(get_dashboard_service)],
-) -> DashboardAnalytics:
     try:
-        return service.get_analytics(query)
-    except ValueError as exc:
-        raise HTTPException(status_code=422, detail=str(exc)) from exc
+        return service.get_admin_dashboard(query)
+    except (InvalidDashboardQuery, ValueError) as exc:
+        raise HTTPException(422, str(exc)) from exc
