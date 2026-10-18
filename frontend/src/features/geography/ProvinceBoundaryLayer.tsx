@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { GeoJSON, Tooltip } from 'react-leaflet'
 import type { Path, PolylineOptions } from 'leaflet'
 import type { ProvinceSnapshot } from '../dashboard/types'
@@ -39,6 +40,7 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, 
       {data.features.map((feature) => {
         const metrics = metricsByProvince.get(feature.id)
         const selectProvince = () => {
+          setHighlightedCode(feature.id)
           if (metrics) onProvinceSelect?.(metrics)
         }
 

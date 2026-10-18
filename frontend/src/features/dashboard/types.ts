@@ -150,3 +150,34 @@ export interface AdminDashboardData {
   metadata?: DashboardMetadata | null
   comparisonTrendRecords?: AdminTrendRecord[]
 }
+
+export interface AnalyticsStatistics {
+  mean: number | null
+  median: number | null
+  minimum: number | null
+  maximum: number | null
+  validCount: number
+  expectedCount: number
+}
+
+export interface ProvinceRank extends AnalyticsStatistics {
+  provinceCode: ProvinceCode
+  provinceName: string
+  rank: number
+}
+
+export interface MetricRanking {
+  metric: Pollutant
+  unit: string
+  rows: ProvinceRank[]
+}
+
+export interface DashboardAnalytics {
+  summary: AnalyticsStatistics
+  provinceCount: number
+  months: string[]
+  rankings: MetricRanking[]
+  timeline: Array<{ date: string; values: Record<string, number | null> }>
+  provinceSnapshots: ProvinceSnapshot[]
+  generation: string | null
+}

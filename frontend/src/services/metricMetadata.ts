@@ -1,6 +1,7 @@
-import type { Pollutant } from '../types/dashboard'
+import type { Pollutant } from '../features/dashboard/types'
 
 export const METRIC_META: Record<Pollutant, { label: string; unit: string }> = {
+  aqi: { label: 'AQI', unit: '' },
   pm25: { label: 'PM2.5', unit: 'µg/m³' },
   pm10: { label: 'PM10', unit: 'µg/m³' },
   o3: { label: 'O₃', unit: 'µg/m³' },

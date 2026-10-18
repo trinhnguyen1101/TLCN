@@ -14,7 +14,10 @@ data/
 
 # Python environments, bytecode and tooling caches
 .venv/
+.venv-*/
 venv/
+venv-*/
+env/
 __pycache__/
 *.py[cod]
 .pytest_cache/

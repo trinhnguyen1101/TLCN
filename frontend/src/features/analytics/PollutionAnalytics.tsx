@@ -2,10 +2,10 @@ import { usePagination } from '../../hooks/usePagination'
 import { Pagination } from '../../components/ui/Pagination'
 import { useId, useMemo } from 'react'
 import { Button } from '../../components/ui/Button'
-import { DataState } from '../../components/dashboard/DataState'
-import { DashboardSkeleton } from '../../components/dashboard/DashboardSkeleton'
+import { DataState } from '../../components/ui/DataState'
+import { DashboardSkeleton } from '../../components/ui/DashboardSkeleton'
 import { METRIC_META } from '../../services/metricMetadata'
-import type { DashboardAnalytics, DashboardFiltersValue, ProvinceRank } from '../../types/dashboard'
+import type { DashboardAnalytics, DashboardFiltersValue, ProvinceRank } from '../dashboard/types'
 import './PollutionAnalytics.css'
 
 interface Props {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { DashboardAnalytics, DashboardFiltersValue } from '../types/dashboard'
+import type { DashboardAnalytics, DashboardFiltersValue } from '../features/dashboard/types'
 
 export function useDashboardAnalytics(filters: DashboardFiltersValue, enabled: boolean, generation?: string) {
   const params = new URLSearchParams({ provinceCode: filters.provinceCode, metric: filters.pollutant })

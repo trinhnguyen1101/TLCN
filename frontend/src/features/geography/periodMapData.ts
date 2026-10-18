@@ -1,4 +1,4 @@
-import type { DashboardData, DashboardFiltersValue, ProvinceSnapshot } from '../../types/dashboard'
+import type { DashboardData, DashboardFiltersValue, ProvinceSnapshot } from '../dashboard/types'
 
 type PeriodFilters = Pick<DashboardFiltersValue, 'year' | 'month' | 'startDate' | 'endDate'>
 type MapSource = Pick<DashboardData, 'provinceSnapshots' | 'dashboardTrendRecords'>

@@ -30,6 +30,7 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
   const headingHeight = metricLines.length * 16 + 8
   const HEIGHT = (compact ? 170 : 230) + headingHeight
   const chartId = `trend-${useId().replaceAll(':', '')}`
+  const gradientId = `${chartId}-gradient`
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
   const geometry = useMemo(() => {
     if (points.length === 0) return null

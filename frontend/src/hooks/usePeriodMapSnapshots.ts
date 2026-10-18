@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import type { DashboardData, DashboardFiltersValue } from '../types/dashboard'
+import type { DashboardData, DashboardFiltersValue } from '../features/dashboard/types'
 import { buildPeriodMapSnapshots } from '../features/geography/periodMapData'
 
 export function usePeriodMapSnapshots(data: DashboardData | null, filters: DashboardFiltersValue) {
