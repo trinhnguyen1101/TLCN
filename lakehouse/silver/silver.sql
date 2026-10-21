@@ -597,5 +597,60 @@ TBLPROPERTIES (
     'write.distribution-mode' = 'hash'
 );
 
+-- ---------------------------------------------------------------------------
+-- 21. API Ninjas hourly province air-quality snapshots
+-- Grain: one configured city-proxy location per UTC collection hour.
+-- Logical key: (dataset_id, location_id, snapshot_hour_utc).
+--
+-- API Ninjas does not provide an observation timestamp in this dataset, so
+-- snapshot_hour_utc is the UTC hour truncated from collected_at_utc. The exact
+-- collection instant is retained separately. A location represents the city
+-- coordinate queried as a proxy for a province; it is not a province-wide
+-- spatial average. Concentration values and pollutant AQIs remain separate so
+-- they cannot be confused downstream.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS nessie.silver.api_ninjas_province_air_quality_hourly (
+    snapshot_id                  STRING NOT NULL,
+    dataset_id                   STRING NOT NULL,
+    location_id                  STRING NOT NULL,
+    admin_unit_version_id        STRING,
+    province_name_source         STRING NOT NULL,
+    query_city                   STRING NOT NULL,
+    country_name_source          STRING NOT NULL,
+    latitude                     DOUBLE NOT NULL,
+    longitude                    DOUBLE NOT NULL,
+    spatial_representation       STRING NOT NULL,
+    snapshot_hour_utc            TIMESTAMP NOT NULL,
+    collected_at_utc             TIMESTAMP NOT NULL,
+    source_collection_run_id     STRING,
+    overall_aqi                  INT,
+    co_concentration             DOUBLE,
+    co_aqi                       INT,
+    no2_concentration            DOUBLE,
+    no2_aqi                      INT,
+    o3_concentration             DOUBLE,
+    o3_aqi                       INT,
+    so2_concentration            DOUBLE,
+    so2_aqi                      INT,
+    pm25_concentration           DOUBLE,
+    pm25_aqi                     INT,
+    pm10_concentration           DOUBLE,
+    pm10_aqi                     INT,
+    missing_reasons              MAP<STRING, STRING>,
+    qc_flag                      STRING NOT NULL,
+    source_file                  STRING NOT NULL,
+    source_file_sha256           STRING NOT NULL,
+    source_record_locator        STRING,
+    ingestion_run_id             STRING NOT NULL,
+    loaded_at                    TIMESTAMP NOT NULL
+)
+USING iceberg
+PARTITIONED BY (month(snapshot_hour_utc))
+TBLPROPERTIES (
+    'format-version' = '2',
+    'write.parquet.compression-codec' = 'zstd',
+    'write.distribution-mode' = 'hash'
+);
+
 -- ETL validation rules, controlled values, MERGE keys and source-specific
 -- normalization rules are documented in lakehouse/silver/README.md.

@@ -78,6 +78,7 @@ the lists deliberately when onboarding a new source.
 | `aggregation_level` | `totals`, `sectors`, `subsectors` |
 | `period_status` | `actual`, `partial`, `estimated`, `projected` |
 | `metadata_status` | `complete`, `partial`, `derived`, `unresolved` |
+| `spatial_representation` | `city_proxy` |
 
 ## Logical keys used by MERGE
 
@@ -102,6 +103,7 @@ the lists deliberately when onboarding a new source.
 | `emission_aggregate` | `aggregate_id` |
 | `emission_source` | `source_id` |
 | `emission_source_observation` | `dataset_id, source_id, year_label, variable_id` |
+| `api_ninjas_province_air_quality_hourly` | `dataset_id, location_id, snapshot_hour_utc` |
 
 ## Source-specific normalization
 
@@ -160,6 +162,36 @@ the lists deliberately when onboarding a new source.
   exact duplicates before `MERGE`, count them in `duplicate_rows`, and reject
   any duplicate logical key whose non-key values conflict.
 
+### API Ninjas province air quality
+
+- Register the live dataset with `source_system=api_ninjas` and
+  `dataset_name=province_air_quality`; keep it separate from WAQI datasets and
+  tables.
+- Each source row is a reading at the configured `query_city` coordinate used
+  as a proxy for `province_name_source`. Set `spatial_representation` to
+  `city_proxy`; never describe the value as a province-wide spatial average.
+- Generate `location_id` deterministically from the dataset ID plus normalized
+  source province name, query city and country. Coordinates are observed
+  attributes and are not part of the identity, so minor coordinate corrections
+  do not create a second logical location.
+- API Ninjas supplies no observation timestamp for this dataset. Parse
+  `collected_at_utc` as an offset-aware instant and derive
+  `snapshot_hour_utc` by truncating that instant to its UTC hour. Never truncate
+  it in the Spark session's display timezone.
+- Generate `snapshot_id` from `(dataset_id, location_id, snapshot_hour_utc)`.
+  When retries produce multiple rows for that key, retain the row with the
+  greatest `collected_at_utc`. If the latest timestamp is tied and values
+  conflict, fail the run rather than choosing nondeterministically.
+- Keep pollutant concentration and AQI columns distinct. Preserve documented
+  API units without guessing or converting units from the magnitude alone.
+- A null metric must have an entry in `missing_reasons`; a present metric must
+  not. Source zeroes remain zero and must not be treated as missing.
+- Resolve `admin_unit_version_id` against the province version active for the
+  snapshot when possible. An unresolved match remains null and must produce a
+  data-quality finding; the original province name is always retained.
+- Require `snapshot_hour_utc` to equal the UTC-hour truncation of
+  `collected_at_utc`; concentrations must be non-negative when present.
+
 ## Data-quality invariants
 
 At minimum, each pipeline run must validate:
@@ -186,7 +218,8 @@ At minimum, each pipeline run must validate:
 ## Initial physical layout
 
 Large fact tables are partitioned by Iceberg time transforms. `cams_cube`
-uses `year(valid_time)`; each row holds all 14 variables.
+uses `year(valid_time)`; each row holds all 14 variables. API Ninjas hourly
+snapshots use `month(snapshot_hour_utc)`.
 `ingestion_run` and small dimensions are intentionally
 unpartitioned. `data_quality_issue` remains day-partitioned because row/field
 findings may grow much faster than run metadata; Iceberg partition evolution
