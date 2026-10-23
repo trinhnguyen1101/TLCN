@@ -89,7 +89,6 @@ export async function withComparison<T extends DashboardData>(
   data: T, load: (query: string) => Promise<T>, resolution: string, comparisonYear?: number,
 ): Promise<T> {
   if (!data.metadata?.queryStart || !data.metadata.queryEnd) return data
-  if (resolution === 'monthly' && data.metadata.queryStart.slice(0, 4) !== data.metadata.queryEnd.slice(0, 4)) return data
   const year = comparisonYear ?? Number(data.metadata.queryEnd.slice(0, 4)) - 1
   if (year === Number(data.metadata.queryEnd.slice(0, 4))) return data
   const bounds = comparisonBounds(inputInstant(data.metadata.queryStart), inputInstant(data.metadata.queryEnd), year)

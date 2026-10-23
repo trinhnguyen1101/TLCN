@@ -34,3 +34,26 @@ export function maskDisplayDate(value: string) {
   const digits = value.replace(/\D/g, '').slice(0, 8)
   return `${digits.slice(0, 2)}${digits.length > 2 ? `/${digits.slice(2, 4)}` : ''}${digits.length > 4 ? `/${digits.slice(4)}` : ''}`
 }
+
+export function isIsoDate(value: string) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return false
+  const [year, month, day] = value.split('-').map(Number)
+  if (year < 1 || month < 1 || month > 12) return false
+  const days = new Date(Date.UTC(year, month, 0)).getUTCDate()
+  return day >= 1 && day <= days
+}
+
+export function parseVietnameseDate(value: string) {
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value)
+  if (!match) return null
+  const iso = `${match[3]}-${match[2]}-${match[1]}`
+  return isIsoDate(iso) ? iso : null
+}
+
+export function shiftDateYear(value: string, offset: number) {
+  if (!value) return ''
+  const year = Number(value.slice(0, 4)) + offset
+  const month = Number(value.slice(5, 7))
+  const day = Math.min(Number(value.slice(8, 10)), new Date(Date.UTC(year, month, 0)).getUTCDate())
+  return `${String(year).padStart(4, '0')}-${value.slice(5, 7)}-${String(day).padStart(2, '0')}${value.slice(10)}`
+}

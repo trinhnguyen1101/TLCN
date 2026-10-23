@@ -154,6 +154,7 @@ function PeriodEditor({ value, years, metadata, onApply, onClose }: Props & { on
       <p className="mt-2 text-xs leading-relaxed text-muted">{single ? 'Chọn ngày trên lịch và bấm vào giờ để đổi giờ quan sát.' : draft.resolution === 'monthly' ? 'Chọn một tháng trên lịch hoặc nhập ngày bắt đầu và kết thúc.' : pickingEnd ? 'Chọn ngày kết thúc trên lịch. Bấm vào ô Bắt đầu để đổi ngày bắt đầu.' : 'Chọn ngày bắt đầu trên lịch, sau đó chọn ngày kết thúc.'}</p>
       {draft.resolution !== '3h' && <Button className="mt-3" onClick={() => setDraft(calendarPeriod(draft, availableYears, year, 'all'))}>Chọn cả năm {year}</Button>}
       </div>
+      <p className="mt-2 text-[.7rem] text-muted">Nhập ngày theo dd/mm/yyyy. Khoảng ngày thay thế bộ lọc năm/tháng và bao gồm cả hai ngày đầu, cuối.{draft.resolution === 'monthly' && ' Dữ liệu là trung bình tháng: hiển thị toàn bộ các tháng giao với khoảng ngày, chưa có số liệu riêng từng ngày.'}</p>
       {error && <p id="period-error" role="alert" className="mt-3 rounded-lg bg-danger-soft p-2.5 text-xs leading-relaxed text-danger">{error}</p>}
       <div className="mt-3 flex gap-2 sm:hidden">{([{ value: previous, label: 'Khoảng trước', icon: 'chevronLeft' }, { value: next, label: 'Khoảng sau', icon: 'chevronRight' }] as const).map((period) => <Button key={period.label} disabled={!period.value} onClick={() => {
         if (!period.value) return

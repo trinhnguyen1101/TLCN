@@ -135,7 +135,7 @@ class ParquetDashboardRepository:
             data.metadata.temporal_aggregation = {"3h": "3_hourly", "daily": "daily_mean", "monthly": "monthly_mean"}[query.resolution]
             data.metadata.query_start, data.metadata.query_end = start, end
             data.metadata.note = (
-                "Dữ liệu mẫu tạm thời, chưa qua pipeline xử lý và kiểm định chính thức. "
+                "Dữ liệu mẫu tạm thời, chưa qua quy trình xử lý và kiểm định chính thức. "
                 "CAMS EAC4 theo diện tích từng vùng báo cáo; quan sát gốc cách nhau 3 giờ UTC. "
                 "Đất liền và quần đảo tính riêng. Các chỉ số *_column là tổng cột (mg/m²). "
                 "Không suy AQI hay ngày vượt ngưỡng từ dữ liệu này."
@@ -331,7 +331,7 @@ class ParquetDashboardRepository:
                 "available_years": sorted({r.date.year for r in trends} if include_monthly else available_years, reverse=True),
                 "observation_start": native_start,
                 "observation_end": manifest.get("observation_end", max(s["end"] for s in manifest["sources"])),
-                "note": "Dữ liệu mẫu tạm thời, chưa qua pipeline xử lý và kiểm định chính thức. "
+                "note": "Dữ liệu mẫu tạm thời, chưa qua quy trình xử lý và kiểm định chính thức. "
                         f"Tái phân tích CAMS EAC4, trung bình tháng theo diện tích trên ranh giới {manifest['province_count']} vùng báo cáo; đất liền và quần đảo được tính riêng. "
                         "Các chỉ số *_column là tổng cột khí quyển (mg/m²). "
                         "Không có dữ liệu phát thải theo ngành; không suy AQI từ trung bình tháng.",

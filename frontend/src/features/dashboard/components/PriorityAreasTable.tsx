@@ -1,6 +1,6 @@
-import { sectorLabel } from '../model/presentation'
 import { useId, useMemo, useState } from 'react'
 import type { PriorityArea, ProvinceCode } from '../types'
+import { sectorLabel } from '../../../utils/labels'
 import { formatDecimal } from '../../../utils/formatters'
 import { Field, Select } from '../../../components/ui/FormControls'
 import { DataState } from '../../../components/ui/DataState'
@@ -39,9 +39,9 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
     <section className="mt-0 overflow-hidden rounded-card border border-border bg-surface shadow-card" aria-labelledby={titleId}>
       <div className="flex items-start justify-between gap-[18px] border-b border-border bg-surface-subtle p-5 [@media(max-width:760px)]:flex-col [@media(max-width:760px)]:p-4">
         <div>
-          <p>Khu vực ưu tiên · Các chỉ số môi trường</p>
-          <h2 id={titleId} className="mt-1 mb-[7px] text-[clamp(1.05rem,2vw,1.25rem)] leading-[1.25] text-heading">Khu vực cần ưu tiên theo dõi</h2>
-          <p className="m-0 max-w-[720px] text-[.78rem] leading-[1.45] text-muted">Số liệu môi trường theo từng tỉnh, thành phố trong khoảng thời gian đã chọn.</p>
+          <p>Khu vực ưu tiên · Tổng hợp đa chỉ số</p>
+          <h2 id={titleId} className="mt-1 mb-[7px] text-[clamp(1.05rem,2vw,1.25rem)] leading-[1.25] text-heading">KHU VỰC CẦN ƯU TIÊN THEO DÕI</h2>
+          <p className="m-0 max-w-[720px] text-[.78rem] leading-[1.45] text-muted">Các khu vực có nhiều chỉ số môi trường cần chú ý trong kỳ báo cáo.</p>
         </div>
         <span className="flex-none rounded-full border border-border bg-surface px-2.5 py-[7px] text-[.68rem] text-secondary">Chưa có điểm ưu tiên</span>
       </div>
@@ -57,7 +57,7 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
               <tr>
                 <th scope="col" className={headingCellClasses}>Tỉnh, thành phố</th>
                 <th scope="col" className={headingCellClasses}>PM2.5 trung bình</th>
-                <th scope="col" className={headingCellClasses}>Thay đổi cùng kỳ (%)</th>
+                <th scope="col" className={headingCellClasses}>Thay đổi so với cùng kỳ năm trước (%)</th>
                 <th scope="col" className={headingCellClasses}>Số ngày vượt ngưỡng</th>
                 <th scope="col" className={headingCellClasses}>Tổng phát thải</th>
                 <th scope="col" className={headingCellClasses}>Ngành phát thải chính</th>
@@ -84,7 +84,7 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
                         onClick={() => onProvinceSelect(area.provinceCode)}
                       >
                         {area.provinceName}
-                        <span className="text-[.62rem] font-normal text-muted">Chọn để lọc dữ liệu →</span>
+                        <span className="text-[.62rem] font-normal text-muted">Chọn để lọc bảng thông tin →</span>
                       </button>
                     </th>
                     <td data-label="PM2.5 trung bình" className={dataCellClasses}>
@@ -95,7 +95,7 @@ export function PriorityAreasTable({ areas, selectedProvinceCode, onProvinceSele
                         </span>
                       </div>
                     </td>
-                    <td data-label="Thay đổi cùng kỳ (%)" className={dataCellClasses}>
+                    <td data-label="Thay đổi so với cùng kỳ năm trước (%)" className={dataCellClasses}>
                       <strong className={yoyClass}>{area.yearOverYearPercent === null ? 'Chưa có dữ liệu' : `${area.yearOverYearPercent > 0 ? '+' : ''}${formatDecimal(area.yearOverYearPercent)}%`}</strong>
                     </td>
                     <td data-label="Số ngày vượt ngưỡng" className={dataCellClasses}>

@@ -48,7 +48,7 @@ export function DashboardFilters({ variant = 'admin', years, pollutantOptions, d
   const previous = shiftPeriod(value, -1, metadata)
   const next = shiftPeriod(value, 1, metadata)
   return <><div ref={sentinel} className="filter-sentinel" aria-hidden="true" />
-  <section ref={panel} className="dashboard-filters mb-4 rounded-xl border border-border bg-surface shadow-card" data-filter-container data-stuck={stuck} data-expanded={expanded} aria-label="Bộ lọc dữ liệu">
+  <section ref={panel} className="dashboard-filters mb-4 rounded-xl border border-border bg-surface shadow-card" data-filter-container data-stuck={stuck} data-expanded={expanded} aria-label="Bộ lọc bảng thông tin">
     <button type="button" className="filter-collapsed-toggle" data-filter-toggle aria-expanded={expanded} aria-controls={controlsId} onClick={() => setExpanded((value) => !value)}>
       <span className="min-w-0"><span className="block truncate text-xs font-semibold text-heading">{province} · {metric}</span><span className="mt-1 block truncate text-[.68rem] text-muted">{shortPeriod(value)}</span></span>
       <span className="flex shrink-0 items-center gap-1.5 text-xs font-medium text-accent"><DashboardIcon name="filter" size="small" />{expanded ? 'Thu gọn' : 'Bộ lọc'}</span>

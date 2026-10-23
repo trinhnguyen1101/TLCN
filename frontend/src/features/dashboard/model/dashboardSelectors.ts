@@ -1,6 +1,6 @@
-import type { AdminTrendRecord, DashboardData, DashboardFiltersValue, Pollutant, ProvinceSnapshot } from '../types'
+import type { AdminTrendRecord, DashboardData, DashboardFiltersValue, EmissionRecord, Pollutant, ProvinceSnapshot } from '../types'
 import { chartKey, chartLabel, inDateRange } from './temporal'
-import { formatDateTime } from '../../../utils/dates'
+import { formatDateTime, isIsoDate, shiftDateYear } from '../../../utils/dates'
 import { observationContext } from './observationInsights'
 
 export const METRIC_META: Record<Pollutant, { label: string; unit: string }> = {
@@ -29,11 +29,45 @@ export const mean = (values: Array<number | null | undefined>) => {
 }
 export const hasPeriodFilter = (filters: DashboardFiltersValue) => filters.year !== 'all' || filters.month !== 'all' || Boolean(filters.startDate || filters.endDate)
 
-export function matchesPeriod(record: { date: string; provinceCode: string }, filters: DashboardFiltersValue, includeProvince = true) {
+export const hasDateRange = (filters: DashboardFiltersValue) => Boolean(filters.startDate || filters.endDate)
+
+export function updateDashboardFilter<K extends keyof DashboardFiltersValue>(filters: DashboardFiltersValue, key: K, value: DashboardFiltersValue[K]): DashboardFiltersValue {
+  const next = { ...filters, [key]: value }
+  if (key === 'startDate' || key === 'endDate') { next.year = 'all'; next.month = 'all' }
+  if (key === 'year' || key === 'month') { next.startDate = ''; next.endDate = '' }
+  return next
+}
+
+export function validDateRange(filters: DashboardFiltersValue) {
+  const valid = (value: string) => !value || isIsoDate(value.slice(0, 10))
+    && (value.length === 10 || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?Z?$/.test(value) && Number.isFinite(Date.parse(`${value.replace(/Z$/, '')}Z`)))
+  return valid(filters.startDate) && valid(filters.endDate)
+    && (!filters.startDate || !filters.endDate || filters.startDate <= filters.endDate)
+}
+
+export function matchesPeriod(record: { date: string; provinceCode: string }, filters: DashboardFiltersValue, includeProvince = true, aggregation?: string) {
+  if (!validDateRange(filters)) return false
+  const custom = hasDateRange(filters)
+  // A monthly mean represents the whole month, regardless of its timestamp's day.
+  const monthly = aggregation === 'monthly_mean' || filters.resolution === 'monthly'
   return (!includeProvince || filters.provinceCode === 'all' || record.provinceCode === filters.provinceCode)
-    && (filters.year === 'all' || Number(record.date.slice(0, 4)) === filters.year)
-    && (filters.month === 'all' || Number(record.date.slice(5, 7)) === filters.month)
-    && inDateRange(record.date, filters.startDate, filters.endDate, filters.resolution)
+    && (custom || filters.year === 'all' || Number(record.date.slice(0, 4)) === filters.year)
+    && (custom || filters.month === 'all' || Number(record.date.slice(5, 7)) === filters.month)
+    && inDateRange(record.date, filters.startDate, filters.endDate, monthly ? 'monthly' : filters.resolution)
+}
+
+export function matchesEmissionPeriod(record: EmissionRecord, filters: DashboardFiltersValue) {
+  return matchesPeriod({ provinceCode: record.provinceCode, date: `${record.year}-${String(record.month).padStart(2, '0')}-01` }, filters, true, 'monthly_mean')
+    && (filters.sector === 'all' || record.sector === filters.sector)
+}
+
+export function comparisonYear(filters: DashboardFiltersValue) {
+  return hasDateRange(filters) ? Number((filters.endDate || filters.startDate).slice(0, 4)) : filters.year === 'all' ? null : filters.year
+}
+
+export function shiftPeriodYear(filters: DashboardFiltersValue, offset: number): DashboardFiltersValue {
+  return { ...filters, year: filters.year === 'all' ? 'all' : filters.year + offset,
+    startDate: shiftDateYear(filters.startDate, offset), endDate: shiftDateYear(filters.endDate, offset) }
 }
 
 export function isFullYearPeriod(filters: DashboardFiltersValue) {
@@ -48,7 +82,7 @@ function hasMetric(data: DashboardData | null, key: Pollutant) {
   return Boolean(data?.metadata?.metrics[key] || data?.dashboardTrendRecords.some((row) => isNumber(row[key])) || data?.provinceSnapshots.some((row) => isNumber(row[key])))
 }
 
-/** Show the source's gas quantity without treating column mass as surface concentration. */
+/** Keep the source's gas quantity distinct from surface concentration. */
 export function basicPollutants(data: DashboardData | null): Pollutant[] {
   return BASIC_POLLUTANTS.map((key) => {
     const column = COLUMN_POLLUTANTS[key]
@@ -71,7 +105,7 @@ export function periodSnapshots(data: DashboardData | null, filters: DashboardFi
   if (useSnapshot) return data.provinceSnapshots
   const grouped = new Map<string, AdminTrendRecord[]>()
   for (const row of data.dashboardTrendRecords) {
-    if (!matchesPeriod(row, filters, false)) continue
+    if (!matchesPeriod(row, filters, false, data.metadata?.temporalAggregation)) continue
     const rows = grouped.get(row.provinceCode) ?? []
     rows.push(row)
     grouped.set(row.provinceCode, rows)
@@ -87,7 +121,7 @@ export function periodSnapshots(data: DashboardData | null, filters: DashboardFi
 export function buildMonitoringView(data: DashboardData | null, filters: DashboardFiltersValue, useSnapshot = false) {
   const snapshots = periodSnapshots(data, filters, useSnapshot)
   const scoped = snapshots.filter((province) => filters.provinceCode === 'all' || province.provinceCode === filters.provinceCode)
-  const records = (data?.dashboardTrendRecords ?? []).filter((record) => matchesPeriod(record, filters))
+  const records = (data?.dashboardTrendRecords ?? []).filter((record) => matchesPeriod(record, filters, true, data?.metadata?.temporalAggregation))
   const groups = new Map<string, number[]>()
   for (const record of records) {
     const value = record[filters.pollutant]

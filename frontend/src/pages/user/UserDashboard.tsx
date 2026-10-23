@@ -46,9 +46,9 @@ export default function UserDashboard() {
     <header className="mb-3 flex flex-wrap items-center justify-between gap-3">
       <div className="flex items-center gap-3">
         <span className="rounded-2xl bg-accent p-3 text-surface shadow-control"><DashboardIcon name="air" /></span>
-        <div><p className="text-[.7rem] font-semibold tracking-wider text-accent">KHÔNG KHÍ · VIỆT NAM</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Chất lượng không khí</h1></div>
+        <div><p className="text-[.7rem] font-semibold tracking-wider text-accent">CHẤT LƯỢNG KHÔNG KHÍ · VIỆT NAM</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Chất lượng không khí</h1></div>
       </div>
-      <span className="rounded-full border border-accent-border bg-accent-soft px-3 py-1.5 text-xs text-accent">{sourceLabel(data?.metadata?.source) ?? 'Theo dõi không khí'}</span>
+      <span className="rounded-full border border-accent-border bg-accent-soft px-3 py-1.5 text-xs text-accent">{data?.metadata?.source ? sourceLabel(data.metadata.source) : 'Theo dõi không khí'}</span>
     </header>
     <DashboardBreadcrumb items={[{ id: 'country', label: 'Việt Nam', onSelect: filters.provinceCode === 'all' ? undefined : () => setFilters((value) => ({ ...value, provinceCode: 'all' })) }, ...(filters.provinceCode === 'all' ? [] : [{ id: 'province', label: view.scopeLabel }])]} />
     {error && <div role="alert" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger/25 bg-danger-soft p-4 text-sm text-danger"><p>{error}</p><Button onClick={retry}>Thử lại</Button></div>}

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import type { DashboardData, DashboardFiltersValue } from '../types'
-import { matchesPeriod, mean } from '../model/dashboardSelectors'
-import { comparisonFilters, temporalQuery } from '../model/temporal'
+import { comparisonYear, matchesPeriod, mean, shiftPeriodYear } from '../model/dashboardSelectors'
+import { temporalQuery } from '../model/temporal'
 import { loadDashboardData } from '../api/dashboardApi'
 import { useTemporalData } from '../hooks/useTemporalData'
 import type { DashboardLoader } from '../api/dashboardTransport'
@@ -21,11 +21,10 @@ export function DashboardComparison({ data, filters, years, unit, loading, load 
   const [selection, setSelection] = useState<Partial<ComparisonValue>>({})
   const value: ComparisonValue = { dimension: 'province', provinceCode: data?.provinceSnapshots[1]?.provinceCode ?? data?.provinceSnapshots[0]?.provinceCode ?? '', year: years[1] ?? years[0] ?? 0, ...selection }
   const name = (code: string) => code === 'all' ? 'Toàn quốc' : data?.provinceSnapshots.find((province) => province.provinceCode === code)?.provinceName ?? code
-  const currentYear = filters.year === 'all' ? Number(filters.endDate.slice(0, 4)) || years[0] : filters.year
-  const currentFilters = value.dimension === 'year' && filters.resolution === 'monthly' && currentYear !== undefined
-    && filters.startDate.slice(0, 4) !== filters.endDate.slice(0, 4)
-    ? { ...filters, year: currentYear, startDate: `${currentYear}-01-01`, endDate: `${currentYear}-12-31` } : filters
-  const otherFilters = value.dimension === 'province' ? { ...filters, provinceCode: value.provinceCode } : comparisonFilters(currentFilters, value.year)
+  const currentYear = comparisonYear(filters) ?? years[0]
+  const currentFilters = value.dimension === 'province' ? filters : { ...filters, year: currentYear ?? 'all' as const }
+  const otherFilters = value.dimension === 'province' ? { ...filters, provinceCode: value.provinceCode }
+    : { ...shiftPeriodYear(currentFilters, value.year - (currentYear ?? value.year)), year: value.year }
   const yearComparison = value.dimension === 'year' && Boolean(data)
   const sameYear = value.year === currentYear
   const previousYear = value.year === Number(data?.metadata?.queryEnd?.slice(0, 4)) - 1 && data?.comparisonTrendRecords !== undefined
@@ -39,7 +38,7 @@ export function DashboardComparison({ data, filters, years, unit, loading, load 
   const error = reference.error ?? (generationChanged ? 'Bộ dữ liệu đã thay đổi. Hãy tải lại để so sánh cùng nguồn.' : null)
   const referenceRecords = !yearComparison || sameYear || existingReference ? data?.dashboardTrendRecords ?? []
     : outsideSource ? [] : previousYear ? data?.comparisonTrendRecords ?? [] : !reference.loading && !error ? reference.data?.dashboardTrendRecords ?? [] : []
-  const average = (rows: DashboardData['dashboardTrendRecords'], scope: DashboardFiltersValue) => mean(rows.filter((row) => matchesPeriod(row, scope)).map((row) => row[filters.pollutant]))
+  const average = (rows: DashboardData['dashboardTrendRecords'], scope: DashboardFiltersValue) => mean(rows.filter((row) => matchesPeriod(row, scope, true, data?.metadata?.temporalAggregation)).map((row) => row[filters.pollutant]))
   return <div>
     {error && <div role="alert" className="mb-3 flex items-center justify-between gap-3 text-xs text-danger"><span>{error}</span><Button onClick={reference.retry}>Thử lại</Button></div>}
     <ComparisonPanel years={years} dataReady={Boolean(data) && !reference.loading && !error} loading={loading || reference.loading} value={value} provinces={data?.provinceSnapshots ?? []} currentLabel={value.dimension === 'province' ? name(filters.provinceCode) : String(currentYear ?? '—')} comparisonLabel={value.dimension === 'province' ? name(value.provinceCode) : String(value.year)} currentValue={average(data?.dashboardTrendRecords ?? [], currentFilters)} comparisonValue={average(referenceRecords, otherFilters)} unit={unit} onChange={setSelection} />

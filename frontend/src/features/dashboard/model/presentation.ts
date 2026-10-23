@@ -1,4 +1,5 @@
 /** Translate display labels while preserving source identifiers used by filters. */
+import { sectorLabel as localSectorLabel } from '../../../utils/labels'
 const SECTORS: Record<string, string> = {
   manufacturing: 'Sản xuất công nghiệp', industry: 'Công nghiệp', industrial: 'Công nghiệp',
   power: 'Sản xuất điện', electricity: 'Sản xuất điện', energy: 'Năng lượng',
@@ -11,7 +12,8 @@ const SECTORS: Record<string, string> = {
 
 export function sectorLabel(value: string) {
   const key = value.trim().toLowerCase().replace(/[_-]/g, ' ').replace(/\s+/g, ' ')
-  return SECTORS[key] ?? value
+  const local = localSectorLabel(value)
+  return local !== value ? local : SECTORS[key] ?? value
 }
 
 export function sourceLabel(value?: string) {
@@ -27,7 +29,7 @@ export function sourceNote(value?: string) {
 }
 
 export function aggregationLabel(value: string) {
-  return ({ '3_hourly': 'Quan sát mỗi 3 giờ', daily_mean: 'Trung bình ngày', monthly_mean: 'Trung bình tháng' } as Record<string, string>)[value] ?? 'Theo nguồn dữ liệu'
+  return ({ '3_hourly': 'Quan sát mỗi 3 giờ', hourly_mean: 'Trung bình giờ', daily_mean: 'Trung bình ngày', monthly_mean: 'Trung bình tháng' } as Record<string, string>)[value] ?? value
 }
 
 export function queryErrorMessage(detail: unknown) {

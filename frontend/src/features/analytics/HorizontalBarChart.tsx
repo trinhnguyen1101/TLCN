@@ -35,9 +35,10 @@ export function HorizontalBarChart({ compact = false, dataReady = true, loading 
   const { containerRef, width: WIDTH } = useChartWidth(560)
   const stackedValue = WIDTH < 420
   const labelWidth = Math.min(220, WIDTH * (stackedValue ? .43 : .35))
-  const valueWidth = stackedValue ? 8 : Math.max(...points.map((point) => chartTextWidth(point.value.toLocaleString('vi-VN'))), 40) + 20
-  const barAreaWidth = Math.max(1, WIDTH - labelWidth - valueWidth)
   const maxValue = Math.max(...points.map((point) => Math.abs(point.value)), 1)
+  const valueLabel = (value: number) => `${value.toLocaleString('vi-VN', { maximumFractionDigits: unit === '1' ? 3 : 2 })}${unit ? ` ${unit}` : ''}`
+  const valueWidth = stackedValue ? 8 : Math.max(80, ...points.map((point) => chartTextWidth(valueLabel(point.value)) + 24))
+  const barAreaWidth = Math.max(1, WIDTH - labelWidth - valueWidth)
   const hasNegative = points.some((point) => point.value < 0)
   const layout = points.reduce((layout, point, index) => {
     const lines = wrapChartText(`${index + 1}. ${point.label}`, labelWidth - 14)
@@ -56,7 +57,7 @@ export function HorizontalBarChart({ compact = false, dataReady = true, loading 
         <ExportActions
           chartId={chartId}
           fileName={fileName}
-          csvRows={points.map((point, index) => ({ Hang: index + 1, Ten: point.label, Gia_tri: point.value, Don_vi: unit }))}
+          csvRows={points.map((point, index) => ({ 'Hạng': index + 1, 'Tên': point.label, 'Giá trị': point.value, 'Đơn vị': unit }))}
         />
       </div>
       <p className="px-4 pt-2 pb-1 text-xs text-muted">Đơn vị: {unit || 'Không có đơn vị'}</p>
@@ -76,7 +77,7 @@ export function HorizontalBarChart({ compact = false, dataReady = true, loading 
                   className={onSelect ? 'group cursor-pointer focus:outline-none' : undefined}
                   tabIndex={onSelect ? 0 : undefined}
                   role={onSelect ? 'button' : undefined}
-                  aria-label={`${point.label}: ${point.value.toLocaleString('vi-VN')} ${unit}${onSelect ? '. Nhấn để lọc dữ liệu.' : ''}`}
+                  aria-label={`${point.label}: ${valueLabel(point.value)}${onSelect ? '. Nhấn để lọc bảng thông tin.' : ''}`}
                   onClick={() => onSelect?.(point)}
                   onKeyDown={(event) => {
                     if (onSelect && (event.key === 'Enter' || event.key === ' ')) {
@@ -85,12 +86,12 @@ export function HorizontalBarChart({ compact = false, dataReady = true, loading 
                     }
                   }}
                 >
-                  <title>{point.label}: {point.value.toLocaleString('vi-VN')} {unit}</title>
+                  <title>{`${point.label}: ${valueLabel(point.value)}`}</title>
                   <text className={labelClasses} x={labelWidth - 14} y={rowY + (rowHeight - lines.length * 16) / 2 + 12} textAnchor="end">{lines.map((line, index) => <tspan key={index} x={labelWidth - 14} dy={index ? 16 : 0}>{line}</tspan>)}</text>
                   <rect className={`fill-surface-subtle ${isSelected ? 'stroke-accent stroke-2' : 'stroke-border stroke-1'}`} x={labelWidth} y={y} width={barAreaWidth} height={BAR_HEIGHT} />
                   <rect className={isSelected ? 'fill-accent-hover' : 'fill-accent group-hover:fill-accent-hover group-focus:fill-accent-hover'} x={point.value < 0 ? baseline - width : baseline} y={y} width={width} height={BAR_HEIGHT} />
                   {hasNegative && <line x1={baseline} x2={baseline} y1={y} y2={y + BAR_HEIGHT} stroke="var(--color-muted)" />}
-                  <text className={`${labelClasses} fill-heading!`} x={WIDTH - 4} y={stackedValue ? y + BAR_HEIGHT + 16 : y + 22} textAnchor="end">{point.value.toLocaleString('vi-VN')}</text>
+                  <text className={`${labelClasses} fill-heading!`} x={WIDTH - 4} y={stackedValue ? y + BAR_HEIGHT + 16 : y + 22} textAnchor="end">{valueLabel(point.value)}</text>
                 </g>
               )
             })}

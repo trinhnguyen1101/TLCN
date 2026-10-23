@@ -19,6 +19,6 @@ export function AQISummaryCard({ aqi, scopeLabel, period, snapshotDate, loading 
       {level && <span className="rounded-full border px-3 py-1 text-xs font-semibold" style={{ color: level.textColor, borderColor: `${level.color}60`, backgroundColor: `${level.color}15` }}>{level.label}</span>}
     </div>
     <p className="text-xs leading-relaxed text-muted">{aqi === null ? 'Nguồn dữ liệu chưa cung cấp AQI cho phạm vi này.' : 'AQI trung bình trong phạm vi đang chọn.'}</p>
-    <p className="mt-2 text-xs text-muted">{snapshotDate ? `Ngày quan sát: ${formatDate(snapshotDate)} (UTC)` : 'Nguồn chưa cung cấp thời điểm cập nhật.'}</p>
+    <p className="mt-2 text-xs text-muted">{snapshotDate ? `Kỳ dữ liệu: ${formatDate(snapshotDate)} (UTC)` : 'Thời điểm cập nhật: nguồn chưa cung cấp'}</p>
   </section>
 }

@@ -149,8 +149,8 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
 
       <DataState className="flex-1" loading={!geoJson && !error} error={error}>
         {geoJson && (
-          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} zoomSnap={0.1} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} zoomControl={false} className={`${mapClasses} ${variant === 'user' ? 'h-[550px] min-[1440px]:h-[600px] max-md:h-[450px]' : 'h-[440px] min-[1024px]:min-h-[440px] min-[1024px]:flex-1 max-md:h-[350px]'}`}>
-            <ZoomControl position="topleft" zoomInTitle="Phóng to" zoomOutTitle="Thu nhỏ" />
+          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} zoomControl={false} className={`${mapClasses} ${variant === 'user' ? 'h-[550px] min-[1440px]:h-[600px] max-[767px]:h-[450px]' : 'h-[400px] max-[767px]:h-[350px]'}`}>
+            <ZoomControl zoomInTitle="Phóng to" zoomOutTitle="Thu nhỏ" />
             <MapSizeSync />
             <MinZoomWheelGuard />
             <WorldBasemap />

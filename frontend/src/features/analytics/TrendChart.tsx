@@ -75,7 +75,7 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
           <h2 id={`${chartId}-title`} className="text-[.98rem] font-semibold text-heading">{points.length === 1 && dataReady ? 'Số liệu tại thời điểm đã chọn' : 'Xu hướng theo thời gian'}</h2>
           <p className="mt-[7px] text-[.78rem] text-muted">{title}</p>
         </div>
-        <ExportActions chartId={chartId} fileName={fileName} csvRows={points.map((point) => ({ Thoi_gian_UTC: point.timestamp ?? point.label, [metricLabel]: point.value, Don_vi: unit }))} />
+        <ExportActions chartId={chartId} fileName={fileName} csvRows={points.map((point) => ({ 'Thời gian': point.label, [metricLabel]: point.value, 'Đơn vị': unit }))} />
       </div>
       <p className="px-6 pb-3 text-xs text-muted">{description}</p>
 

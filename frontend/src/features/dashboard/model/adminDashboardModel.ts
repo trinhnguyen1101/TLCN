@@ -1,7 +1,7 @@
-import { sectorLabel } from './presentation'
+import { sectorLabel } from '../../../utils/labels'
 import type { AdminDashboardData, DashboardFiltersValue, PriorityArea } from '../types'
-import { buildMonitoringView, isFullYearPeriod, isNumber, matchesPeriod, mean, metricOptions } from './dashboardSelectors'
-import { comparisonFilters, periodYears } from './temporal'
+import { buildMonitoringView, comparisonYear, isFullYearPeriod, isNumber, matchesEmissionPeriod, matchesPeriod, mean, metricOptions, shiftPeriodYear } from './dashboardSelectors'
+import { periodYears } from './temporal'
 
 function trendFromChange(change: number | null): PriorityArea['trend'] {
   if (change === null) return null
@@ -18,25 +18,16 @@ export function buildAdminDashboardView(data: AdminDashboardData | null, filters
   const selectedPollutant = availableMetrics.includes(filters.pollutant) ? filters.pollutant : availableMetrics[0] ?? 'pm25'
   const monitoring = buildMonitoringView(data, { ...filters, pollutant: selectedPollutant })
   const years = periodYears(data?.metadata, [...new Set(trends.map((record) => Number(record.date.slice(0, 4))).filter(Number.isFinite))].sort((a, b) => b - a), filters.resolution)
-  const currentYear = filters.year !== 'all' ? filters.year
-    : filters.startDate && filters.endDate && (filters.resolution !== 'monthly' || filters.startDate.slice(0, 4) === filters.endDate.slice(0, 4))
-      ? Number(filters.endDate.slice(0, 4)) : undefined
-  const currentRecords = trends.filter((record) => matchesPeriod(record, filters))
-  const previousFilters = currentYear === undefined ? null : comparisonFilters(filters, currentYear - 1)
-  const previousRecords = previousFilters ? (data?.comparisonTrendRecords ?? trends).filter((record) => matchesPeriod(record, previousFilters)) : []
-  const currentAverage = mean(currentRecords.map((record) => record[selectedPollutant]))
-  const previousAverage = mean(previousRecords.map((record) => record[selectedPollutant]))
-  const yoy = currentAverage !== null && previousAverage !== null && previousAverage !== 0
-    ? (currentAverage - previousAverage) / previousAverage * 100 : null
-  const filteredEmissions = (data?.emissionRecords ?? []).filter((record) => {
-    const date = `${record.year}-${String(record.month).padStart(2, '0')}`
-    return (filters.year === 'all' || record.year === filters.year)
-      && (filters.provinceCode === 'all' || record.provinceCode === filters.provinceCode)
-      && (filters.month === 'all' || record.month === filters.month)
-      && (filters.sector === 'all' || record.sector === filters.sector)
-      && (!filters.startDate || date >= filters.startDate.slice(0, 7))
-      && (!filters.endDate || date <= filters.endDate.slice(0, 7))
-  })
+  const currentRecords = monitoring.records
+  const baseYear = comparisonYear(filters)
+  const currentYear = baseYear ?? undefined
+  const previousFilters = baseYear === null ? null : shiftPeriodYear(filters, -1)
+  const previousRecords = previousFilters ? (data?.comparisonTrendRecords ?? trends).filter((record) => matchesPeriod(record, previousFilters, true, data?.metadata?.temporalAggregation)) : []
+  const currentPm25 = mean(currentRecords.map((record) => record.pm25))
+  const previousPm25 = mean(previousRecords.map((record) => record.pm25))
+  const yoy = currentPm25 !== null && previousPm25 !== null && previousPm25 !== 0
+    ? (currentPm25 - previousPm25) / previousPm25 * 100 : null
+  const filteredEmissions = (data?.emissionRecords ?? []).filter((record) => matchesEmissionPeriod(record, filters))
   const sectorGroups = new Map<string, number>()
   filteredEmissions.forEach((record) => {
     if (isNumber(record.emissionTonnes)) sectorGroups.set(record.sector, (sectorGroups.get(record.sector) ?? 0) + record.emissionTonnes)
@@ -66,7 +57,7 @@ export function buildAdminDashboardView(data: AdminDashboardData | null, filters
   return {
     monitoring, availableMetrics, pollutantOptions, years, currentYear, selectedPollutant,
     metric: monitoring.metric, scopeLabel: monitoring.scopeLabel, chartPoints: monitoring.chartPoints,
-    sectorRanking, totalEmissions, currentAqi: monitoring.aqi, yoy, priorityAreaRows, topSector: sectorRanking[0],
+    sectorRanking, totalEmissions, currentAqi: monitoring.aqi, yoy, comparisonYear: baseYear, priorityAreaRows, topSector: sectorRanking[0],
   }
 }
 export type AdminDashboardView = ReturnType<typeof buildAdminDashboardView>
