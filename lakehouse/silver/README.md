@@ -7,7 +7,8 @@ in the `nessie.silver` namespace. It is Spark SQL, not PostgreSQL SQL.
 
 - Bronze files remain immutable. File-derived rows carry source file lineage,
   or (for CAMS cube rows) join through `bronze_batch_id` and
-  `cams_cube_source` to `source_file` and `source_file_sha256`.
+  `cams_cube_standard_source` to `source_file` and `source_file_sha256`.
+  Native `cams_cube`/`cams_cube_source` are preserved legacy tables.
 - Business/entity IDs stored as `STRING` are deterministic UUIDs or hashes.
   `ingestion_run.run_id` is the deliberate exception: it identifies one
   physical attempt and is a new UUID for every retry.
@@ -94,6 +95,8 @@ the lists deliberately when onboarding a new source.
 | `cams_grid_point` | `grid_id, grid_point_id` |
 | `cams_cube_source` | `dataset_id, bronze_batch_id, column_name` |
 | `cams_cube` | `dataset_id, valid_time, grid_id` |
+| `cams_cube_standard_source` | `dataset_id, bronze_batch_id, column_name` |
+| `cams_cube_standard` | `dataset_id, valid_time, grid_id` |
 | `waqi_station` | `station_id` |
 | `waqi_station_source` | `dataset_id, source_station_key` |
 | `waqi_station_variable` | `dataset_id, station_id, variable_id` |
@@ -111,6 +114,8 @@ the lists deliberately when onboarding a new source.
 
 - Parse `date` explicitly using `yyyy/M/d`; do not rely on locale inference.
 - Trim column names and cell values. Empty strings become `NULL`.
+- Require nonblank AQI values to be finite, nonnegative integers within the
+  SQL INT range before casting; never saturate overflow or turn NaN into zero.
 - The pollutant columns contain daily AQI values, not concentrations.
 - Each historical CSV represents exactly one station. The current files have
   no provider station ID. Build `station_id` from dataset ID and normalized
@@ -134,22 +139,31 @@ the lists deliberately when onboarding a new source.
   use hybrid model level 60. Surface and hybrid GRIB grid section hashes may
   differ; validate identical ordered coordinates and shape before aligning
   the fields to the reference surface grid ID.
-- Store one `cams_cube` row per time/grid with 20 `ARRAY<FLOAT>` native fields.
+- Store one `cams_cube_standard` row per time/grid with 20 `ARRAY<FLOAT>` standard fields.
   Array position is zero-based `cams_grid_point.grid_point_id`. Float32 reduces
-  storage; it can round the decoded native double. The unchanged GRIB is the
+  storage; conversion uses decoded float64 before rounding. The unchanged GRIB is the
   exact-value source of record.
-- Pipeline v3 explicitly adds missing model-level arrays to existing v2
-  tables. These six columns are nullable to retain historical 14-field rows;
-  every new v3 row supplies all 20 arrays. Reprocess a completed 20-file
-  Bronze batch to populate model-level values for historical time ranges.
-- `cams_cube_source` stores one row per original GRIB file, its SHA-256, unit,
+- Pipeline v4 uses new standard tables to keep legacy native cube values
+  separate. No historical rows are automatically converted or backfilled.
+- `cams_cube_standard_source` stores one row per original GRIB file, its SHA-256, unit,
   variable ID, and conversion `native * standard_scale + standard_offset`.
-  `NULL` scale/offset means no documented standard conversion.
-- Model-level gases keep their mass mixing ratio in `kg kg**-1`, and
-  `q_model` keeps specific humidity in that unit. No gas concentration is
-  inferred from the mixing ratio.
-- GRIB validity times are UTC instants. Spark displays `cams_cube.valid_time`
+  Gas scale/offset are NULL because the factor depends on aligned local
+  density. `conversion_method` and `conversion_metadata` document L60 A/B,
+  their source, pressure/temperature/humidity inputs, Rd and epsilon.
+- PM and four model-level gases (including CO) are stored in `ug/m3`;
+  total columns in `mg/m2`; temperatures in `degC`; pressures in `hPa`;
+  wind in `m/s`; `q_model` in `kg/kg`; AOD in `1`. Do not rescale these arrays.
+  Gas density uses `(p_half59+p_half60)/2`, Kelvin temperature and specific
+  humidity, with validated L60 GRIB coefficients preferred to the official
+  six-decimal ECMWF table. Missing/invalid inputs fail without defaults or
+  concentration fabrication. See [job contract and formulas](../../spark/jobs/silver/README.md#cams-cube).
+- GRIB validity times are UTC instants. Spark displays `cams_cube_standard.valid_time`
   in Vietnam time. Duplicate or out-of-order source times fail the run.
+  Instantaneous analysis step zero and 3-hour UTC timestamps are required;
+  gaps are kept without interpolation. Read standard cube rows only when
+  their `ingestion_run` has `status='succeeded'`, since failed runs can have
+  already committed earlier valid chunks. Provenance quality is interpreted
+  together with this run status.
 - The old point-per-row `cams_observation` table, if present, is legacy data;
   this schema does not delete or migrate it.
 
@@ -217,6 +231,8 @@ At minimum, each pipeline run must validate:
   one attempt per logical run has status `succeeded`;
 - required SHA-256 values are 64 lowercase hexadecimal characters, and
   `source_file` is a normalized relative POSIX path without `..` segments;
+- Bronze file metadata has no null identity/hash/size fields, duplicate file
+  paths, or object paths outside the declared batch's `files/` prefix;
 - `valid_to` is null or no earlier than `valid_from`;
 - `admin_match_confidence` is null or between 0 and 1;
 - `aqi_value` is not silently rounded from a non-integral source value;
@@ -225,11 +241,14 @@ At minimum, each pipeline run must validate:
 - aggregate hierarchy matches its level: totals have no sector/subsector,
   sectors have a sector and no subsector, and subsectors have both;
 - `period_end >= period_start` and the dates agree with `period_type`.
+- Climate TRACE quantities are finite; signed finite emission values are
+  retained without assuming that all native quantities are positive. Year
+  labels must be four-digit valid years and agree with monthly periods.
 
 ## Initial physical layout
 
-Large fact tables are partitioned by Iceberg time transforms. `cams_cube`
-uses `year(valid_time)`; each row holds all 14 variables. API Ninjas hourly
+Large fact tables are partitioned by Iceberg time transforms. `cams_cube_standard`
+uses `year(valid_time)`; each row holds all 20 variables. API Ninjas hourly
 snapshots use `month(snapshot_hour_utc)`.
 `ingestion_run` and small dimensions are intentionally
 unpartitioned. `data_quality_issue` remains day-partitioned because row/field

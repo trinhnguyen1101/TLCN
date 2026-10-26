@@ -343,6 +343,74 @@ TBLPROPERTIES (
 );
 
 -- ---------------------------------------------------------------------------
+-- Standardized CAMS v4 output. The native cams_cube/cams_cube_source above
+-- remain legacy tables: never mix their native arrays with standard values.
+-- Keys/array ordering/partitioning match the existing cube contract.
+-- Consumers must join ingestion_run on ingestion_run_id = run_id and require
+-- status='succeeded'; failed attempts can have committed earlier chunks.
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS nessie.silver.cams_cube_standard_source (
+    dataset_id          STRING NOT NULL,
+    bronze_batch_id     STRING NOT NULL,
+    column_name         STRING NOT NULL,
+    variable_id         STRING NOT NULL,
+    param_id            INT NOT NULL,
+    short_name          STRING NOT NULL,
+    native_unit         STRING NOT NULL,
+    standard_unit       STRING,
+    standard_scale      DOUBLE,
+    standard_offset     DOUBLE,
+    source_file         STRING NOT NULL,
+    source_file_sha256  STRING NOT NULL,
+    ingestion_run_id    STRING NOT NULL,
+    loaded_at           TIMESTAMP NOT NULL,
+    conversion_method   STRING NOT NULL,
+    conversion_metadata STRING NOT NULL,
+    quality_status      STRING NOT NULL
+)
+USING iceberg
+TBLPROPERTIES ('format-version' = '2', 'write.parquet.compression-codec' = 'zstd');
+
+-- Units: PM and CO/NO2/SO2/O3 ug/m3; columns mg/m2; temperatures degC;
+-- pressures hPa; wind m/s; q_model kg/kg; AOD dimensionless.
+CREATE TABLE IF NOT EXISTS nessie.silver.cams_cube_standard (
+    dataset_id          STRING NOT NULL,
+    valid_time          TIMESTAMP NOT NULL,
+    grid_id             STRING NOT NULL,
+    aod550              ARRAY<FLOAT> NOT NULL,
+    co                  ARRAY<FLOAT> NOT NULL,
+    co_column           ARRAY<FLOAT> NOT NULL,
+    d2m                 ARRAY<FLOAT> NOT NULL,
+    mslp                ARRAY<FLOAT> NOT NULL,
+    no2                 ARRAY<FLOAT> NOT NULL,
+    no2_column          ARRAY<FLOAT> NOT NULL,
+    o3                  ARRAY<FLOAT> NOT NULL,
+    o3_column           ARRAY<FLOAT> NOT NULL,
+    pm10                ARRAY<FLOAT> NOT NULL,
+    pm1                 ARRAY<FLOAT> NOT NULL,
+    pm2p5               ARRAY<FLOAT> NOT NULL,
+    q_model             ARRAY<FLOAT> NOT NULL,
+    so2                 ARRAY<FLOAT> NOT NULL,
+    so2_column          ARRAY<FLOAT> NOT NULL,
+    sp                  ARRAY<FLOAT> NOT NULL,
+    t2m                 ARRAY<FLOAT> NOT NULL,
+    t_model             ARRAY<FLOAT> NOT NULL,
+    u10                 ARRAY<FLOAT> NOT NULL,
+    v10                 ARRAY<FLOAT> NOT NULL,
+    bronze_batch_id     STRING NOT NULL,
+    ingestion_run_id    STRING NOT NULL,
+    loaded_at           TIMESTAMP NOT NULL
+)
+USING iceberg
+PARTITIONED BY (year(valid_time))
+TBLPROPERTIES (
+    'format-version' = '2',
+    'write.parquet.compression-codec' = 'zstd',
+    'write.distribution-mode' = 'hash',
+    'write.target-file-size-bytes' = '134217728'
+);
+
+-- ---------------------------------------------------------------------------
 -- 12. Canonical WAQI stations
 -- Logical key: station_id. station_id must not be derived from display name
 -- alone; use the source mapping table when source IDs are missing.

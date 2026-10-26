@@ -15,6 +15,7 @@ from common import (
     create_spark,
     deduplicate_or_fail,
     finish_run,
+    finite_number,
     load_bronze_batch,
     merge_dataframe,
     metadata_rows,
@@ -29,6 +30,7 @@ from common import (
 
 
 PIPELINE = "climate-trace-bronze-to-silver"
+PIPELINE_VERSION = "1.1.0"
 
 
 def parse_args():
@@ -83,6 +85,8 @@ def read_sources(spark, batch):
     point_source = point_sources[0]
     for frame in point_sources[1:]:
         point_source = point_source.unionByName(frame, allowMissingColumns=True)
+    if "asset_type" not in point_source.columns:
+        point_source = point_source.withColumn("asset_type", F.lit(None).cast("string"))
     return aggregate, point_source, input_rows
 
 
@@ -167,13 +171,15 @@ def transform(spark, batch, run):
     )
     invalid_aggregate = aggregate_typed.filter(
         F.col("country").isNull() | F.col("gas").isNull() | F.col("_year").isNull()
-        | F.col("_quantity").isNull() | F.isnan("_quantity")
+        | ~finite_number(F.col("_quantity"))
+        | (~F.col("year").rlike("^[0-9]{4}$")) | (~F.col("_year").between(1, 9999))
         | F.col("_period_start").isNull() | F.col("_period_end").isNull()
         | (~F.col("aggregation").isin("totals", "sectors", "subsectors"))
         | ((F.col("aggregation") == "totals") & (F.col("sector").isNotNull() | F.col("subsector").isNotNull()))
         | ((F.col("aggregation") == "sectors") & (F.col("sector").isNull() | F.col("subsector").isNotNull()))
         | ((F.col("aggregation") == "subsectors") & (F.col("sector").isNull() | F.col("subsector").isNull()))
         | (F.col("_period_end") < F.col("_period_start"))
+        | (F.year("_period_start") != F.col("_year"))
     )
     fail_invalid(
         spark, run, invalid_aggregate, "climate_trace_aggregate_contract",
@@ -245,7 +251,8 @@ def transform(spark, batch, run):
     invalid_sources = sources_typed.filter(
         F.col("source_id").isNull() | F.col("country").isNull() | F.col("gas").isNull()
         | F.col("sector").isNull() | F.col("subsector").isNull() | F.col("source_type").isNull()
-        | F.col("_year").isNull() | F.col("_quantity").isNull() | F.isnan("_quantity")
+        | F.col("_year").isNull() | ~finite_number(F.col("_quantity"))
+        | (~F.col("year").rlike("^[0-9]{4}$")) | (~F.col("_year").between(1, 9999))
         | F.col("_latitude").isNull() | F.col("_longitude").isNull()
         | (~F.col("_latitude").between(-90.0, 90.0))
         | (~F.col("_longitude").between(-180.0, 180.0))
@@ -353,7 +360,7 @@ def main():
             source_uri="https://climatetrace.org/",
             description="Climate TRACE Vietnam aggregate and point-source emissions.",
         )
-        run = start_run(spark, batch, dataset_id, PIPELINE)
+        run = start_run(spark, batch, dataset_id, PIPELINE, pipeline_version=PIPELINE_VERSION)
         if run.skipped:
             return
         input_rows, output_rows, duplicates = transform(spark, batch, run)
