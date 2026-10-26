@@ -300,7 +300,8 @@ TBLPROPERTIES (
 -- 11. CAMS native grid values, one row per time and grid
 -- Logical key: (dataset_id, valid_time, grid_id).
 -- Each array index matches cams_grid_point.grid_point_id (zero based).
--- All 14 arrays have row_count * column_count finite native values.
+-- All 20 arrays in a v3 run have row_count * column_count finite native values.
+-- The six model-level arrays are nullable for historical rows written by v2.
 -- valid_time is a UTC source instant displayed in Asia/Ho_Chi_Minh by Spark.
 -- Prior row-based cams_observation tables are legacy and are not modified here.
 -- ---------------------------------------------------------------------------
@@ -309,17 +310,23 @@ CREATE TABLE IF NOT EXISTS nessie.silver.cams_cube (
     valid_time          TIMESTAMP NOT NULL,
     grid_id             STRING NOT NULL,
     aod550              ARRAY<FLOAT> NOT NULL,
+    co                  ARRAY<FLOAT> NOT NULL,
     co_column           ARRAY<FLOAT> NOT NULL,
     d2m                 ARRAY<FLOAT> NOT NULL,
     mslp                ARRAY<FLOAT> NOT NULL,
+    no2                 ARRAY<FLOAT> NOT NULL,
     no2_column          ARRAY<FLOAT> NOT NULL,
+    o3                  ARRAY<FLOAT> NOT NULL,
     o3_column           ARRAY<FLOAT> NOT NULL,
     pm10                ARRAY<FLOAT> NOT NULL,
     pm1                 ARRAY<FLOAT> NOT NULL,
     pm2p5               ARRAY<FLOAT> NOT NULL,
+    q_model             ARRAY<FLOAT> NOT NULL,
+    so2                 ARRAY<FLOAT> NOT NULL,
     so2_column          ARRAY<FLOAT> NOT NULL,
     sp                  ARRAY<FLOAT> NOT NULL,
     t2m                 ARRAY<FLOAT> NOT NULL,
+    t_model             ARRAY<FLOAT> NOT NULL,
     u10                 ARRAY<FLOAT> NOT NULL,
     v10                 ARRAY<FLOAT> NOT NULL,
     bronze_batch_id     STRING NOT NULL,

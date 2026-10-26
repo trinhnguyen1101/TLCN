@@ -128,15 +128,26 @@ the lists deliberately when onboarding a new source.
   metadata rather than from the filename.
 - Derive `grid_id` from GRIB `md5GridSection`; never assume all future files use
   the same grid.
-- Match all 14 inputs by GRIB `paramId` and `shortName`, then require each
+- Match all 20 inputs by GRIB `paramId` and `shortName`, then require each
   time/grid step to have exactly one aligned message from every field.
-- Store one `cams_cube` row per time/grid with 14 `ARRAY<FLOAT>` native fields.
+- The six added fields (`co`, `no2`, `o3`, `so2`, `t_model`, `q_model`) must
+  use hybrid model level 60. Surface and hybrid GRIB grid section hashes may
+  differ; validate identical ordered coordinates and shape before aligning
+  the fields to the reference surface grid ID.
+- Store one `cams_cube` row per time/grid with 20 `ARRAY<FLOAT>` native fields.
   Array position is zero-based `cams_grid_point.grid_point_id`. Float32 reduces
   storage; it can round the decoded native double. The unchanged GRIB is the
   exact-value source of record.
+- Pipeline v3 explicitly adds missing model-level arrays to existing v2
+  tables. These six columns are nullable to retain historical 14-field rows;
+  every new v3 row supplies all 20 arrays. Reprocess a completed 20-file
+  Bronze batch to populate model-level values for historical time ranges.
 - `cams_cube_source` stores one row per original GRIB file, its SHA-256, unit,
   variable ID, and conversion `native * standard_scale + standard_offset`.
   `NULL` scale/offset means no documented standard conversion.
+- Model-level gases keep their mass mixing ratio in `kg kg**-1`, and
+  `q_model` keeps specific humidity in that unit. No gas concentration is
+  inferred from the mixing ratio.
 - GRIB validity times are UTC instants. Spark displays `cams_cube.valid_time`
   in Vietnam time. Duplicate or out-of-order source times fail the run.
 - The old point-per-row `cams_observation` table, if present, is legacy data;
