@@ -28,7 +28,7 @@ from common import (
 
 
 PIPELINE = "cams-eac4-bronze-to-silver"
-PIPELINE_VERSION = "2.0.0"
+PIPELINE_VERSION = "3.0.0"
 CAMS_CHUNK_TIMESTEPS = 512
 CAMS_INPUT_PARTITIONS = 16
 
@@ -36,20 +36,31 @@ CAMS_INPUT_PARTITIONS = 16
 # One aligned time/grid record has exactly one message from every field.
 FIELD_SPECS = {
     "aod550": (210207, "aod550"),
+    "co": (210123, "co"),
     "co_column": (210127, "tcco"),
     "d2m": (168, "2d"),
     "mslp": (151, "msl"),
+    "no2": (210121, "no2"),
     "no2_column": (210125, "tcno2"),
+    "o3": (210203, "go3"),
     "o3_column": (210206, "gtco3"),
     "pm10": (210074, "pm10"),
     "pm1": (210072, "pm1"),
     "pm2p5": (210073, "pm2p5"),
+    "q_model": (133, "q"),
+    "so2": (210122, "so2"),
     "so2_column": (210126, "tcso2"),
     "sp": (134, "sp"),
     "t2m": (167, "2t"),
+    "t_model": (130, "t"),
     "u10": (165, "10u"),
     "v10": (166, "10v"),
 }
+MODEL_LEVEL_FIELDS = {"co", "no2", "o3", "so2", "q_model", "t_model"}
+CUBE_COLUMNS = (
+    "dataset_id", "valid_time", "grid_id", *FIELD_SPECS,
+    "bronze_batch_id", "ingestion_run_id", "loaded_at",
+)
 PARAM_TO_COLUMN = {param_id: column for column, (param_id, _) in FIELD_SPECS.items()}
 GRIB_KEYS = (
     "paramId", "shortName", "name", "units", "typeOfLevel", "level",
@@ -89,6 +100,9 @@ def measurement_contract(metadata):
         return "mass_concentration", "ug m**-3", 1_000_000_000.0, 0.0
     if unit == "kg m**-2":
         return "column_mass", "mg m**-2", 1_000_000.0, 0.0
+    if unit == "kg kg**-1":
+        kind = "specific_humidity" if short_name == "q" else "mass_mixing_ratio"
+        return kind, "kg kg**-1", 1.0, 0.0
     if unit == "K":
         return "temperature", "degC", 1.0, -273.15
     if unit == "Pa":
@@ -228,10 +242,55 @@ def register_sources(spark, files, first_messages, run, batch):
     )
 
 
+def ensure_cube_schema(spark):
+    """Add the six v3 arrays without rewriting historical 14-field rows."""
+    table = f"{TABLE_PREFIX}.cams_cube"
+    fields = {field.name: field.dataType.simpleString() for field in spark.table(table).schema.fields}
+    missing = set(FIELD_SPECS).difference(fields)
+    if missing.difference(MODEL_LEVEL_FIELDS):
+        raise DataQualityError(f"CAMS cube schema is missing original fields: {sorted(missing)}")
+    for column in FIELD_SPECS:
+        if column in fields and fields[column] != "array<float>":
+            raise DataQualityError(f"CAMS cube {column} must be ARRAY<FLOAT>, got {fields[column]}")
+    if missing:
+        columns = ", ".join(f"`{column}` ARRAY<FLOAT>" for column in FIELD_SPECS if column in missing)
+        spark.sql(f"ALTER TABLE {table} ADD COLUMNS ({columns})")
+
+
+def align_grid_messages(messages, grid_coordinates, aligned_grids):
+    """Align horizontal grids even when GRIB sections include different vertical metadata."""
+    metadata, timestamp, grid_id, values, coordinates = messages[next(iter(FIELD_SPECS))]
+    if len({message[1] for message in messages.values()}) != 1:
+        raise DataQualityError("CAMS GRIB fields have different times")
+    if coordinates is None:
+        coordinates = grid_coordinates.get(grid_id)
+    if coordinates is None:
+        raise DataQualityError("Missing coordinates for a new CAMS grid")
+    if grid_id in grid_coordinates and grid_coordinates[grid_id] != coordinates:
+        raise DataQualityError("CAMS grid coordinates changed for the same grid ID")
+    shape = (int(metadata["Ni"]), int(metadata["Nj"]))
+    for other_metadata, _, other_grid_id, other_values, other_coordinates in messages.values():
+        if (int(other_metadata["Ni"]), int(other_metadata["Nj"])) != shape or len(other_values) != len(values):
+            raise DataQualityError("CAMS field grid shape mismatch")
+        if other_coordinates is not None:
+            if other_coordinates != coordinates:
+                raise DataQualityError("CAMS grid coordinates conflict")
+        elif aligned_grids.get(other_grid_id) != grid_id:
+            raise DataQualityError("CAMS field has no verified horizontal grid alignment")
+        if other_grid_id in aligned_grids and aligned_grids[other_grid_id] != grid_id:
+            raise DataQualityError("CAMS GRIB grid section changed its horizontal alignment")
+    grid_coordinates[grid_id] = coordinates
+    for message in messages.values():
+        aligned_grids[message[2]] = grid_id
+    return metadata, timestamp, grid_id, coordinates
+
+
 def merge_cube_chunk(spark, rows):
     if not rows:
         return 0
-    schema = spark.table(f"{TABLE_PREFIX}.cams_cube").schema
+    # ALTER TABLE appends new columns after lineage columns on an existing table.
+    # Match tuple order explicitly so a migrated table cannot swap variable arrays.
+    schema = spark.table(f"{TABLE_PREFIX}.cams_cube").select(*CUBE_COLUMNS).schema
     source = spark.createDataFrame(
         spark.sparkContext.parallelize(rows, CAMS_INPUT_PARTITIONS), schema
     )
@@ -253,6 +312,8 @@ def transform(spark, batch, run):
 
     seen_grids = set()
     grid_shapes = {}
+    grid_coordinates = {}
+    aligned_grids = {}
     input_rows = output_rows = 0
     last_time = None
     chunk = []
@@ -276,6 +337,10 @@ def transform(spark, batch, run):
                 )
             if column in files:
                 raise DataQualityError(f"Two CAMS GRIB files map to {column}")
+            if column in MODEL_LEVEL_FIELDS and (
+                str(metadata["typeOfLevel"]) != "hybrid" or int(metadata["level"]) != 60
+            ):
+                raise DataQualityError(f"{meta.source_file}: {column} requires hybrid model level 60")
             files[column] = {
                 "meta": meta,
                 "handle": handle,
@@ -293,36 +358,20 @@ def transform(spark, batch, run):
                 break
             if any(message is None for message in messages.values()):
                 raise DataQualityError("CAMS GRIB files have different message counts")
-            times = {message[1] for message in messages.values()}
-            grids = {message[2] for message in messages.values()}
-            if len(times) != 1 or len(grids) != 1:
-                raise DataQualityError("CAMS GRIB fields have different times or grids")
-            timestamp = next(iter(times))
-            grid_id = next(iter(grids))
-            shape = (int(messages[next(iter(FIELD_SPECS))][0]["Ni"]),
-                     int(messages[next(iter(FIELD_SPECS))][0]["Nj"]))
+            metadata, timestamp, grid_id, coordinates = align_grid_messages(
+                messages, grid_coordinates, aligned_grids
+            )
+            shape = (int(metadata["Ni"]), int(metadata["Nj"]))
             if grid_id in grid_shapes and grid_shapes[grid_id] != shape:
                 raise DataQualityError("CAMS grid shape changed for the same grid ID")
             if last_time is not None and timestamp <= last_time:
                 raise DataQualityError("CAMS GRIB times must be strictly increasing")
             last_time = timestamp
 
-            if grid_id not in seen_grids:
-                first = messages[next(iter(FIELD_SPECS))]
-                metadata, _, _, _, coordinates = first
-                if coordinates is None:
-                    raise DataQualityError("Missing coordinates for a new CAMS grid")
-                for message in messages.values():
-                    other_metadata, _, _, values, other_coordinates = message
-                    if (int(other_metadata["Ni"]), int(other_metadata["Nj"])) != (
-                        int(metadata["Ni"]), int(metadata["Nj"])
-                    ) or len(values) != len(first[3]):
-                        raise DataQualityError("CAMS field grid shape mismatch")
-                    if other_coordinates is not None and other_coordinates != coordinates:
-                        raise DataQualityError("CAMS grid coordinates conflict")
+            if grid_id not in grid_shapes:
                 register_grid(spark, metadata, grid_id, coordinates, run)
-                seen_grids.add(grid_id)
                 grid_shapes[grid_id] = shape
+            seen_grids.update(message[2] for message in messages.values())
             for column, message in messages.items():
                 metadata = message[0]
                 if (int(metadata["Ni"]), int(metadata["Nj"])) != shape:
@@ -353,6 +402,13 @@ def transform(spark, batch, run):
 
         output_rows += merge_cube_chunk(spark, chunk)
         print(f"CAMS cube committed {output_rows} time/grid rows (complete)", flush=True)
+        # ecCodes/CFFI can retain a C FILE* until the Python stream itself is
+        # released. Drop these references before temporary cleanup on Windows.
+        stack.close()
+        for file in files.values():
+            file.clear()
+        files.clear()
+        handle = file = None
     return input_rows, output_rows, 0
 
 
@@ -367,6 +423,7 @@ def main():
             raise ValueError(
                 f"Expected cams/eac4 Bronze batch, got {batch.source}/{batch.dataset_name}"
             )
+        ensure_cube_schema(spark)
         dataset_id = register_dataset(
             spark, batch, source_version=args.source_version,
             source_uri="https://ads.atmosphere.copernicus.eu/",
