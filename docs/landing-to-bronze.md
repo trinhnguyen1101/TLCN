@@ -128,3 +128,36 @@ for dataset in "${datasets[@]}"; do
     exit 1
   fi
 done
+
+
+lệnh cho ubuntu
+
+
+datasets=(
+  "waqi/historical"
+  "CAMS/EAC4"
+  "climate_trace/climate_trace_vietnam"
+  "reference/vietnam_administrative_divisions"
+  "reference/vietnamese-provinces-database"
+)
+
+for dataset in "${datasets[@]}"; do
+  echo "======================================"
+  echo "Processing dataset: $dataset"
+  echo "======================================"
+
+  if ! docker compose exec -T spark-master \
+    /opt/spark/bin/spark-submit \
+    --master "local[1]" \
+    --driver-memory 512m \
+    /opt/spark/work-dir/jobs/bronze/landing_to_bronze.py \
+    --dataset "$dataset"; then
+
+    echo "Nạp thất bại: $dataset" >&2
+    exit 1
+  fi
+
+  echo "Nạp thành công: $dataset"
+done
+
+echo "Hoàn tất nạp tất cả datasets vào Bronze."
