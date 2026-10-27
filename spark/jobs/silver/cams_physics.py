@@ -13,6 +13,7 @@ import numpy as np
 
 
 L60_SOURCE = "https://confluence.ecmwf.int/spaces/UDOC/pages/108117131/L60+model+level+definitions"
+L60_A_ATOL_PA = 2e-3  # Archived 2013-2016 GRIB pv values are quantized to this precision.
 RD = 287.05  # J kg-1 K-1
 EPSILON = 0.621981
 GASES = {"co", "no2", "so2", "o3"}
@@ -88,7 +89,7 @@ def hybrid_coefficients(metadata):
     if pv.shape != (122,) or (nv is not None and int(nv) != 122):
         raise ValueError("L60 requires 122 pv coefficients (61 A followed by 61 B), not L137")
     a, b = pv[:61], pv[61:]
-    if (not np.allclose(a, L60_A, rtol=0, atol=1e-5)
+    if (not np.allclose(a, L60_A, rtol=0, atol=L60_A_ATOL_PA)
             or not np.allclose(b, L60_B, rtol=0, atol=5.1e-7)):
         raise ValueError("GRIB pv does not match the official ECMWF L60 coefficients in Pa")
     return a, b, "grib_pv_l60"
@@ -99,7 +100,17 @@ def coefficient_provenance(metadata):
     payload = dict(source=source, reference=L60_SOURCE, half_level_indices=[59, 60],
                    a_pa=a.tolist(), b=b.tolist())
     encoded = json.dumps(payload, sort_keys=True, separators=(",", ":"))
-    return encoded, hashlib.sha256(encoded.encode()).hexdigest()
+    # Identify the validated physical coefficient family, not the exact binary
+    # representation found in one GRIB message. ECMWF archive messages from
+    # 2013-2016 quantize some A coefficients slightly differently while still
+    # representing the same official L60 definition.
+    identity = json.dumps(
+        dict(family="ecmwf_l60", reference=L60_SOURCE,
+             a_pa=list(L60_A), b=list(L60_B)),
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+    return encoded, hashlib.sha256(identity.encode()).hexdigest()
 
 
 def aligned_coefficient_metadata(messages):

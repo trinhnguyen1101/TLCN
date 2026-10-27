@@ -9,7 +9,7 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from cams_physics import (
-    CONTRACTS, GASES, L60_A, L60_B, air_density, gas_concentration,
+    CONTRACTS, GASES, L60_A, L60_B, air_density, coefficient_provenance, gas_concentration,
     half_level_pressure, hybrid_coefficients, model_level_pressure,
     normalize_fields, virtual_temperature,
 )
@@ -98,6 +98,20 @@ class CamsPhysicsTests(unittest.TestCase):
         for metadata in invalid:
             with self.subTest(metadata=str(metadata)[:50]), self.assertRaises(ValueError):
                 hybrid_coefficients(metadata)
+
+    def test_accepts_quantized_2013_to_2016_grib_a_coefficients(self):
+        pv = list(L60_A) + list(L60_B)
+        pv[25] = 10376.125
+        a, _, method = hybrid_coefficients({"NV": 122, "pv": pv})
+        self.assertEqual(method, "grib_pv_l60")
+        self.assertEqual(a[25], 10376.125)
+
+        original_payload, original_id = coefficient_provenance(
+            {"NV": 122, "pv": list(L60_A) + list(L60_B)}
+        )
+        quantized_payload, quantized_id = coefficient_provenance({"NV": 122, "pv": pv})
+        self.assertNotEqual(original_payload, quantized_payload)
+        self.assertEqual(original_id, quantized_id)
 
     def test_invalid_meteorology_and_missing_values(self):
         for column, invalid in {
