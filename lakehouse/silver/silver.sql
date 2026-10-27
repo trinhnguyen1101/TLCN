@@ -727,5 +727,71 @@ TBLPROPERTIES (
     'write.distribution-mode' = 'hash'
 );
 
+-- ---------------------------------------------------------------------------
+-- Supabase API Ninjas city-proxy locations. The old wide table above is
+-- preserved for compatibility; new ingestion writes only these three tables.
+-- Logical key: (dataset_id, source_location_id).
+-- ---------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS nessie.silver.province_air_quality_location (
+    dataset_id              STRING NOT NULL,
+    proxy_location_id       STRING NOT NULL,
+    source_location_id      STRING NOT NULL,
+    location_key            STRING NOT NULL,
+    admin_unit_version_id   STRING NOT NULL,
+    admin_code              STRING NOT NULL,
+    query_city              STRING NOT NULL,
+    query_latitude          DOUBLE NOT NULL,
+    query_longitude         DOUBLE NOT NULL,
+    spatial_representation  STRING NOT NULL,
+    mapping_method          STRING NOT NULL,
+    mapping_confidence      DOUBLE NOT NULL,
+    source_file             STRING NOT NULL,
+    source_file_sha256      STRING NOT NULL,
+    ingestion_run_id        STRING NOT NULL,
+    loaded_at               TIMESTAMP NOT NULL
+)
+USING iceberg
+TBLPROPERTIES ('format-version' = '2', 'write.parquet.compression-codec' = 'zstd');
+
+-- Logical key: (dataset_id, proxy_location_id, snapshot_hour_utc).
+CREATE TABLE IF NOT EXISTS nessie.silver.province_air_quality_hourly_observation (
+    observation_id           STRING NOT NULL,
+    dataset_id               STRING NOT NULL,
+    proxy_location_id        STRING NOT NULL,
+    admin_unit_version_id    STRING NOT NULL,
+    snapshot_hour_utc        TIMESTAMP NOT NULL,
+    collected_at_utc         TIMESTAMP NOT NULL,
+    overall_aqi              INT NOT NULL,
+    validation_status        STRING NOT NULL,
+    qc_flag                  STRING NOT NULL,
+    source_collection_run_id STRING NOT NULL,
+    source_file              STRING NOT NULL,
+    source_file_sha256       STRING NOT NULL,
+    ingestion_run_id         STRING NOT NULL,
+    loaded_at                TIMESTAMP NOT NULL
+)
+USING iceberg
+PARTITIONED BY (month(snapshot_hour_utc))
+TBLPROPERTIES ('format-version' = '2', 'write.parquet.compression-codec' = 'zstd');
+
+-- Logical key: (observation_id, variable_id).
+CREATE TABLE IF NOT EXISTS nessie.silver.province_air_quality_hourly_measurement (
+    observation_id          STRING NOT NULL,
+    dataset_id              STRING NOT NULL,
+    proxy_location_id       STRING NOT NULL,
+    admin_unit_version_id   STRING NOT NULL,
+    snapshot_hour_utc       TIMESTAMP NOT NULL,
+    variable_id             STRING NOT NULL,
+    value_native            DOUBLE,
+    value_standard          DOUBLE,
+    missing_reason          STRING,
+    qc_flag                 STRING NOT NULL,
+    ingestion_run_id        STRING NOT NULL,
+    loaded_at               TIMESTAMP NOT NULL
+)
+USING iceberg
+PARTITIONED BY (month(snapshot_hour_utc))
+TBLPROPERTIES ('format-version' = '2', 'write.parquet.compression-codec' = 'zstd');
+
 -- ETL validation rules, controlled values, MERGE keys and source-specific
 -- normalization rules are documented in lakehouse/silver/README.md.

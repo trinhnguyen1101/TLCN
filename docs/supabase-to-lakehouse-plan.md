@@ -7,8 +7,11 @@ Tài liệu này mô tả kế hoạch triển khai hai job:
 1. Đồng bộ raw data của WAQI và API Ninjas từ Supabase Storage vào MinIO Bronze.
 2. Chuẩn hóa các Bronze batch đó vào Apache Iceberg Silver.
 
-Phạm vi hiện tại chỉ gồm thiết kế và kế hoạch triển khai. Job, DAG và schema
-mới chưa được tạo.
+Trạng thái triển khai: hai job và ba bảng `province_air_quality_*` đã được
+viết. Unit test và kiểm tra contract với một run Supabase của mỗi nguồn đã
+chạy. Cửa sổ API Ninjas 2026-10-26 04:00–05:00 UTC đã qua Bronze → Silver:
+34 location, 34 observation, 408 measurement; chạy lại cùng batch không tạo
+thêm run/observation. Chưa tạo DAG Airflow.
 
 Luồng mục tiêu:
 
@@ -177,6 +180,10 @@ sidecar riêng, nhưng không được phá contract mà các Silver job hiện 
 - Checkpoint tối thiểu chứa source, window start/end, collection run cuối,
   scheduled hour cuối, Bronze batch ID, object count, fingerprint và thời điểm
   hoàn tất.
+
+Checkpoint hiện được lưu trong chính batch tại `supabase_checkpoint.json` sau
+`_ingestion_manifest/_SUCCESS`. Lịch sync sau này nên truyền cửa sổ UTC tường
+minh; job không tự bỏ qua một cửa sổ chỉ vì checkpoint cũ tồn tại.
 
 ## 4. Job Bronze → Silver
 
@@ -365,8 +372,9 @@ Quy trình ánh xạ dự kiến:
 
 1. Ưu tiên mã hoặc mapping cấu hình đã được xác nhận.
 2. Kiểm tra query point nằm trong `admin_boundary` tương ứng.
-3. Nếu không nằm trong polygon, ghi quality issue thay vì âm thầm chọn tỉnh gần
-   nhất.
+3. Nếu điểm nằm ngoài polygon của tỉnh đã khớp tên tối đa 250 m, giữ mapping
+   với confidence `0.9` và ghi quality issue cảnh báo. Điểm xa hơn hoặc tên
+   tỉnh không khớp duy nhất sẽ khiến run thất bại; không tự chọn tỉnh gần nhất.
 4. Lưu `mapping_method` và `mapping_confidence`.
 5. Giữ nguyên mapping lịch sử theo `admin_unit_version_id`; không tự đổi record
    cũ khi danh giới hoặc tên hành chính thay đổi.
@@ -452,6 +460,9 @@ dụng checkpoint để tải bù raw objects đã tồn tại trên Supabase St
 - Kiểm tra query qua Trino và lineage ngược về raw object.
 - Sau khi ổn định mới tạo DAG và lịch daily sync.
 
+Đã xác minh một cửa sổ API Ninjas theo yêu cầu chạy thử; backfill nhiều giờ,
+kiểm thử toàn bộ lịch sử, DAG và lịch Airflow chưa triển khai.
+
 ## 8. Tiêu chí hoàn thành
 
 - Không mất hoặc tự sửa raw provider bytes.
@@ -462,3 +473,47 @@ dụng checkpoint để tải bù raw objects đã tồn tại trên Supabase St
 - Mọi tỉnh/thành proxy ánh xạ tới `admin_unit_version_id` có kiểm chứng.
 - AQI và concentration không dùng chung variable/measurement kind.
 - Mọi Silver row có lineage đầy đủ và chỉ được công bố từ run `succeeded`.
+
+
+lệnh chạy thử
+window_start=2026-10-26T04:00:00Z
+window_end=2026-10-26T05:00:00Z
+ingestion_date=2026-10-27
+waqi_batch=waqi-live-20261026-04
+waqi_path="s3a://lakehouse/bronze/waqi/live/ingestion_date=$ingestion_date/batch_id=$waqi_batch"
+
+if docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+    --master 'local[1]' --driver-memory 1g \
+    /opt/spark/work-dir/jobs/bronze/supabase_to_bronze.py \
+    --source waqi --window-start "$window_start" --window-end "$window_end" \
+    --batch-id "$waqi_batch" --ingestion-date "$ingestion_date"; then
+  docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+    --master 'local[1]' --driver-memory 1g \
+    --py-files /opt/spark/work-dir/jobs/silver/common.py \
+    /opt/spark/work-dir/jobs/silver/supabase_bronze_to_silver.py \
+    --source waqi --bronze-path "$waqi_path"
+else
+  echo "Bronze thất bại; chưa chạy Silver" >&2
+fi
+
+
+
+window_start=2026-10-26T04:00:00Z
+window_end=2026-10-26T05:00:00Z
+ingestion_date=2026-10-27
+ninja_batch=ninja-proxy-20261026-04
+ninja_path="s3a://lakehouse/bronze/api_ninjas/province_air_quality/ingestion_date=$ingestion_date/batch_id=$ninja_batch"
+
+if docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+    --master 'local[1]' --driver-memory 1g \
+    /opt/spark/work-dir/jobs/bronze/supabase_to_bronze.py \
+    --source api_ninjas --window-start "$window_start" --window-end "$window_end" \
+    --batch-id "$ninja_batch" --ingestion-date "$ingestion_date"; then
+  docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+    --master 'local[1]' --driver-memory 1g \
+    --py-files /opt/spark/work-dir/jobs/silver/common.py \
+    /opt/spark/work-dir/jobs/silver/supabase_bronze_to_silver.py \
+    --source api_ninjas --bronze-path "$ninja_path"
+else
+  echo "Bronze thất bại; chưa chạy Silver" >&2
+fi

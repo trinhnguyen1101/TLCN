@@ -11,6 +11,65 @@ Vietnam-local calendar dates.
 | `cams_bronze_to_silver.py` | 20 aligned EAC4 GRIB files | `variable`, `cams_grid`, `cams_grid_point`, `cams_cube_standard_source`, `cams_cube_standard` |
 | `waqi_bronze_to_silver.py` | 17 historical CSV files, one station per file | `variable`, `waqi_station`, `waqi_station_source`, `waqi_station_variable`, `waqi_daily_observation` |
 | `climate_trace_bronze_to_silver.py` | Annual/monthly emissions CSV | `variable`, `emission_aggregate`, `emission_source`, `emission_source_observation` |
+| `supabase_bronze_to_silver.py` | Supabase private raw API JSON + provider manifests | WAQI hourly tables or `province_air_quality_*` |
+
+## Supabase live ingestion
+
+`supabase_bronze_to_silver.py` accepts `--source waqi` or
+`--source api_ninjas` and a completed Bronze batch path. WAQI uses provider
+`data.time.iso` as observation time; API Ninjas uses the collection run's
+scheduled UTC hour. The API Ninjas city proxy is mapped to the current
+`admin_unit` province by name and checked against `admin_boundary` geometry.
+One existing Nha Trang point is about 160 m outside the Khánh Hoà polygon;
+named matches within 250 m are accepted with `mapping_confidence=0.9` and a
+`province_proxy_near_boundary` warning. Greater mismatches and missing or
+ambiguous province mapping fail with a quality issue. The old
+`api_ninjas_province_air_quality_hourly` table is not written by this job.
+The 2026-10-26 04:00 UTC batch was verified with 34 observations and 408
+measurements. A second run of the same batch was skipped without adding rows.
+
+AQI and concentration are separate variable IDs. API Ninjas concentration
+`standard_unit` and `value_standard` stay NULL until the provider unit is
+confirmed. WAQI IAQI is recorded as AQI, not mass concentration. Invalid
+provider responses remain in Bronze; the Silver job records quality issues
+and skips those observations. `partial` responses retain missing fields with
+their reason. Conflicting logical keys fail the run.
+The proxy location row points to the provider manifest that supplied its
+query coordinates; observation rows point to raw response files.
+
+Build the Spark image after the dependency change. Run the following entire
+block in one Bash terminal. The example selects the UTC hour 04:00–05:00 on
+2026-10-26; change the date and hour together for another run. Silver starts
+only after Bronze succeeds:
+
+```bash
+docker compose build spark-master spark-worker
+docker compose up -d --force-recreate spark-master spark-worker
+
+window_start=2026-10-26T04:00:00Z
+window_end=2026-10-26T05:00:00Z
+ingestion_date=2026-10-27
+batch_id=waqi-live-20261026-04
+bronze_path="s3a://lakehouse/bronze/waqi/live/ingestion_date=$ingestion_date/batch_id=$batch_id"
+
+if docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+     --master 'local[1]' --driver-memory 1g \
+     /opt/spark/work-dir/jobs/bronze/supabase_to_bronze.py \
+     --source waqi --window-start "$window_start" --window-end "$window_end" \
+     --batch-id "$batch_id" --ingestion-date "$ingestion_date"; then
+  docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+    --master 'local[1]' --driver-memory 1g \
+    --py-files /opt/spark/work-dir/jobs/silver/common.py \
+    /opt/spark/work-dir/jobs/silver/supabase_bronze_to_silver.py \
+    --source waqi --bronze-path "$bronze_path"
+fi
+```
+
+Replace `waqi` with `api_ninjas` and use the corresponding
+`bronze/api_ninjas/province_air_quality/...` path for the second source.
+Windows are half open UTC intervals. Reuse the same window and batch ID when
+retrying; an existing complete batch is checked against the source fingerprint.
+The run records and row lineage are kept in `nessie.silver.ingestion_run`.
 
 ## CAMS cube
 

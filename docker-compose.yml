@@ -9,6 +9,8 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+    AWS_CONNECTION_STRING: ${AWS_CONNECTION_STRING}
+    AWS_SECRET_KEY: ${AWS_SECRET_KEY}
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/logs:/opt/airflow/logs
@@ -155,6 +157,8 @@ services:
       SPARK_NO_DAEMONIZE: "true"
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      AWS_CONNECTION_STRING: ${AWS_CONNECTION_STRING}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
       AWS_REGION: us-east-1
       AWS_DEFAULT_REGION: us-east-1
     ports:
@@ -185,6 +189,8 @@ services:
       SPARK_WORKER_MEMORY: 2g
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+      AWS_CONNECTION_STRING: ${AWS_CONNECTION_STRING}
+      AWS_SECRET_KEY: ${AWS_SECRET_KEY}
     ports:
       - "${SPARK_WORKER_UI_PORT}:8081"
     volumes:
