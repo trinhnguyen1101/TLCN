@@ -106,15 +106,13 @@ the lists deliberately when onboarding a new source.
 | `emission_aggregate` | `aggregate_id` |
 | `emission_source` | `source_id` |
 | `emission_source_observation` | `dataset_id, source_id, year_label, variable_id` |
-| `api_ninjas_province_air_quality_hourly` | `dataset_id, location_id, snapshot_hour_utc` |
 | `province_air_quality_location` | `dataset_id, source_location_id` |
 | `province_air_quality_hourly_observation` | `dataset_id, proxy_location_id, snapshot_hour_utc` |
 | `province_air_quality_hourly_measurement` | `observation_id, variable_id` |
 
-The `province_air_quality_*` tables are the new Supabase API Ninjas output.
-The older wide `api_ninjas_province_air_quality_hourly` table is retained for
-compatibility and receives no rows from the new job. The city proxy location
-keeps the exact queried coordinates and a checked `admin_unit_version_id`.
+The `province_air_quality_*` tables store the Supabase API Ninjas output. The
+city proxy location keeps the exact queried coordinates and a checked
+`admin_unit_version_id`.
 
 ## Source-specific normalization
 

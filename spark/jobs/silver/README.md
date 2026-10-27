@@ -23,9 +23,8 @@ scheduled UTC hour. The API Ninjas city proxy is mapped to the current
 One existing Nha Trang point is about 160 m outside the Khánh Hoà polygon;
 named matches within 250 m are accepted with `mapping_confidence=0.9` and a
 `province_proxy_near_boundary` warning. Greater mismatches and missing or
-ambiguous province mapping fail with a quality issue. The old
-`api_ninjas_province_air_quality_hourly` table is not written by this job.
-The 2026-10-26 04:00 UTC batch was verified with 34 observations and 408
+ambiguous province mapping fail with a quality issue. The 2026-10-26 04:00 UTC
+batch was verified with 34 observations and 408
 measurements. A second run of the same batch was skipped without adding rows.
 
 AQI and concentration are separate variable IDs. API Ninjas concentration
