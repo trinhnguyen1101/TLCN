@@ -18,6 +18,7 @@ from common import (
     create_spark,
     deduplicate_or_fail,
     finish_run,
+    finite_number,
     load_bronze_batch,
     merge_dataframe,
     metadata_rows,
@@ -33,7 +34,7 @@ from common import (
 
 
 PIPELINE = "waqi-bronze-to-silver"
-PIPELINE_VERSION = "2.0.0"
+PIPELINE_VERSION = "2.1.0"
 CANONICAL_COLUMNS = ("pm25", "pm10", "o3", "no2", "so2", "co", "aqi")
 DISPLAY_NAMES = {
     "pm25": "PM2.5 AQI",
@@ -86,6 +87,11 @@ def variable_frame(spark):
             "Daily air-quality index supplied by the WAQI historical CSV.", now,
         ))
     return spark.createDataFrame(rows, spark.table(f"{TABLE_PREFIX}.variable").schema)
+
+
+def valid_aqi_value(column):
+    """Check before INT cast; retain valid zeroes and reject NaN/Inf/overflow."""
+    return finite_number(column) & column.between(0, 2147483647) & (column == F.floor(column))
 
 
 def transform(spark, batch, run):
@@ -185,7 +191,7 @@ def transform(spark, batch, run):
     numeric = long_data.withColumn("_numeric_value", F.col("raw_value").cast("double"))
     invalid_values = numeric.filter(
         F.col("raw_value").isNotNull()
-        & (F.col("_numeric_value").isNull() | (F.col("_numeric_value") != F.floor(F.col("_numeric_value"))))
+        & ~valid_aqi_value(F.col("_numeric_value"))
     )
     invalid_value_rows = invalid_values.limit(100).collect()
     if invalid_value_rows:
@@ -196,10 +202,10 @@ def transform(spark, batch, run):
             "rule_id": "waqi_integral_aqi",
             "issue_type": "invalid_measurement",
             "severity": "fatal",
-            "description": "AQI value must be an integer and is never silently rounded.",
+            "description": "AQI must be finite, nonnegative and integral within the INT range; no rounding or saturation.",
             "original_value": row.raw_value,
         } for row in invalid_value_rows))
-        raise DataQualityError("WAQI contains non-integral or non-numeric AQI values")
+        raise DataQualityError("WAQI contains invalid, non-finite, negative or out-of-range AQI values")
 
     now = utc_now()
     observations = numeric.select(

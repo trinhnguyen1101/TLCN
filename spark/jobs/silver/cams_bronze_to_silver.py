@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import math
 import os
 import tempfile
-from array import array
 from contextlib import ExitStack
 from datetime import datetime, timezone
 
@@ -24,11 +25,17 @@ from common import (
     sha256_json,
     start_run,
     utc_now,
+    write_quality_issues,
+)
+from cams_physics import (
+    CONTRACTS, GASES, aligned_coefficient_metadata, coefficient_provenance, normalize_fields,
 )
 
 
 PIPELINE = "cams-eac4-bronze-to-silver"
-PIPELINE_VERSION = "3.0.0"
+PIPELINE_VERSION = "4.0.0"
+CUBE_TABLE = f"{TABLE_PREFIX}.cams_cube_standard"
+SOURCE_TABLE = f"{TABLE_PREFIX}.cams_cube_standard_source"
 CAMS_CHUNK_TIMESTEPS = 512
 CAMS_INPUT_PARTITIONS = 16
 
@@ -67,11 +74,13 @@ GRIB_KEYS = (
     "stepType", "dataType", "md5GridSection", "gridType", "Ni", "Nj",
     "iDirectionIncrementInDegrees", "jDirectionIncrementInDegrees",
     "validityDate", "validityTime", "numberOfMissing",
+    "dataDate", "dataTime", "step", "NV",
 )
 REQUIRED_KEYS = (
     "paramId", "shortName", "name", "units", "typeOfLevel", "level",
     "stepType", "dataType", "md5GridSection", "gridType", "Ni", "Nj",
     "validityDate", "validityTime",
+    "dataDate", "dataTime", "step", "numberOfMissing",
 )
 
 
@@ -93,25 +102,14 @@ def ec_value(eccodes, handle, key):
 
 
 def measurement_contract(metadata):
-    """Return kind, standard unit, scale and offset for native * scale + offset."""
-    unit = str(metadata["units"])
-    short_name = str(metadata["shortName"])
-    if unit == "kg m**-3":
-        return "mass_concentration", "ug m**-3", 1_000_000_000.0, 0.0
-    if unit == "kg m**-2":
-        return "column_mass", "mg m**-2", 1_000_000.0, 0.0
-    if unit == "kg kg**-1":
-        kind = "specific_humidity" if short_name == "q" else "mass_mixing_ratio"
-        return kind, "kg kg**-1", 1.0, 0.0
-    if unit == "K":
-        return "temperature", "degC", 1.0, -273.15
-    if unit == "Pa":
-        return "pressure", "hPa", 0.01, 0.0
-    if unit == "m s**-1":
-        return "wind_component", "m s**-1", 1.0, 0.0
-    if unit in {"~", "1"} or short_name.startswith("aod"):
-        return "optical_depth", "1", 1.0, 0.0
-    return "native_measurement", None, None, None
+    """Validate identity AND source unit; gas scale is spatially/time dependent."""
+    column = PARAM_TO_COLUMN.get(int(metadata["paramId"]))
+    if column is None or str(metadata["shortName"]) != FIELD_SPECS[column][1]:
+        raise DataQualityError("Unexpected CAMS paramId/shortName")
+    native, kind, unit, scale, offset = CONTRACTS[column]
+    if metadata["units"] != native and not (column == "aod550" and metadata["units"] == "1"):
+        raise DataQualityError(f"{column}: unexpected source unit {metadata['units']!r}; expected {native!r}")
+    return kind, unit, scale, offset
 
 
 def source_variable(metadata):
@@ -126,6 +124,14 @@ def valid_time(metadata):
     day = str(int(metadata["validityDate"]))
     clock = f"{int(metadata['validityTime']):04d}"
     source_utc = datetime.strptime(day + clock, "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
+    if source_utc.minute or source_utc.hour % 3:
+        raise DataQualityError("EAC4 analysis requires 3-hour UTC timestamps")
+    if metadata["dataType"] != "an" or metadata["stepType"] != "instant" or float(metadata["step"]) != 0:
+        raise DataQualityError("Expected instantaneous EAC4 analysis at forecast step 0")
+    if (int(metadata["dataDate"]), int(metadata["dataTime"])) != (
+        int(metadata["validityDate"]), int(metadata["validityTime"])
+    ):
+        raise DataQualityError("Analysis reference time differs from valid time")
     return source_utc.astimezone(SILVER_TZ)
 
 
@@ -142,6 +148,8 @@ def read_message(eccodes, handle, seen_grids, source_file):
         return None
     try:
         metadata = {key: ec_value(eccodes, grib, key) for key in GRIB_KEYS}
+        if eccodes.codes_is_defined(grib, "pv"):
+            metadata["pv"] = [float(x) for x in eccodes.codes_get_array(grib, "pv")]
         missing = [key for key in REQUIRED_KEYS if metadata[key] is None]
         if missing:
             raise DataQualityError(f"{source_file}: missing GRIB metadata {missing}")
@@ -153,8 +161,8 @@ def read_message(eccodes, handle, seen_grids, source_file):
         raw_values = eccodes.codes_get_array(grib, "values")
         if len(raw_values) != ni * nj:
             raise DataQualityError(f"{source_file}: grid size and value count disagree")
-        # Keep one float32 per point, matching the Iceberg ARRAY<FLOAT> schema.
-        values = array("f", (float(value) for value in raw_values)).tolist()
+        # Preserve decoded precision until physics and unit conversions finish.
+        values = [float(value) for value in raw_values]
         if any(not math.isfinite(value) for value in values):
             raise DataQualityError(f"{source_file}: non-finite native value")
 
@@ -227,6 +235,19 @@ def register_sources(spark, files, first_messages, run, batch):
             int(metadata["paramId"]), str(metadata["shortName"]), str(metadata["units"]),
             standard_unit, scale, offset, file_meta.source_file, file_meta.file_sha256,
             run.run_id, now,
+            "mmr_rho_l60_virtual_temperature_v1" if column in GASES else "native_scale_offset_v1",
+            json.dumps({
+                "pipeline_version": PIPELINE_VERSION, "model_level": 60 if column in MODEL_LEVEL_FIELDS else None,
+                "coefficients": json.loads(coefficient_provenance(aligned_coefficient_metadata(first_messages))[0])
+                if column in GASES else None,
+                "density_inputs": ["sp:Pa", "t_model:K", "q_model:kg/kg"] if column in GASES else None,
+                "rd_j_kg_k": 287.05 if column in GASES else None,
+                "epsilon": 0.621981 if column in GASES else None,
+                "source_time": {key: metadata[key] for key in (
+                    "dataDate", "dataTime", "step", "validityDate", "validityTime", "dataType", "stepType")},
+                "quality_policy": "fail_on_invalid; use only succeeded ingestion_run",
+            }, sort_keys=True),
+            "validated",
         ))
     merge_dataframe(
         spark,
@@ -236,15 +257,15 @@ def register_sources(spark, files, first_messages, run, batch):
     )
     merge_dataframe(
         spark,
-        spark.createDataFrame(source_rows, spark.table(f"{TABLE_PREFIX}.cams_cube_source").schema),
-        f"{TABLE_PREFIX}.cams_cube_source",
+        spark.createDataFrame(source_rows, spark.table(SOURCE_TABLE).schema),
+        SOURCE_TABLE,
         ["dataset_id", "bronze_batch_id", "column_name"],
     )
 
 
 def ensure_cube_schema(spark):
-    """Add the six v3 arrays without rewriting historical 14-field rows."""
-    table = f"{TABLE_PREFIX}.cams_cube"
+    """Validate standard arrays, reusing the additive model-field migration."""
+    table = CUBE_TABLE
     fields = {field.name: field.dataType.simpleString() for field in spark.table(table).schema.fields}
     missing = set(FIELD_SPECS).difference(fields)
     if missing.difference(MODEL_LEVEL_FIELDS):
@@ -290,12 +311,12 @@ def merge_cube_chunk(spark, rows):
         return 0
     # ALTER TABLE appends new columns after lineage columns on an existing table.
     # Match tuple order explicitly so a migrated table cannot swap variable arrays.
-    schema = spark.table(f"{TABLE_PREFIX}.cams_cube").select(*CUBE_COLUMNS).schema
+    schema = spark.table(CUBE_TABLE).select(*CUBE_COLUMNS).schema
     source = spark.createDataFrame(
         spark.sparkContext.parallelize(rows, CAMS_INPUT_PARTITIONS), schema
     )
     merge_dataframe(
-        spark, source, f"{TABLE_PREFIX}.cams_cube",
+        spark, source, CUBE_TABLE,
         ["dataset_id", "valid_time", "grid_id"],
     )
     return len(rows)
@@ -321,8 +342,16 @@ def transform(spark, batch, run):
         files = {}
         first_messages = {}
         for index, meta in enumerate(grib_files):
+            if meta.bronze_object != f"{batch.bronze_path}/files/{meta.source_file}":
+                raise DataQualityError(f"{meta.source_file}: source object is outside its declared Bronze batch")
             local_path = os.path.join(temp_dir, f"input-{index}.grib")
             copy_bronze_file_to_local(spark, meta.bronze_object, local_path)
+            with open(local_path, "rb") as checksum_input:
+                digest = hashlib.sha256()
+                for block in iter(lambda: checksum_input.read(1024 * 1024), b""):
+                    digest.update(block)
+            if digest.hexdigest() != meta.file_sha256 or os.path.getsize(local_path) != meta.file_size:
+                raise DataQualityError(f"{meta.source_file}: Bronze file SHA-256/size mismatch")
             handle = stack.enter_context(open(local_path, "rb"))
             message = read_message(eccodes, handle, seen_grids, meta.source_file)
             if message is None:
@@ -341,11 +370,18 @@ def transform(spark, batch, run):
                 str(metadata["typeOfLevel"]) != "hybrid" or int(metadata["level"]) != 60
             ):
                 raise DataQualityError(f"{meta.source_file}: {column} requires hybrid model level 60")
+            if column not in MODEL_LEVEL_FIELDS and (
+                metadata["typeOfLevel"] != "surface" or int(metadata["level"]) != 0
+            ):
+                raise DataQualityError(f"{meta.source_file}: {column} requires surface level 0")
+            measurement_contract(metadata)
+            coefficient_id = coefficient_provenance(metadata)[1] if column in MODEL_LEVEL_FIELDS else None
             files[column] = {
                 "meta": meta,
                 "handle": handle,
                 "source_variable": source_variable(metadata),
                 "unit": str(metadata["units"]),
+                "coefficient_id": coefficient_id,
             }
             first_messages[column] = message
         if set(files) != set(FIELD_SPECS):
@@ -380,11 +416,18 @@ def transform(spark, batch, run):
                     metadata["units"]
                 ) != files[column]["unit"]:
                     raise DataQualityError(f"CAMS GRIB metadata changed for {column}")
+                if column in MODEL_LEVEL_FIELDS and coefficient_provenance(metadata)[1] != files[column]["coefficient_id"]:
+                    raise DataQualityError(f"CAMS L60 coefficients changed for {column} at {timestamp}")
+
+            try:
+                normalized = normalize_fields(messages)
+            except ValueError as exc:
+                raise DataQualityError(f"CAMS normalization failed at {timestamp}, grid={grid_id}: {exc}") from exc
 
             now = utc_now()
             chunk.append((
                 run.dataset_id, timestamp, grid_id,
-                *(messages[column][3] for column in FIELD_SPECS),
+                *(normalized[column] for column in FIELD_SPECS),
                 batch.batch_id, run.run_id, now,
             ))
             input_rows += sum(len(messages[column][3]) for column in FIELD_SPECS)
@@ -441,6 +484,10 @@ def main():
         )
     except Exception as exc:
         if run is not None and not run.skipped:
+            write_quality_issues(spark, run, [{
+                "rule_id": "cams_normalization_failed", "severity": "fatal",
+                "description": str(exc), "normalized_value": None,
+            }])
             finish_run(spark, run, status="failed", error_message=str(exc))
         raise
     finally:

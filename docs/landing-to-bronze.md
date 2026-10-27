@@ -1,6 +1,6 @@
 # Landing → Bronze trên MinIO
 
-Cập nhật 2026-10-03. Job chạy độc lập, chưa đưa vào Airflow và chưa tạo bảng Silver/Gold. Cả năm dataset Landing hiện có đã được nạp lên MinIO và đối chiếu SHA-256 thành công, gồm cả 14 file GRIB CAMS và 3.355 file GeoJSON.
+Cập nhật 2026-10-03. Job chạy độc lập, chưa đưa vào Airflow và chưa tạo bảng Silver/Gold. Cả năm dataset Landing hiện có đã được nạp lên MinIO và đối chiếu SHA-256 thành công, gồm cả 20 file GRIB CAMS và 3.355 file GeoJSON.
 
 ## Landing và cấu hình hiện có
 
@@ -9,7 +9,7 @@ Landing nằm tại `data/landing/` trên host. Compose mount chỉ đọc thư 
 | Dataset dùng với `--dataset` | Số file | Định dạng | Batch đã kiểm chứng (2026-10-03 UTC) |
 | --- | ---: | --- | --- |
 | `waqi/historical` | 17 | CSV | `raw-waqi-001` |
-| `CAMS/EAC4` | 14 | GRIB | `raw-cams-001` |
+| `CAMS/EAC4` | 20 | GRIB | `raw-cams-001` |
 | `climate_trace/climate_trace_vietnam` | 3 | CSV | `raw-climate-trace-001` |
 | `reference/vietnam_administrative_divisions` | 11 | CSV, JSON, NDJSON, CFF, Markdown, LICENSE | `raw-reference-admin-001` |
 | `reference/vietnamese-provinces-database` | 3.363 | 3.355 GeoJSON, JSON, Markdown | `raw-reference-geojson-001` |

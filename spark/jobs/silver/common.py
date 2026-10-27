@@ -162,7 +162,16 @@ def _valid_source_file(value: str) -> bool:
     if not value or "\\" in value or value.startswith("/"):
         return False
     parts = PurePosixPath(value).parts
-    return bool(parts) and all(part not in {"", ".", ".."} for part in parts)
+    return (bool(parts) and PurePosixPath(value).as_posix() == value
+            and all(part not in {"", ".", ".."} for part in parts))
+
+
+def finite_number(column: F.Column) -> F.Column:
+    """True only for a present finite number (Spark considers NaN equal to NaN)."""
+    return F.coalesce(
+        column.isNotNull() & ~F.isnan(column) & (F.abs(column) != F.lit(float("inf"))),
+        F.lit(False),
+    )
 
 
 def load_bronze_batch(spark: SparkSession, bronze_path: str) -> BronzeBatch:
@@ -207,7 +216,10 @@ def load_bronze_batch(spark: SparkSession, bronze_path: str) -> BronzeBatch:
         .withColumnRenamed("relative_file", "source_file")
     )
     invalid = metadata.filter(
-        (~F.col("file_sha256").rlike("^[0-9a-f]{64}$"))
+        F.col("file_sha256").isNull() | F.col("file_size").isNull()
+        | F.col("batch_id").isNull() | F.col("source").isNull() | F.col("dataset").isNull()
+        | F.col("source_file").isNull() | F.col("bronze_object").isNull()
+        | (~F.col("file_sha256").rlike("^[0-9a-f]{64}$"))
         | (F.col("file_size") < 0)
         | (F.col("batch_id") != F.lit(str(manifest["batch_id"])))
         | (F.col("source") != F.lit(str(manifest["source"])))
@@ -215,10 +227,14 @@ def load_bronze_batch(spark: SparkSession, bronze_path: str) -> BronzeBatch:
     ).limit(1).count()
     if invalid:
         raise ValueError("Bronze _file_metadata failed SHA/path/batch validation")
-    bad_paths = [row.source_file for row in metadata.select("source_file").collect()
-                 if not _valid_source_file(row.source_file)]
+    file_rows = metadata.select("source_file", "bronze_object").collect()
+    bad_paths = [row.source_file for row in file_rows
+                 if not _valid_source_file(row.source_file)
+                 or row.bronze_object != f"{base}/files/{row.source_file}"]
     if bad_paths:
         raise ValueError(f"Invalid Bronze relative source path: {bad_paths[0]!r}")
+    if len({row.source_file for row in file_rows}) != len(file_rows):
+        raise ValueError("Bronze _file_metadata contains duplicate source files")
     actual_count = metadata.count()
     if actual_count != int(manifest["file_count"]):
         raise ValueError(
