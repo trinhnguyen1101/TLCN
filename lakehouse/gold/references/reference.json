@@ -1,0 +1,20 @@
+{
+  "method_version": "vn-aqi-1459-2019-project-v1",
+  "decision": "1459/QĐ-TCMT, 2019-11-12",
+  "reference_url": "https://vea.mae.gov.vn/Data/files/QD%201459%20TCMT%20ngay%2012_11_2019%20AQI%281%29.pdf",
+  "file": "1459-2019.pdf",
+  "sha256": "968c4cbb9bf5cf03e4a9bf30850afd8695d130f767324ac57ca02e2d54a48c26",
+  "checked_date_local": "2026-10-28",
+  "authority_evidence": [
+    "https://cem.gov.vn/tin-tuc-moi-truong/tong-cuc-moi-truong-ban-hanh-huong-dan-ky-thuat-tinh-toan-va-cong-bo-chi-so-chat-luong-khong-khi-viet-nam",
+    "https://cdn.haiphong.gov.vn/gov-hpg/6815/tintuc/2026/2/cv-khuyen-cao-nguoi-dan-han-che-toi-da-hdnt-trong-thoi-diem-aqi-cao-2026.signed-1-639056598656265723.pdf"
+  ],
+  "current_use_check": "Official original PDF remains available; 2026 local-government guidance still cites 1459. No replacement found in checked searches. This is evidence of continued use, not a formal legal-register certification.",
+  "project_policies": {
+    "rounding": "decimal half up; preserve unrounded concentration and NowCast weight",
+    "daily_completeness": "24/24 eligible hourly means per pollutant; O3 all 24 full rolling8h windows",
+    "upper_range": ">= terminal concentration cutoff ->500; O3 8h >400 -> ineligible",
+    "nowcast": "PDF page4 exact two branches, newest-first fixed 12 slots; missing terms omitted at original age",
+    "pdf_arithmetic_discrepancy": "Page8 NO2 118.7: printed60, exact linear result59.35 ->59. Formula takes precedence and test records discrepancy."
+  }
+}
