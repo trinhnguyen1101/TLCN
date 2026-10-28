@@ -1,0 +1,56 @@
+{
+  "status": "development_acceptance_passed_not_production_ready",
+  "unit_tests": {
+    "gold": 23,
+    "backend": 23,
+    "frontend": 34
+  },
+  "historical_counts": {
+    "hourly": 72,
+    "daily": 3,
+    "monthly": 2
+  },
+  "complete_metric_withdrawal": {
+    "semantic_lanes": 1,
+    "so2_null_hour_statuses": 48,
+    "old_snapshot_values_retained": true,
+    "unreviewed_vertical_change_published": false
+  },
+  "host_backfill_replay": {
+    "hourly": 168,
+    "daily": 7,
+    "monthly": 1,
+    "releases": 2,
+    "timeline_versions": 2
+  },
+  "schema_definitions": 29,
+  "schema_namespaces": 7,
+  "browser": {
+    "provinces": 34,
+    "hour_slots": 24,
+    "js_errors": 0,
+    "calendar": "Asia/Ho_Chi_Minh",
+    "csv_timezone_verified": true
+  },
+  "cams_process_metrics": {
+    "seconds": 36.615,
+    "maximum_child_rss_kib": 1779380,
+    "child_user_cpu_seconds": 169.123512,
+    "child_system_cpu_seconds": 6.133978,
+    "exit_code": 0,
+    "task_count": 415,
+    "maximum_task_runtime_ms": 337,
+    "median_task_runtime_ms": 9,
+    "shuffle_read_bytes": 2273812,
+    "shuffle_write_bytes": 2273812,
+    "maximum_task_execution_memory_bytes": 402992032
+  },
+  "production_air_quality_releases": 0,
+  "blockers": [
+    "production EAC4/hourly-mean Silver",
+    "station/proxy succeeded inputs and certified mappings/units",
+    "Airflow Spark submit transport",
+    "bounded snapshot archive/retention lifecycle and full archive benchmark",
+    "emission units/GADM allocation"
+  ]
+}

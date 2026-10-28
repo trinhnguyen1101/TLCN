@@ -1,0 +1,387 @@
+{
+  "checked_at_utc": "2026-10-27T18:03:04.867530+00:00",
+  "silver_runs": [
+    {
+      "source_system": "climate_trace",
+      "source_version": null,
+      "status": "succeeded",
+      "pipeline_version": "1.1.0",
+      "runs": 1,
+      "output_rows": 49664
+    },
+    {
+      "source_system": "reference",
+      "source_version": "2026-09-08",
+      "status": "succeeded",
+      "pipeline_version": "1.0.0",
+      "runs": 1,
+      "output_rows": 3355
+    },
+    {
+      "source_system": "reference",
+      "source_version": "v5.1.0",
+      "status": "succeeded",
+      "pipeline_version": "1.0.0",
+      "runs": 1,
+      "output_rows": 6710
+    },
+    {
+      "source_system": "cams",
+      "source_version": "EAC4-validation-cams-validation-30fffe54da92",
+      "status": "succeeded",
+      "pipeline_version": "4.0.0",
+      "runs": 1,
+      "output_rows": 3
+    },
+    {
+      "source_system": "waqi",
+      "source_version": null,
+      "status": "succeeded",
+      "pipeline_version": "2.1.0",
+      "runs": 1,
+      "output_rows": 179843
+    }
+  ],
+  "live_silver_counts": {
+    "waqi_hourly_observation": 0,
+    "waqi_hourly_measurement": 0,
+    "api_ninjas_province_air_quality_hourly": 0
+  },
+  "cams_actual": [
+    {
+      "rows": 3,
+      "first_time": "2003-01-01T00:00:00.000Z",
+      "last_time": "2003-01-01T06:00:00.000Z"
+    }
+  ],
+  "admin_hierarchy": [
+    {
+      "admin_code": "01",
+      "name_vi": "Hà Nội",
+      "parent_code": null
+    },
+    {
+      "admin_code": "04",
+      "name_vi": "Cao Bằng",
+      "parent_code": null
+    },
+    {
+      "admin_code": "08",
+      "name_vi": "Tuyên Quang",
+      "parent_code": null
+    },
+    {
+      "admin_code": "11",
+      "name_vi": "Điện Biên",
+      "parent_code": null
+    },
+    {
+      "admin_code": "12",
+      "name_vi": "Lai Châu",
+      "parent_code": null
+    },
+    {
+      "admin_code": "14",
+      "name_vi": "Sơn La",
+      "parent_code": null
+    },
+    {
+      "admin_code": "15",
+      "name_vi": "Lào Cai",
+      "parent_code": null
+    },
+    {
+      "admin_code": "19",
+      "name_vi": "Thái Nguyên",
+      "parent_code": null
+    },
+    {
+      "admin_code": "20",
+      "name_vi": "Lạng Sơn",
+      "parent_code": null
+    },
+    {
+      "admin_code": "20333",
+      "name_vi": "Hoàng Sa",
+      "parent_code": "48"
+    },
+    {
+      "admin_code": "22",
+      "name_vi": "Quảng Ninh",
+      "parent_code": null
+    },
+    {
+      "admin_code": "22736",
+      "name_vi": "Trường Sa",
+      "parent_code": "56"
+    },
+    {
+      "admin_code": "24",
+      "name_vi": "Bắc Ninh",
+      "parent_code": null
+    },
+    {
+      "admin_code": "25",
+      "name_vi": "Phú Thọ",
+      "parent_code": null
+    },
+    {
+      "admin_code": "31",
+      "name_vi": "Hải Phòng",
+      "parent_code": null
+    },
+    {
+      "admin_code": "33",
+      "name_vi": "Hưng Yên",
+      "parent_code": null
+    },
+    {
+      "admin_code": "37",
+      "name_vi": "Ninh Bình",
+      "parent_code": null
+    },
+    {
+      "admin_code": "38",
+      "name_vi": "Thanh Hoá",
+      "parent_code": null
+    },
+    {
+      "admin_code": "40",
+      "name_vi": "Nghệ An",
+      "parent_code": null
+    },
+    {
+      "admin_code": "42",
+      "name_vi": "Hà Tĩnh",
+      "parent_code": null
+    },
+    {
+      "admin_code": "44",
+      "name_vi": "Quảng Trị",
+      "parent_code": null
+    },
+    {
+      "admin_code": "46",
+      "name_vi": "Huế",
+      "parent_code": null
+    },
+    {
+      "admin_code": "48",
+      "name_vi": "Đà Nẵng",
+      "parent_code": null
+    },
+    {
+      "admin_code": "51",
+      "name_vi": "Quảng Ngãi",
+      "parent_code": null
+    },
+    {
+      "admin_code": "52",
+      "name_vi": "Gia Lai",
+      "parent_code": null
+    },
+    {
+      "admin_code": "56",
+      "name_vi": "Khánh Hoà",
+      "parent_code": null
+    },
+    {
+      "admin_code": "66",
+      "name_vi": "Đắk Lắk",
+      "parent_code": null
+    },
+    {
+      "admin_code": "68",
+      "name_vi": "Lâm Đồng",
+      "parent_code": null
+    },
+    {
+      "admin_code": "75",
+      "name_vi": "Đồng Nai",
+      "parent_code": null
+    },
+    {
+      "admin_code": "79",
+      "name_vi": "Hồ Chí Minh",
+      "parent_code": null
+    },
+    {
+      "admin_code": "80",
+      "name_vi": "Tây Ninh",
+      "parent_code": null
+    },
+    {
+      "admin_code": "82",
+      "name_vi": "Đồng Tháp",
+      "parent_code": null
+    },
+    {
+      "admin_code": "86",
+      "name_vi": "Vĩnh Long",
+      "parent_code": null
+    },
+    {
+      "admin_code": "91",
+      "name_vi": "An Giang",
+      "parent_code": null
+    },
+    {
+      "admin_code": "92",
+      "name_vi": "Cần Thơ",
+      "parent_code": null
+    },
+    {
+      "admin_code": "96",
+      "name_vi": "Cà Mau",
+      "parent_code": null
+    }
+  ],
+  "gold_pilot": {
+    "release": {
+      "release_id": "8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+      "channel": "air_quality",
+      "scope_start_utc": "2002-12-31T17:00:00.000Z",
+      "scope_end_utc": "2003-01-01T17:00:00.000Z",
+      "input_snapshots_json": "{\"nessie.silver.admin_boundary\": 6530732959169950407, \"nessie.silver.admin_unit\": 5170689017209035660, \"nessie.silver.cams_cube_standard\": 1741534254314839457, \"nessie.silver.cams_cube_standard_source\": 8103154217731034710, \"nessie.silver.cams_grid\": 3739020627665014705, \"nessie.silver.cams_grid_point\": 5402724372357560867, \"nessie.silver.dataset\": 898348258876339204, \"nessie.silver.ingestion_run\": 6559327147841412300}",
+      "output_snapshots_json": "{\"bridge_cams_region_weight\": 3004070399627446270, \"bridge_source_variable_metric\": 5280848085759013034, \"dim_admin_unit\": 4783037611794699192, \"dim_air_quality_series\": 6346702329654640921, \"dim_aqi_method\": 1867100565085404631, \"dim_date\": 1214025379277270642, \"dim_geo_component\": 1858154298417295622, \"dim_hour\": 222794437278003928, \"dim_location\": 8127988129716074188, \"dim_metric\": 7531434443690599616, \"fact_air_quality_hourly\": 8516604477124297401, \"fact_aqi_daily\": 8929680703930457926, \"fact_aqi_hourly\": 5503455596577742459, \"fact_aqi_pollutant_daily\": 8832892638386329081, \"fact_aqi_pollutant_hourly\": 1011458774798893437, \"mart_air_quality_daily\": 5493044719655676830, \"mart_air_quality_hourly\": 5042683512824392789, \"mart_air_quality_monthly\": 8101914950990984103, \"mart_source_quality_daily\": 3267438676888693679, \"ref_aqi_breakpoint\": 6200052379395341798}",
+      "method_version": "vn-aqi-1459-2019-project-v1",
+      "contract_sha256": "b91e5f130588e7f6c3c5d89285846b5de8814640a774c9ea8c9ebf1811eb6be8",
+      "code_sha256": "fca5d0c4aa84aad1dab2ee63e155a3ab5bfc694a385cdfa4c590e87f8213fa94",
+      "published_at": "2026-10-27T17:35:41.301Z",
+      "validation_json": "{\"aqi_daily_valid\": 0, \"aqi_hourly_valid\": 0, \"bridge_source_variable_metric\": 6, \"dim_admin_unit\": 36, \"dim_air_quality_series\": 34, \"dim_aqi_method\": 1, \"dim_date\": 2, \"dim_geo_component\": 36, \"dim_hour\": 35, \"dim_location\": 34, \"dim_metric\": 6, \"fact_air_quality_hourly\": 612, \"fact_aqi_daily\": 34, \"fact_aqi_hourly\": 816, \"fact_aqi_pollutant_daily\": 238, \"fact_aqi_pollutant_hourly\": 4896, \"mart_air_quality_daily\": 204, \"mart_air_quality_hourly\": 4896, \"mart_air_quality_monthly\": 204, \"mart_source_quality_daily\": 204, \"ref_aqi_breakpoint\": 102}"
+    },
+    "row_counts": {
+      "bridge_source_variable_metric": 6,
+      "dim_admin_unit": 36,
+      "dim_air_quality_series": 34,
+      "dim_aqi_method": 1,
+      "dim_date": 2,
+      "dim_geo_component": 36,
+      "dim_hour": 35,
+      "dim_location": 34,
+      "dim_metric": 6,
+      "fact_air_quality_hourly": 612,
+      "fact_aqi_daily": 34,
+      "fact_aqi_hourly": 816,
+      "fact_aqi_pollutant_daily": 238,
+      "fact_aqi_pollutant_hourly": 4896,
+      "mart_air_quality_daily": 204,
+      "mart_air_quality_hourly": 4896,
+      "mart_air_quality_monthly": 204,
+      "mart_source_quality_daily": 204,
+      "ref_aqi_breakpoint": 102
+    },
+    "storage": {
+      "fact_air_quality_hourly": {
+        "files": 1,
+        "bytes": 15518,
+        "records": 612
+      },
+      "mart_air_quality_hourly": {
+        "files": 2,
+        "bytes": 31569,
+        "records": 4896
+      }
+    },
+    "aqi_status": [
+      {
+        "status": "not_calculable",
+        "missing_reason": "requires_eligible_pm",
+        "rows": 816
+      }
+    ]
+  },
+  "gold_test_hourly": {
+    "release": {
+      "release_id": "c030587cdf5ab995b38ea3b7ce09f34f7c3ecf843e466665fbd861bc005f4efa",
+      "channel": "air_quality",
+      "scope_start_utc": "2026-01-01T17:00:00.000Z",
+      "scope_end_utc": "2026-01-03T17:00:00.000Z",
+      "input_snapshots_json": "{\"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.hourly_concentration\": 4240312397134742333, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619}",
+      "output_snapshots_json": "{\"bridge_source_variable_metric\": 6037599859596935758, \"dim_admin_unit\": 1109373040010709057, \"dim_air_quality_series\": 950092545643134686, \"dim_aqi_method\": 7499710166953405333, \"dim_date\": 7595805513359509759, \"dim_geo_component\": 5388528856565697874, \"dim_hour\": 8350833608537166068, \"dim_location\": 6066186500979538218, \"dim_metric\": 4073756269318465260, \"fact_air_quality_hourly\": 2677566872751063733, \"fact_aqi_daily\": 7932408057771948207, \"fact_aqi_hourly\": 6360111332245891234, \"fact_aqi_pollutant_daily\": 8763258577322308413, \"fact_aqi_pollutant_hourly\": 3040847067059322509, \"mart_air_quality_daily\": 7281177560427802822, \"mart_air_quality_hourly\": 453480783789986101, \"mart_air_quality_monthly\": 8924073069703998601, \"mart_source_quality_daily\": 8186996656046711442, \"ref_aqi_breakpoint\": 5442933368051286833}",
+      "method_version": "vn-aqi-1459-2019-project-v1",
+      "contract_sha256": "af612da27282ac783f1e94ff2595b2d624ef7d754b473c1103d525deb9137f69",
+      "code_sha256": "fca5d0c4aa84aad1dab2ee63e155a3ab5bfc694a385cdfa4c590e87f8213fa94",
+      "published_at": "2026-10-27T17:32:42.519Z",
+      "validation_json": "{\"aqi_daily_valid\": 2, \"aqi_hourly_valid\": 48, \"bridge_source_variable_metric\": 0, \"dim_admin_unit\": 36, \"dim_air_quality_series\": 1, \"dim_aqi_method\": 1, \"dim_date\": 3, \"dim_geo_component\": 36, \"dim_hour\": 59, \"dim_location\": 34, \"dim_metric\": 6, \"fact_air_quality_hourly\": 354, \"fact_aqi_daily\": 2, \"fact_aqi_hourly\": 48, \"fact_aqi_pollutant_daily\": 14, \"fact_aqi_pollutant_hourly\": 288, \"mart_air_quality_daily\": 12, \"mart_air_quality_hourly\": 288, \"mart_air_quality_monthly\": 6, \"mart_source_quality_daily\": 12, \"ref_aqi_breakpoint\": 102}"
+    },
+    "row_counts": {
+      "bridge_source_variable_metric": 0,
+      "dim_admin_unit": 36,
+      "dim_air_quality_series": 1,
+      "dim_aqi_method": 1,
+      "dim_date": 3,
+      "dim_geo_component": 36,
+      "dim_hour": 59,
+      "dim_location": 34,
+      "dim_metric": 6,
+      "fact_air_quality_hourly": 354,
+      "fact_aqi_daily": 2,
+      "fact_aqi_hourly": 48,
+      "fact_aqi_pollutant_daily": 14,
+      "fact_aqi_pollutant_hourly": 288,
+      "mart_air_quality_daily": 12,
+      "mart_air_quality_hourly": 288,
+      "mart_air_quality_monthly": 6,
+      "mart_source_quality_daily": 12,
+      "ref_aqi_breakpoint": 102
+    }
+  },
+  "gold_test_partition": {
+    "release": {
+      "release_id": "7ea7adca5bda6bcd708e2fb3210e854d166232e89ca24768e5151efa5c72d990",
+      "channel": "air_quality",
+      "scope_start_utc": "2026-01-30T17:00:00.000Z",
+      "scope_end_utc": "2026-02-01T17:00:00.000Z",
+      "input_snapshots_json": "{\"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.hourly_concentration\": 4240312397134742333, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619}",
+      "output_snapshots_json": "{\"bridge_source_variable_metric\": 2098579397056751711, \"dim_admin_unit\": 4463875904499476191, \"dim_air_quality_series\": 3321790262784413417, \"dim_aqi_method\": 5104765249062307398, \"dim_date\": 8777069815926146411, \"dim_geo_component\": 4120142830670590309, \"dim_hour\": 7372382642926750931, \"dim_location\": 4274365174572177710, \"dim_metric\": 6619775430888261153, \"fact_air_quality_hourly\": 1021708870082061690, \"fact_aqi_daily\": 5510456286783908392, \"fact_aqi_hourly\": 6138403137563043226, \"fact_aqi_pollutant_daily\": 2265175348471872665, \"fact_aqi_pollutant_hourly\": 3954008187330248808, \"mart_air_quality_daily\": 1216707860303041434, \"mart_air_quality_hourly\": 82946213304300202, \"mart_air_quality_monthly\": 184857428637320528, \"mart_source_quality_daily\": 429559792959335028, \"ref_aqi_breakpoint\": 6999713019162054092}",
+      "method_version": "vn-aqi-1459-2019-project-v1",
+      "contract_sha256": "af612da27282ac783f1e94ff2595b2d624ef7d754b473c1103d525deb9137f69",
+      "code_sha256": "fca5d0c4aa84aad1dab2ee63e155a3ab5bfc694a385cdfa4c590e87f8213fa94",
+      "published_at": "2026-10-27T17:33:17.764Z",
+      "validation_json": "{\"aqi_daily_valid\": 2, \"aqi_hourly_valid\": 48, \"bridge_source_variable_metric\": 0, \"dim_admin_unit\": 36, \"dim_air_quality_series\": 1, \"dim_aqi_method\": 1, \"dim_date\": 3, \"dim_geo_component\": 36, \"dim_hour\": 59, \"dim_location\": 34, \"dim_metric\": 6, \"fact_air_quality_hourly\": 354, \"fact_aqi_daily\": 2, \"fact_aqi_hourly\": 48, \"fact_aqi_pollutant_daily\": 14, \"fact_aqi_pollutant_hourly\": 288, \"mart_air_quality_daily\": 12, \"mart_air_quality_hourly\": 288, \"mart_air_quality_monthly\": 12, \"mart_source_quality_daily\": 12, \"ref_aqi_breakpoint\": 102}"
+    },
+    "row_counts": {
+      "bridge_source_variable_metric": 0,
+      "dim_admin_unit": 36,
+      "dim_air_quality_series": 1,
+      "dim_aqi_method": 1,
+      "dim_date": 3,
+      "dim_geo_component": 36,
+      "dim_hour": 59,
+      "dim_location": 34,
+      "dim_metric": 6,
+      "fact_air_quality_hourly": 354,
+      "fact_aqi_daily": 2,
+      "fact_aqi_hourly": 48,
+      "fact_aqi_pollutant_daily": 14,
+      "fact_aqi_pollutant_hourly": 288,
+      "mart_air_quality_daily": 12,
+      "mart_air_quality_hourly": 288,
+      "mart_air_quality_monthly": 12,
+      "mart_source_quality_daily": 12,
+      "ref_aqi_breakpoint": 102
+    }
+  },
+  "gold": {
+    "release": {
+      "release_id": "58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+      "channel": "native_sources",
+      "scope_start_utc": "2014-01-01T00:00:00.000Z",
+      "scope_end_utc": "2027-01-01T00:00:00.000Z",
+      "input_snapshots_json": "{\"nessie.silver.dataset\": 898348258876339204, \"nessie.silver.emission_aggregate\": 315577526667176054, \"nessie.silver.emission_source\": 8925082103717498583, \"nessie.silver.emission_source_observation\": 3638210018152726107, \"nessie.silver.ingestion_run\": 6559327147841412300, \"nessie.silver.variable\": 852091384182337394, \"nessie.silver.waqi_daily_observation\": 4389811408994116907, \"nessie.silver.waqi_station\": 5212555907961330558}",
+      "output_snapshots_json": "{\"fact_emission_aggregate_native\": 6488460548670540109, \"fact_emission_source_native\": 3773180145828424693, \"fact_waqi_station_daily_native\": 4998914530796133110, \"mart_emission_country_period_native\": 3141374937929171203}",
+      "method_version": "not_applicable_native-v1",
+      "contract_sha256": "60781f4cf66916382f97b7b81bd85c9684804d3440fa7dc3945da54ad5734727",
+      "code_sha256": "fca5d0c4aa84aad1dab2ee63e155a3ab5bfc694a385cdfa4c590e87f8213fa94",
+      "published_at": "2026-10-27T17:37:14.369Z",
+      "validation_json": "{\"fact_emission_aggregate_native\": 17280, \"fact_emission_source_native\": 32384, \"fact_waqi_station_daily_native\": 179843, \"mart_emission_country_period_native\": 216}"
+    },
+    "row_counts": {
+      "fact_emission_aggregate_native": 17280,
+      "fact_emission_source_native": 32384,
+      "fact_waqi_station_daily_native": 179843,
+      "mart_emission_country_period_native": 216
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "release_id": "8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+  "spark_elapsed_seconds": 33.44,
+  "process_elapsed_seconds": 36.123,
+  "maximum_child_rss_kib": 1676744,
+  "child_user_cpu_seconds": 166.650811,
+  "child_system_cpu_seconds": 6.001126,
+  "exit_code": 0,
+  "measurement": "Linux RUSAGE_CHILDREN from tests/measure_process.py; maximum child RSS, not aggregate container memory"
+}

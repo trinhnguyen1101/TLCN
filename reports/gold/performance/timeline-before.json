@@ -1,0 +1,78 @@
+{
+  "kind": "metadata_only_simulation_no_real_snapshots",
+  "label": "before",
+  "cases": [
+    {
+      "chunks": 100,
+      "manifest_bytes": 1318552,
+      "v1_cumulative_prefix_version_bytes": 66589450,
+      "resolve": {
+        "seconds": 0.021639282997057308,
+        "python_allocation_peak_bytes": 2624044
+      },
+      "query_generation": {
+        "seconds": 0.00393203000567155,
+        "python_allocation_peak_bytes": 110056
+      },
+      "overlay": {
+        "seconds": 0.026656084002752323,
+        "python_allocation_peak_bytes": 1318168
+      },
+      "withdrawal": {
+        "seconds": 0.02679870599968126,
+        "python_allocation_peak_bytes": 1315752
+      },
+      "sql_bytes": 34372,
+      "max_scans": 100,
+      "process_max_rss_kib": 40308
+    },
+    {
+      "chunks": 500,
+      "manifest_bytes": 6592552,
+      "v1_cumulative_prefix_version_bytes": 1651447250,
+      "resolve": {
+        "seconds": 0.10359160900407005,
+        "python_allocation_peak_bytes": 13111196
+      },
+      "query_generation": {
+        "seconds": 0.01869917299336521,
+        "python_allocation_peak_bytes": 520918
+      },
+      "overlay": {
+        "seconds": 0.13350372199784033,
+        "python_allocation_peak_bytes": 6421384
+      },
+      "withdrawal": {
+        "seconds": 0.1401287409971701,
+        "python_allocation_peak_bytes": 6419272
+      },
+      "sql_bytes": 171572,
+      "max_scans": 500,
+      "process_max_rss_kib": 79540
+    },
+    {
+      "chunks": 1200,
+      "manifest_bytes": 15822052,
+      "v1_cumulative_prefix_version_bytes": 9501173400,
+      "resolve": {
+        "seconds": 0.25451685099687893,
+        "python_allocation_peak_bytes": 31475932
+      },
+      "query_generation": {
+        "seconds": 0.04714611499366583,
+        "python_allocation_peak_bytes": 1249089
+      },
+      "overlay": {
+        "seconds": 0.34068753400060814,
+        "python_allocation_peak_bytes": 17700224
+      },
+      "withdrawal": {
+        "seconds": 0.323364160998608,
+        "python_allocation_peak_bytes": 17697936
+      },
+      "sql_bytes": 411672,
+      "max_scans": 1200,
+      "process_max_rss_kib": 163464
+    }
+  ]
+}

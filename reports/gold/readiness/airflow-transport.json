@@ -1,0 +1,7 @@
+{
+  "python": "3.12.9",
+  "spark_submit": null,
+  "gold_jobs_mounted": false,
+  "docker_socket_mounted": false,
+  "status": "Blocked by runtime: no tested submit transport; host runner retained"
+}

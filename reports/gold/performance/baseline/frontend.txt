@@ -1,0 +1,46 @@
+
+> frontend@0.0.0 test
+> node --test tests/*.test.ts tests/*.test.mjs
+
+✔ all years aggregates all selected records and emissions (5.962121ms)
+✔ province drilldown scopes the highest-province KPI to the selected province (0.854861ms)
+✔ mid-month dates select monthly values and never prorate exceedance counts (0.338691ms)
+✔ empty filtered scope never falls back to stale annual values (0.140731ms)
+✔ year-over-year compares only matching province-month pairs (0.187222ms)
+✔ a province selection scopes metrics and chart but preserves national map context (1.789277ms)
+✔ historical data never inherits a current AQI snapshot or unavailable gas (4.967537ms)
+✔ pollutant selection updates ranking, unit and series consistently (0.758437ms)
+✔ all-years totals and concentration means use the same period as the trend (0.225217ms)
+✔ custom dates constrain all monthly concentration views and empty periods remain empty (0.33481ms)
+✔ annual exceedance counts are never estimated for a partial year (0.258776ms)
+✔ YoY uses the same province and month in the previous year (0.183276ms)
+✔ missing/non-finite values cannot become zero readings (0.103791ms)
+✔ Vietnamese dates parse strictly, reject invalid calendar dates and display dd/mm/yyyy (0.386655ms)
+✔ entering a custom range clears year/month and selecting year/month clears custom dates (0.188007ms)
+✔ daily ranges override stale year/month selections and include both boundary days (0.28769ms)
+✔ monthly source includes overlapping boundary months independently of timestamp day (0.35405ms)
+✔ monthly ranges cover same-month, open-ended and empty periods; reversed ranges stay empty (0.599153ms)
+✔ same-period comparisons shift each date by one year and clamp leap days (0.175721ms)
+✔ source metadata and sector names have Vietnamese display labels (0.171273ms)
+✔ date filtering retains three-hour observations and inclusive UTC day boundaries (0.229251ms)
+✔ hourly supports every aligned hour, preserves gaps, and rejects minutes (0.482237ms)
+✔ AQI is never averaged over provinces or multiple periods (0.270119ms)
+✔ daily concentration weighting uses actual sample counts (0.126109ms)
+✔ fixed concentration colors cover six physical pollutants without reusing AQI categories (28.018307ms)
+✔ Gold national concentration KPI uses valid sample weights across provinces (0.190993ms)
+✔ hourly YoY excludes a current hour without a matching prior-year hour (0.166617ms)
+✔ daily YoY does not reuse February 28 as the baseline for February 29 (0.117616ms)
+✔ period labels retain UTC hour slots and use the VN calendar for Gold daily/monthly (0.179171ms)
+✔ map reads monthly source values without an analytics response (0.670076ms)
+✔ map follows mid-month ranges and keeps national context on province selection (0.135007ms)
+✔ empty map period never reuses latest snapshot values (0.128425ms)
+✔ duplicate monthly records receive equal month weight (0.102982ms)
+✔ reversed dates do not display a valid-looking map (0.096638ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 372.859115

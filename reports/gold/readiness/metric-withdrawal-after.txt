@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "/home/zaneth/Projects/TLCN/scripts/test_gold_metric_withdrawal.py", line 15, in <module>
+    checks['prepare']=run('metric-prepare','tests/prepare_hourly_fixture.py',['--namespace','gold_test_deletion_silver','--start-date','2026-04-01','--days','2'])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zaneth/Projects/TLCN/scripts/test_gold_pipeline.py", line 28, in run
+    raise AssertionError((name,result.returncode,log.read_text()[-2500:]))
+AssertionError: ('metric-prepare', 1, 'permission denied while trying to connect to the docker API at unix:///var/run/docker.sock\n')

@@ -1,0 +1,71 @@
+{
+  "gold_pilot": {
+    "/api/gold/map": {
+      "seconds": 0.335,
+      "rows": 34
+    },
+    "/api/gold/air-quality?resolution=hourly": {
+      "seconds": 0.142,
+      "rows": 816
+    },
+    "/api/gold/air-quality?resolution=daily": {
+      "seconds": 0.119,
+      "rows": 34
+    },
+    "/api/gold/air-quality?resolution=monthly": {
+      "seconds": 0.113,
+      "rows": 34
+    },
+    "/api/gold/source-quality": {
+      "seconds": 0.124,
+      "rows": 204
+    },
+    "/api/gold/admin/summary": {
+      "seconds": 0.138,
+      "rows": 6
+    },
+    "/api/dashboard?resolution=hourly": {
+      "seconds": 0.582,
+      "rows": 34
+    },
+    "/api/admin/dashboard?resolution=hourly": {
+      "seconds": 0.574,
+      "rows": 34
+    }
+  },
+  "gold_test_hourly": {
+    "/api/gold/map": {
+      "seconds": 0.265,
+      "rows": 34
+    },
+    "/api/gold/air-quality?resolution=hourly": {
+      "seconds": 0.097,
+      "rows": 48
+    },
+    "/api/gold/air-quality?resolution=daily": {
+      "seconds": 0.114,
+      "rows": 2
+    },
+    "/api/gold/air-quality?resolution=monthly": {
+      "seconds": 0.094,
+      "rows": 1
+    },
+    "/api/gold/source-quality": {
+      "seconds": 0.084,
+      "rows": 12
+    },
+    "/api/gold/admin/summary": {
+      "seconds": 0.101,
+      "rows": 6
+    },
+    "/api/dashboard?resolution=hourly": {
+      "seconds": 0.375,
+      "rows": 34
+    },
+    "/api/admin/dashboard?resolution=hourly": {
+      "seconds": 0.39,
+      "rows": 34
+    }
+  },
+  "native_emissions_rows": 6
+}

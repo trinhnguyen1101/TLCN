@@ -1,0 +1,126 @@
+{
+  "bridge_source_variable_metric": {
+    "checksum": null,
+    "exact_fields": 7,
+    "n": 0
+  },
+  "comparison_policy": {
+    "raw_facts_aqi_lineage": "exact checksums",
+    "sql_float_reductions": "absolute 1e-9 + relative 1e-12 only; NULLs and all other fields exact"
+  },
+  "dim_admin_unit": {
+    "checksum": "A003098D6BF5281E",
+    "exact_fields": 7,
+    "n": 36
+  },
+  "dim_air_quality_series": {
+    "checksum": "38D149EC306C0D38",
+    "exact_fields": 9,
+    "n": 34
+  },
+  "dim_aqi_method": {
+    "checksum": "62BB2B04A0FDEBA9",
+    "exact_fields": 5,
+    "n": 1
+  },
+  "dim_date": {
+    "checksum": "390A41BAAF981CE9",
+    "exact_fields": 5,
+    "n": 8
+  },
+  "dim_geo_component": {
+    "checksum": "0C294483BD81564C",
+    "exact_fields": 8,
+    "n": 36
+  },
+  "dim_hour": {
+    "checksum": "CCE8EAA3EEF46AF8",
+    "exact_fields": 5,
+    "n": 179
+  },
+  "dim_location": {
+    "checksum": "5C7691FEDC06F7FE",
+    "exact_fields": 7,
+    "n": 34
+  },
+  "dim_metric": {
+    "checksum": "54F9FF238DE259AC",
+    "exact_fields": 6,
+    "n": 6
+  },
+  "fact_air_quality_hourly": {
+    "checksum": "473BB2824EBE796C",
+    "exact_fields": 20,
+    "n": 36514
+  },
+  "fact_aqi_daily": {
+    "checksum": "45614D44A500153F",
+    "exact_fields": 12,
+    "n": 238
+  },
+  "fact_aqi_hourly": {
+    "checksum": "74EEAC1B06693214",
+    "exact_fields": 12,
+    "n": 5712
+  },
+  "fact_aqi_pollutant_daily": {
+    "checksum": "60474D7AC2BAE547",
+    "exact_fields": 22,
+    "n": 1666
+  },
+  "fact_aqi_pollutant_hourly": {
+    "checksum": "D38D7555EF3285CA",
+    "exact_fields": 22,
+    "n": 34272
+  },
+  "fact_measurement_provenance": {
+    "checksum": "3E63A566A121A0C0",
+    "exact_fields": 10,
+    "n": 36514
+  },
+  "mart_air_quality_daily": {
+    "checksum": "5D3218FBE633A1A2",
+    "exact_fields": 29,
+    "float_reduction_check": {
+      "completeness_ratio_bad": 0,
+      "completeness_ratio_delta": 0,
+      "concentration_sum_bad": 0,
+      "concentration_sum_delta": 9.094947017729282e-13,
+      "coverage_bad": 0,
+      "coverage_delta": 0,
+      "n": 1428,
+      "value_bad": 0,
+      "value_delta": 5.684341886080802e-14
+    },
+    "n": 1428
+  },
+  "mart_air_quality_hourly": {
+    "checksum": "BC011C5B7B409A8D",
+    "exact_fields": 28,
+    "n": 34272
+  },
+  "mart_air_quality_monthly": {
+    "checksum": "D82EB8C7856A9C52",
+    "exact_fields": 13,
+    "float_reduction_check": {
+      "completeness_ratio_bad": 0,
+      "completeness_ratio_delta": 0,
+      "concentration_sum_bad": 0,
+      "concentration_sum_delta": 1.8189894035458565e-12,
+      "n": 204,
+      "value_bad": 0,
+      "value_delta": 7.105427357601002e-15
+    },
+    "n": 204
+  },
+  "mart_source_quality_daily": {
+    "checksum": "D3AB5F9A96BD4AEA",
+    "exact_fields": 16,
+    "n": 1428
+  },
+  "ref_aqi_breakpoint": {
+    "checksum": "E11F6D2D98797A92",
+    "exact_fields": 6,
+    "n": 102
+  }
+}

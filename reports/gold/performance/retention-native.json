@@ -1,0 +1,864 @@
+{
+  "dry_run": true,
+  "cleanup_enabled": false,
+  "delete_candidates": [],
+  "inventory_complete": true,
+  "missing_references": [],
+  "issues": [],
+  "protected_snapshots": [
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 7869653384241366396,
+      "committed_at": "2026-10-27T17:05:18.236000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 6238675952679696076,
+      "committed_at": "2026-10-27T17:19:09.283000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 7965354991638849893,
+      "committed_at": "2026-10-27T17:28:19.886000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 6488460548670540109,
+      "committed_at": "2026-10-27T17:37:10.310000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 922674511416397695,
+      "committed_at": "2026-10-27T17:05:19.066000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 380879238455501307,
+      "committed_at": "2026-10-27T17:19:10.071000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 591379653700411280,
+      "committed_at": "2026-10-27T17:28:20.855000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 3773180145828424693,
+      "committed_at": "2026-10-27T17:37:11.121000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 109578682567758320,
+      "committed_at": "2026-10-27T17:05:17.206000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 5171782801533179344,
+      "committed_at": "2026-10-27T17:19:08.349000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 2210282282334473850,
+      "committed_at": "2026-10-27T17:28:18.828000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803"
+      ]
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 4998914530796133110,
+      "committed_at": "2026-10-27T17:37:09.298000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f"
+      ]
+    },
+    {
+      "table": "nessie.gold.gold_current_release",
+      "snapshot_id": 5780128046620488461,
+      "committed_at": "2026-10-27T17:37:15.576000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold.gold_release",
+      "snapshot_id": 5115646961001345284,
+      "committed_at": "2026-10-27T17:37:14.961000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 6670982923552262080,
+      "committed_at": "2026-10-27T17:05:19.595000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef"
+      ]
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 7912189284178747029,
+      "committed_at": "2026-10-27T17:19:10.643000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11"
+      ]
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 8578026777515415496,
+      "committed_at": "2026-10-27T17:28:21.505000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803"
+      ]
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 3141374937929171203,
+      "committed_at": "2026-10-27T17:37:11.708000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 6420487279276591979,
+      "committed_at": "2026-10-26T15:30:41.765000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 9154058031385424352,
+      "committed_at": "2026-10-26T15:40:00.335000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 5041335334607037983,
+      "committed_at": "2026-10-26T15:42:30.270000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 427087103703665293,
+      "committed_at": "2026-10-26T15:49:52.164000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 7873449595639163600,
+      "committed_at": "2026-10-26T15:52:31.994000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 3876985363905154567,
+      "committed_at": "2026-10-26T15:55:12.363000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 5824238219730235757,
+      "committed_at": "2026-10-26T15:57:05.695000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 9076542374933981049,
+      "committed_at": "2026-10-26T16:03:31.525000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 2297219784079638551,
+      "committed_at": "2026-10-26T16:03:43.470000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 5289639023203338317,
+      "committed_at": "2026-10-26T16:03:55.006000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 8692473565048842361,
+      "committed_at": "2026-10-26T16:04:06.592000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 898348258876339204,
+      "committed_at": "2026-10-26T16:04:18.347000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.emission_aggregate",
+      "snapshot_id": 315577526667176054,
+      "committed_at": "2026-10-26T15:57:17.180000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.emission_source",
+      "snapshot_id": 8925082103717498583,
+      "committed_at": "2026-10-26T15:57:18.316000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.emission_source_observation",
+      "snapshot_id": 3638210018152726107,
+      "committed_at": "2026-10-26T15:57:19.720000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 6203246250997834573,
+      "committed_at": "2026-10-26T15:30:42.515000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 5786643513296145701,
+      "committed_at": "2026-10-26T15:30:47.813000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 6230685238231347605,
+      "committed_at": "2026-10-26T15:49:53.103000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 8582100226120947381,
+      "committed_at": "2026-10-26T15:50:00.192000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 165592707994739365,
+      "committed_at": "2026-10-26T15:52:33.048000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 7092559353049640151,
+      "committed_at": "2026-10-26T15:53:43.516000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 4711015884491723156,
+      "committed_at": "2026-10-26T15:55:13.446000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 3434599110762658673,
+      "committed_at": "2026-10-26T15:55:51.451000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 5856735903130052714,
+      "committed_at": "2026-10-26T15:57:06.841000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 6559327147841412300,
+      "committed_at": "2026-10-26T15:57:20.701000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.variable",
+      "snapshot_id": 96518889088669705,
+      "committed_at": "2026-10-26T15:30:43.628000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.variable",
+      "snapshot_id": 6270911932286997908,
+      "committed_at": "2026-10-26T15:30:51.873000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.variable",
+      "snapshot_id": 8401529411996247183,
+      "committed_at": "2026-10-26T15:40:05.637000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.variable",
+      "snapshot_id": 3533656327451542398,
+      "committed_at": "2026-10-26T15:55:14.297000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.variable",
+      "snapshot_id": 852091384182337394,
+      "committed_at": "2026-10-26T15:57:09.093000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.waqi_daily_observation",
+      "snapshot_id": 4389811408994116907,
+      "committed_at": "2026-10-26T15:55:50.006000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "input:e730d802f84e682609f175d10bbcfdec951c8e11515a6a031d670a4962f4b1ef",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.waqi_station",
+      "snapshot_id": 5212555907961330558,
+      "committed_at": "2026-10-26T15:55:44.579000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:135c4e5a7e6ae521d6b3aa01b87efdcadea48c54ea92f4c552849cd1e9655803",
+        "input:5890938d4ebff955faea555771d9423cb1261ed22605fdc65e01c49c0a519b11",
+        "input:58eccc5c30266aeaa230061c9814a41a265816f8d5ff2878cd6b3d427a7e652f",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    }
+  ],
+  "recent_unreferenced": [
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 2911573560921643281,
+      "committed_at": "2026-10-27T17:05:17.324000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 3740328549305334338,
+      "committed_at": "2026-10-27T17:19:08.493000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 1429048138890448671,
+      "committed_at": "2026-10-27T17:28:18.987000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_aggregate_native",
+      "snapshot_id": 5110854213686692455,
+      "committed_at": "2026-10-27T17:37:09.460000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 9124215391094318197,
+      "committed_at": "2026-10-27T17:05:18.390000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 2977766203174423416,
+      "committed_at": "2026-10-27T17:19:09.460000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 7096896714587755613,
+      "committed_at": "2026-10-27T17:28:20.094000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_emission_source_native",
+      "snapshot_id": 3955129004193062130,
+      "committed_at": "2026-10-27T17:37:10.496000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 197259273572088833,
+      "committed_at": "2026-10-27T17:05:14.808000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 2912236748285184879,
+      "committed_at": "2026-10-27T17:19:05.998000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 7556952012143705107,
+      "committed_at": "2026-10-27T17:28:16.627000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.fact_waqi_station_daily_native",
+      "snapshot_id": 5945074718069254726,
+      "committed_at": "2026-10-27T17:37:06.922000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.gold_current_release",
+      "snapshot_id": 2893296093094276789,
+      "committed_at": "2026-10-27T17:05:22.480000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.gold_current_release",
+      "snapshot_id": 7049285475320662157,
+      "committed_at": "2026-10-27T17:19:14.058000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.gold_current_release",
+      "snapshot_id": 2581195881549803949,
+      "committed_at": "2026-10-27T17:28:25.284000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.gold_release",
+      "snapshot_id": 5334480179972274869,
+      "committed_at": "2026-10-27T17:05:22.089000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.gold_release",
+      "snapshot_id": 4929347256830543963,
+      "committed_at": "2026-10-27T17:19:13.477000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.gold_release",
+      "snapshot_id": 4890952394676896701,
+      "committed_at": "2026-10-27T17:28:24.691000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 1991160586208045502,
+      "committed_at": "2026-10-27T17:05:19.202000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 4197302890738763271,
+      "committed_at": "2026-10-27T17:19:10.217000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 6136646024225380313,
+      "committed_at": "2026-10-27T17:28:21.060000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold.mart_emission_country_period_native",
+      "snapshot_id": 6091098750244826294,
+      "committed_at": "2026-10-27T17:37:11.318000",
+      "is_head": false,
+      "named_refs": []
+    }
+  ],
+  "unreferenced_snapshot_review_candidates": [],
+  "minimum_age_days": 90,
+  "note": "All released/rollback/input references protected. Review candidates may be intermediate or staged; no orphan-file or object deletion classification is made.",
+  "files": {
+    "nessie.gold.fact_emission_aggregate_native": {
+      "files": 48,
+      "head_bytes": 3251424,
+      "head_records": 69120,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold.fact_emission_source_native": {
+      "files": 4,
+      "head_bytes": 1133025,
+      "head_records": 129536,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold.fact_waqi_station_daily_native": {
+      "files": 52,
+      "head_bytes": 1209537,
+      "head_records": 719372,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold.gold_current_release": {
+      "files": 1,
+      "head_bytes": 3449,
+      "head_records": 1,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold.gold_release": {
+      "files": 4,
+      "head_bytes": 34409,
+      "head_records": 4,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold.gold_timeline": {
+      "files": 0,
+      "head_bytes": null,
+      "head_records": null,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold.gold_timeline_current": {
+      "files": 0,
+      "head_bytes": null,
+      "head_records": null,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold.mart_emission_country_period_native": {
+      "files": 48,
+      "head_bytes": 222716,
+      "head_records": 864,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.silver.dataset": {
+      "files": 5,
+      "head_bytes": 20769,
+      "head_records": 5,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.emission_aggregate": {
+      "files": 12,
+      "head_bytes": 999049,
+      "head_records": 17280,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.emission_source": {
+      "files": 1,
+      "head_bytes": 161717,
+      "head_records": 14886,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.emission_source_observation": {
+      "files": 1,
+      "head_bytes": 268390,
+      "head_records": 32384,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.ingestion_run": {
+      "files": 5,
+      "head_bytes": 40600,
+      "head_records": 5,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.variable": {
+      "files": 3,
+      "head_bytes": 15213,
+      "head_records": 30,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.waqi_daily_observation": {
+      "files": 13,
+      "head_bytes": 372179,
+      "head_records": 179843,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.waqi_station": {
+      "files": 1,
+      "head_bytes": 6655,
+      "head_records": 17,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    }
+  }
+}

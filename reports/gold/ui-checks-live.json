@@ -1,0 +1,17 @@
+{
+  "api_requests": [
+    "http://127.0.0.1:5178/api/dashboard?resolution=hourly",
+    "http://127.0.0.1:5178/api/admin/dashboard?resolution=hourly"
+  ],
+  "source": "live Vite -> FastAPI -> Trino -> Iceberg",
+  "published_release_id": "8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+  "page_errors": [],
+  "province_count": 34,
+  "hour_picker_count": 24,
+  "hourly_mode": 1,
+  "screenshots": [
+    "user-pilot-live.png",
+    "hourly-picker-live.png",
+    "admin-pilot-live.png"
+  ]
+}

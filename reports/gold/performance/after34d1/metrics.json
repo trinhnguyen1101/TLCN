@@ -1,0 +1,1004 @@
+{
+  "seconds": 26.8,
+  "maximum_child_rss_kib": 1506396,
+  "child_user_cpu_seconds": 93.455876,
+  "child_system_cpu_seconds": 4.787058,
+  "exit_code": 0,
+  "task_count": 201,
+  "maximum_task_runtime_ms": 385,
+  "median_task_runtime_ms": 17,
+  "shuffle_read_bytes": 3177185,
+  "shuffle_write_bytes": 3177337,
+  "maximum_task_execution_memory_bytes": 403221408,
+  "job_count": 201,
+  "stage_count": 196,
+  "sampled_rss": {
+    "driver_jvm_rss_kib": 1507996,
+    "driver_python_rss_kib": 89440,
+    "python_workers_rss_kib": 94624,
+    "process_tree_rss_kib": 1685752
+  },
+  "memory_scope": "local[1]: driver/executor share JVM; sampled RSS sums may double-count shared pages; not Docker peak",
+  "per_stage_runtime_ms": {
+    "0": {
+      "tasks": 1,
+      "maximum": 385,
+      "median": 385
+    },
+    "1": {
+      "tasks": 1,
+      "maximum": 53,
+      "median": 53
+    },
+    "2": {
+      "tasks": 2,
+      "maximum": 220,
+      "median": 220
+    },
+    "3": {
+      "tasks": 1,
+      "maximum": 330,
+      "median": 330
+    },
+    "5": {
+      "tasks": 1,
+      "maximum": 20,
+      "median": 20
+    },
+    "6": {
+      "tasks": 1,
+      "maximum": 63,
+      "median": 63
+    },
+    "8": {
+      "tasks": 1,
+      "maximum": 111,
+      "median": 111
+    },
+    "9": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "11": {
+      "tasks": 1,
+      "maximum": 5,
+      "median": 5
+    },
+    "12": {
+      "tasks": 1,
+      "maximum": 19,
+      "median": 19
+    },
+    "14": {
+      "tasks": 1,
+      "maximum": 50,
+      "median": 50
+    },
+    "15": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "17": {
+      "tasks": 1,
+      "maximum": 5,
+      "median": 5
+    },
+    "18": {
+      "tasks": 1,
+      "maximum": 47,
+      "median": 47
+    },
+    "20": {
+      "tasks": 1,
+      "maximum": 16,
+      "median": 16
+    },
+    "21": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "23": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "24": {
+      "tasks": 1,
+      "maximum": 47,
+      "median": 47
+    },
+    "26": {
+      "tasks": 1,
+      "maximum": 20,
+      "median": 20
+    },
+    "27": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "29": {
+      "tasks": 1,
+      "maximum": 5,
+      "median": 5
+    },
+    "30": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "32": {
+      "tasks": 1,
+      "maximum": 13,
+      "median": 13
+    },
+    "33": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "35": {
+      "tasks": 1,
+      "maximum": 7,
+      "median": 7
+    },
+    "36": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "38": {
+      "tasks": 1,
+      "maximum": 15,
+      "median": 15
+    },
+    "39": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "41": {
+      "tasks": 1,
+      "maximum": 4,
+      "median": 4
+    },
+    "42": {
+      "tasks": 1,
+      "maximum": 46,
+      "median": 46
+    },
+    "44": {
+      "tasks": 1,
+      "maximum": 18,
+      "median": 18
+    },
+    "45": {
+      "tasks": 1,
+      "maximum": 27,
+      "median": 27
+    },
+    "46": {
+      "tasks": 1,
+      "maximum": 141,
+      "median": 141
+    },
+    "47": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "49": {
+      "tasks": 1,
+      "maximum": 4,
+      "median": 4
+    },
+    "50": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "52": {
+      "tasks": 1,
+      "maximum": 16,
+      "median": 16
+    },
+    "53": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "55": {
+      "tasks": 1,
+      "maximum": 15,
+      "median": 15
+    },
+    "56": {
+      "tasks": 1,
+      "maximum": 46,
+      "median": 46
+    },
+    "58": {
+      "tasks": 1,
+      "maximum": 17,
+      "median": 17
+    },
+    "59": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "61": {
+      "tasks": 1,
+      "maximum": 7,
+      "median": 7
+    },
+    "62": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "63": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "64": {
+      "tasks": 1,
+      "maximum": 27,
+      "median": 27
+    },
+    "66": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "67": {
+      "tasks": 1,
+      "maximum": 39,
+      "median": 39
+    },
+    "69": {
+      "tasks": 1,
+      "maximum": 53,
+      "median": 53
+    },
+    "70": {
+      "tasks": 1,
+      "maximum": 30,
+      "median": 30
+    },
+    "72": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "73": {
+      "tasks": 1,
+      "maximum": 31,
+      "median": 31
+    },
+    "75": {
+      "tasks": 1,
+      "maximum": 81,
+      "median": 81
+    },
+    "76": {
+      "tasks": 1,
+      "maximum": 18,
+      "median": 18
+    },
+    "77": {
+      "tasks": 1,
+      "maximum": 221,
+      "median": 221
+    },
+    "78": {
+      "tasks": 2,
+      "maximum": 238,
+      "median": 238
+    },
+    "81": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "83": {
+      "tasks": 1,
+      "maximum": 111,
+      "median": 111
+    },
+    "86": {
+      "tasks": 1,
+      "maximum": 46,
+      "median": 46
+    },
+    "88": {
+      "tasks": 2,
+      "maximum": 48,
+      "median": 48
+    },
+    "91": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "93": {
+      "tasks": 1,
+      "maximum": 76,
+      "median": 76
+    },
+    "96": {
+      "tasks": 1,
+      "maximum": 29,
+      "median": 29
+    },
+    "98": {
+      "tasks": 2,
+      "maximum": 87,
+      "median": 87
+    },
+    "101": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "103": {
+      "tasks": 1,
+      "maximum": 182,
+      "median": 182
+    },
+    "106": {
+      "tasks": 1,
+      "maximum": 15,
+      "median": 15
+    },
+    "108": {
+      "tasks": 2,
+      "maximum": 47,
+      "median": 47
+    },
+    "111": {
+      "tasks": 1,
+      "maximum": 5,
+      "median": 5
+    },
+    "113": {
+      "tasks": 1,
+      "maximum": 59,
+      "median": 59
+    },
+    "116": {
+      "tasks": 1,
+      "maximum": 14,
+      "median": 14
+    },
+    "118": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "119": {
+      "tasks": 1,
+      "maximum": 48,
+      "median": 48
+    },
+    "120": {
+      "tasks": 1,
+      "maximum": 10,
+      "median": 10
+    },
+    "121": {
+      "tasks": 1,
+      "maximum": 9,
+      "median": 9
+    },
+    "122": {
+      "tasks": 1,
+      "maximum": 25,
+      "median": 25
+    },
+    "123": {
+      "tasks": 1,
+      "maximum": 22,
+      "median": 22
+    },
+    "124": {
+      "tasks": 1,
+      "maximum": 47,
+      "median": 47
+    },
+    "125": {
+      "tasks": 1,
+      "maximum": 53,
+      "median": 53
+    },
+    "126": {
+      "tasks": 1,
+      "maximum": 20,
+      "median": 20
+    },
+    "127": {
+      "tasks": 1,
+      "maximum": 58,
+      "median": 58
+    },
+    "129": {
+      "tasks": 1,
+      "maximum": 67,
+      "median": 67
+    },
+    "131": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "132": {
+      "tasks": 1,
+      "maximum": 31,
+      "median": 31
+    },
+    "133": {
+      "tasks": 1,
+      "maximum": 105,
+      "median": 105
+    },
+    "134": {
+      "tasks": 1,
+      "maximum": 66,
+      "median": 66
+    },
+    "136": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "138": {
+      "tasks": 1,
+      "maximum": 65,
+      "median": 65
+    },
+    "141": {
+      "tasks": 1,
+      "maximum": 27,
+      "median": 27
+    },
+    "143": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "144": {
+      "tasks": 1,
+      "maximum": 39,
+      "median": 39
+    },
+    "145": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "147": {
+      "tasks": 1,
+      "maximum": 107,
+      "median": 107
+    },
+    "150": {
+      "tasks": 1,
+      "maximum": 23,
+      "median": 23
+    },
+    "152": {
+      "tasks": 1,
+      "maximum": 60,
+      "median": 60
+    },
+    "155": {
+      "tasks": 1,
+      "maximum": 36,
+      "median": 36
+    },
+    "157": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "158": {
+      "tasks": 1,
+      "maximum": 65,
+      "median": 65
+    },
+    "160": {
+      "tasks": 1,
+      "maximum": 17,
+      "median": 17
+    },
+    "163": {
+      "tasks": 1,
+      "maximum": 13,
+      "median": 13
+    },
+    "164": {
+      "tasks": 1,
+      "maximum": 23,
+      "median": 23
+    },
+    "166": {
+      "tasks": 1,
+      "maximum": 10,
+      "median": 10
+    },
+    "169": {
+      "tasks": 1,
+      "maximum": 11,
+      "median": 11
+    },
+    "170": {
+      "tasks": 1,
+      "maximum": 11,
+      "median": 11
+    },
+    "172": {
+      "tasks": 1,
+      "maximum": 2,
+      "median": 2
+    },
+    "175": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "176": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "178": {
+      "tasks": 1,
+      "maximum": 2,
+      "median": 2
+    },
+    "181": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "182": {
+      "tasks": 1,
+      "maximum": 9,
+      "median": 9
+    },
+    "184": {
+      "tasks": 1,
+      "maximum": 2,
+      "median": 2
+    },
+    "187": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "188": {
+      "tasks": 1,
+      "maximum": 9,
+      "median": 9
+    },
+    "190": {
+      "tasks": 1,
+      "maximum": 2,
+      "median": 2
+    },
+    "193": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "195": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "196": {
+      "tasks": 1,
+      "maximum": 20,
+      "median": 20
+    },
+    "198": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "201": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "202": {
+      "tasks": 1,
+      "maximum": 30,
+      "median": 30
+    },
+    "204": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "207": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "208": {
+      "tasks": 1,
+      "maximum": 9,
+      "median": 9
+    },
+    "210": {
+      "tasks": 1,
+      "maximum": 2,
+      "median": 2
+    },
+    "213": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "214": {
+      "tasks": 1,
+      "maximum": 39,
+      "median": 39
+    },
+    "216": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "219": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "220": {
+      "tasks": 1,
+      "maximum": 41,
+      "median": 41
+    },
+    "222": {
+      "tasks": 1,
+      "maximum": 10,
+      "median": 10
+    },
+    "225": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "226": {
+      "tasks": 1,
+      "maximum": 41,
+      "median": 41
+    },
+    "228": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "231": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "232": {
+      "tasks": 1,
+      "maximum": 36,
+      "median": 36
+    },
+    "234": {
+      "tasks": 1,
+      "maximum": 13,
+      "median": 13
+    },
+    "237": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "238": {
+      "tasks": 1,
+      "maximum": 33,
+      "median": 33
+    },
+    "240": {
+      "tasks": 1,
+      "maximum": 7,
+      "median": 7
+    },
+    "243": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "244": {
+      "tasks": 1,
+      "maximum": 22,
+      "median": 22
+    },
+    "246": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "249": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "250": {
+      "tasks": 1,
+      "maximum": 25,
+      "median": 25
+    },
+    "252": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "255": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "256": {
+      "tasks": 1,
+      "maximum": 31,
+      "median": 31
+    },
+    "258": {
+      "tasks": 1,
+      "maximum": 4,
+      "median": 4
+    },
+    "261": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "262": {
+      "tasks": 1,
+      "maximum": 21,
+      "median": 21
+    },
+    "264": {
+      "tasks": 1,
+      "maximum": 6,
+      "median": 6
+    },
+    "267": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "268": {
+      "tasks": 1,
+      "maximum": 12,
+      "median": 12
+    },
+    "270": {
+      "tasks": 1,
+      "maximum": 4,
+      "median": 4
+    },
+    "273": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "274": {
+      "tasks": 1,
+      "maximum": 20,
+      "median": 20
+    },
+    "276": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "279": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "280": {
+      "tasks": 1,
+      "maximum": 42,
+      "median": 42
+    },
+    "281": {
+      "tasks": 1,
+      "maximum": 21,
+      "median": 21
+    },
+    "283": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "284": {
+      "tasks": 1,
+      "maximum": 23,
+      "median": 23
+    },
+    "286": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "287": {
+      "tasks": 1,
+      "maximum": 12,
+      "median": 12
+    },
+    "288": {
+      "tasks": 1,
+      "maximum": 17,
+      "median": 17
+    },
+    "290": {
+      "tasks": 1,
+      "maximum": 4,
+      "median": 4
+    },
+    "291": {
+      "tasks": 1,
+      "maximum": 9,
+      "median": 9
+    },
+    "292": {
+      "tasks": 1,
+      "maximum": 19,
+      "median": 19
+    },
+    "294": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "295": {
+      "tasks": 1,
+      "maximum": 10,
+      "median": 10
+    },
+    "296": {
+      "tasks": 1,
+      "maximum": 17,
+      "median": 17
+    },
+    "298": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "299": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "300": {
+      "tasks": 1,
+      "maximum": 33,
+      "median": 33
+    },
+    "302": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "303": {
+      "tasks": 1,
+      "maximum": 16,
+      "median": 16
+    },
+    "305": {
+      "tasks": 1,
+      "maximum": 3,
+      "median": 3
+    },
+    "306": {
+      "tasks": 1,
+      "maximum": 7,
+      "median": 7
+    },
+    "308": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "309": {
+      "tasks": 1,
+      "maximum": 10,
+      "median": 10
+    },
+    "311": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "312": {
+      "tasks": 1,
+      "maximum": 14,
+      "median": 14
+    },
+    "314": {
+      "tasks": 1,
+      "maximum": 0,
+      "median": 0
+    },
+    "315": {
+      "tasks": 1,
+      "maximum": 8,
+      "median": 8
+    },
+    "317": {
+      "tasks": 1,
+      "maximum": 1,
+      "median": 1
+    },
+    "318": {
+      "tasks": 1,
+      "maximum": 53,
+      "median": 53
+    },
+    "319": {
+      "tasks": 1,
+      "maximum": 10,
+      "median": 10
+    },
+    "320": {
+      "tasks": 1,
+      "maximum": 7,
+      "median": 7
+    },
+    "321": {
+      "tasks": 1,
+      "maximum": 7,
+      "median": 7
+    },
+    "322": {
+      "tasks": 1,
+      "maximum": 48,
+      "median": 48
+    },
+    "323": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "324": {
+      "tasks": 1,
+      "maximum": 43,
+      "median": 43
+    },
+    "326": {
+      "tasks": 1,
+      "maximum": 31,
+      "median": 31
+    },
+    "327": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "328": {
+      "tasks": 1,
+      "maximum": 44,
+      "median": 44
+    },
+    "330": {
+      "tasks": 1,
+      "maximum": 25,
+      "median": 25
+    }
+  }
+}

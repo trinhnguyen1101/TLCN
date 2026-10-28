@@ -1,0 +1,1209 @@
+{
+  "dry_run": true,
+  "cleanup_enabled": false,
+  "delete_candidates": [],
+  "inventory_complete": true,
+  "missing_references": [],
+  "issues": [],
+  "protected_snapshots": [
+    {
+      "table": "nessie.gold_test_perf_input34.admin_boundary",
+      "snapshot_id": 658592385282965744,
+      "committed_at": "2026-10-28T02:28:06.833000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "input:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_input34.admin_unit",
+      "snapshot_id": 2637565878962234510,
+      "committed_at": "2026-10-28T02:28:05.060000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "input:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_input34.hourly_concentration",
+      "snapshot_id": 3747242359620411129,
+      "committed_at": "2026-10-28T02:28:09.330000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "input:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_input34.ingestion_run",
+      "snapshot_id": 3445744237672643923,
+      "committed_at": "2026-10-28T02:28:07.156000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "input:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.bridge_source_variable_metric",
+      "snapshot_id": 6150052457365176129,
+      "committed_at": "2026-10-28T02:49:42.845000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.bridge_source_variable_metric",
+      "snapshot_id": 5598010825691071234,
+      "committed_at": "2026-10-28T02:54:17.859000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_admin_unit",
+      "snapshot_id": 8786585403826545405,
+      "committed_at": "2026-10-28T02:49:34.912000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_admin_unit",
+      "snapshot_id": 527890091278680227,
+      "committed_at": "2026-10-28T02:54:09.868000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_air_quality_series",
+      "snapshot_id": 6032883998797919470,
+      "committed_at": "2026-10-28T02:49:42.574000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_air_quality_series",
+      "snapshot_id": 6977650567796145255,
+      "committed_at": "2026-10-28T02:54:17.594000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_aqi_method",
+      "snapshot_id": 3766581481738958253,
+      "committed_at": "2026-10-28T02:49:36.700000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_aqi_method",
+      "snapshot_id": 4272508474713891306,
+      "committed_at": "2026-10-28T02:54:11.937000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_date",
+      "snapshot_id": 592880188741713335,
+      "committed_at": "2026-10-28T02:49:36.378000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_date",
+      "snapshot_id": 5430621019668073848,
+      "committed_at": "2026-10-28T02:54:11.565000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_geo_component",
+      "snapshot_id": 2979908394083517017,
+      "committed_at": "2026-10-28T02:49:35.354000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_geo_component",
+      "snapshot_id": 1223179851896302160,
+      "committed_at": "2026-10-28T02:54:10.388000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_hour",
+      "snapshot_id": 8477587938999718230,
+      "committed_at": "2026-10-28T02:49:36.054000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_hour",
+      "snapshot_id": 4490099912543698459,
+      "committed_at": "2026-10-28T02:54:11.209000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_location",
+      "snapshot_id": 1516951823238264066,
+      "committed_at": "2026-10-28T02:49:35.679000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_location",
+      "snapshot_id": 9166967294344612018,
+      "committed_at": "2026-10-28T02:54:10.806000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_metric",
+      "snapshot_id": 3112048437550655431,
+      "committed_at": "2026-10-28T02:49:42.272000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_metric",
+      "snapshot_id": 1070986313330115577,
+      "committed_at": "2026-10-28T02:54:17.230000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_air_quality_hourly",
+      "snapshot_id": 4102414364060136317,
+      "committed_at": "2026-10-28T02:49:47.032000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_air_quality_hourly",
+      "snapshot_id": 5332565055397333241,
+      "committed_at": "2026-10-28T02:54:21.749000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_daily",
+      "snapshot_id": 6261688731424240158,
+      "committed_at": "2026-10-28T02:49:55.276000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_daily",
+      "snapshot_id": 3226053677922774690,
+      "committed_at": "2026-10-28T02:54:29.899000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_hourly",
+      "snapshot_id": 1594804117290472693,
+      "committed_at": "2026-10-28T02:49:54.221000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_hourly",
+      "snapshot_id": 938640927498753676,
+      "committed_at": "2026-10-28T02:54:28.642000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_daily",
+      "snapshot_id": 5311000154503587877,
+      "committed_at": "2026-10-28T02:49:54.809000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_daily",
+      "snapshot_id": 4659563667092218043,
+      "committed_at": "2026-10-28T02:54:29.306000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_hourly",
+      "snapshot_id": 8758331134796504416,
+      "committed_at": "2026-10-28T02:49:53.609000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_hourly",
+      "snapshot_id": 5738200736260472029,
+      "committed_at": "2026-10-28T02:54:27.986000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_measurement_provenance",
+      "snapshot_id": 2702741014439883247,
+      "committed_at": "2026-10-28T02:49:45.164000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_measurement_provenance",
+      "snapshot_id": 1016764550910970060,
+      "committed_at": "2026-10-28T02:54:20.017000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_current_release",
+      "snapshot_id": 4109224023063128627,
+      "committed_at": "2026-10-28T02:54:40.668000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_release",
+      "snapshot_id": 5594350440701777186,
+      "committed_at": "2026-10-28T02:54:39.412000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_timeline",
+      "snapshot_id": 3311530918450010676,
+      "committed_at": "2026-10-28T02:54:39.827000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_timeline_current",
+      "snapshot_id": 5406020076995137176,
+      "committed_at": "2026-10-28T02:54:40.322000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_daily",
+      "snapshot_id": 5668106834805683419,
+      "committed_at": "2026-10-28T02:49:58.034000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_daily",
+      "snapshot_id": 415442970762623380,
+      "committed_at": "2026-10-28T02:54:32.806000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_hourly",
+      "snapshot_id": 3247261137469735703,
+      "committed_at": "2026-10-28T02:49:56.864000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_hourly",
+      "snapshot_id": 2832714256035470166,
+      "committed_at": "2026-10-28T02:54:31.507000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_monthly",
+      "snapshot_id": 2708121937399515666,
+      "committed_at": "2026-10-28T02:49:58.752000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_monthly",
+      "snapshot_id": 7735632977255642718,
+      "committed_at": "2026-10-28T02:54:33.766000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_source_quality_daily",
+      "snapshot_id": 6234581436540282956,
+      "committed_at": "2026-10-28T02:49:59.167000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_source_quality_daily",
+      "snapshot_id": 3107721480450371413,
+      "committed_at": "2026-10-28T02:54:34.416000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.ref_aqi_breakpoint",
+      "snapshot_id": 8575565060624528655,
+      "committed_at": "2026-10-28T02:49:37.041000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:fdefbad51cd3eff2db2bc3d99a0a1e79844d719171d64451e8939920cad39fb9",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc",
+        "timeline:fb76f94f60d7899e2e4df78390fba849749d5e0fe6225bf6e42918838a56cc69"
+      ]
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.ref_aqi_breakpoint",
+      "snapshot_id": 2956384394330417806,
+      "committed_at": "2026-10-28T02:54:12.301000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:abc9a381bc54979ff425670e9616acafbb15524a84b997cf12b8d6e751f0cd49",
+        "timeline:6a3be7db8c5665b6ce6f0a81262201875d41bfb88c2756495fd8472a18af7bbc"
+      ]
+    }
+  ],
+  "recent_unreferenced": [
+    {
+      "table": "nessie.gold_test_perf_month34.bridge_source_variable_metric",
+      "snapshot_id": 8067839173264489328,
+      "committed_at": "2026-10-28T02:49:42.704000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.bridge_source_variable_metric",
+      "snapshot_id": 6877570975663417014,
+      "committed_at": "2026-10-28T02:54:17.740000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_admin_unit",
+      "snapshot_id": 4803464598239882296,
+      "committed_at": "2026-10-28T02:49:34.513000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_admin_unit",
+      "snapshot_id": 3608349056913500189,
+      "committed_at": "2026-10-28T02:54:09.419000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_air_quality_series",
+      "snapshot_id": 2963496657469981220,
+      "committed_at": "2026-10-28T02:49:42.415000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_air_quality_series",
+      "snapshot_id": 1596948565041401280,
+      "committed_at": "2026-10-28T02:54:17.416000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_aqi_method",
+      "snapshot_id": 5722775392825325451,
+      "committed_at": "2026-10-28T02:49:36.523000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_aqi_method",
+      "snapshot_id": 6511619509996922638,
+      "committed_at": "2026-10-28T02:54:11.740000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_date",
+      "snapshot_id": 7908643160296535273,
+      "committed_at": "2026-10-28T02:49:36.203000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_date",
+      "snapshot_id": 6235142158799356936,
+      "committed_at": "2026-10-28T02:54:11.391000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_geo_component",
+      "snapshot_id": 3656609033977013793,
+      "committed_at": "2026-10-28T02:49:35.183000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_geo_component",
+      "snapshot_id": 4598610746298305256,
+      "committed_at": "2026-10-28T02:54:10.162000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_hour",
+      "snapshot_id": 7902678735384961698,
+      "committed_at": "2026-10-28T02:49:35.842000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_hour",
+      "snapshot_id": 4537643213687451819,
+      "committed_at": "2026-10-28T02:54:11.010000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_location",
+      "snapshot_id": 4348273073537719811,
+      "committed_at": "2026-10-28T02:49:35.506000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_location",
+      "snapshot_id": 5894051152568403850,
+      "committed_at": "2026-10-28T02:54:10.614000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_metric",
+      "snapshot_id": 3975209330919962535,
+      "committed_at": "2026-10-28T02:49:42.099000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.dim_metric",
+      "snapshot_id": 6957221918516326275,
+      "committed_at": "2026-10-28T02:54:17.054000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_air_quality_hourly",
+      "snapshot_id": 4885838151985475804,
+      "committed_at": "2026-10-28T02:49:46.507000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_air_quality_hourly",
+      "snapshot_id": 2628951736250142433,
+      "committed_at": "2026-10-28T02:54:21.266000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_daily",
+      "snapshot_id": 1106149306913653431,
+      "committed_at": "2026-10-28T02:49:55.012000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_daily",
+      "snapshot_id": 3591196544663667811,
+      "committed_at": "2026-10-28T02:54:29.620000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_hourly",
+      "snapshot_id": 3881361755862602337,
+      "committed_at": "2026-10-28T02:49:53.895000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_hourly",
+      "snapshot_id": 1442828409977402095,
+      "committed_at": "2026-10-28T02:54:28.295000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_daily",
+      "snapshot_id": 8346228879683780790,
+      "committed_at": "2026-10-28T02:49:54.465000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_daily",
+      "snapshot_id": 5989007361300040740,
+      "committed_at": "2026-10-28T02:54:28.979000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_hourly",
+      "snapshot_id": 6579887015723393194,
+      "committed_at": "2026-10-28T02:49:52.484000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_aqi_pollutant_hourly",
+      "snapshot_id": 3824434769312614773,
+      "committed_at": "2026-10-28T02:54:26.998000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_measurement_provenance",
+      "snapshot_id": 3267217199496892648,
+      "committed_at": "2026-10-28T02:49:44.639000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.fact_measurement_provenance",
+      "snapshot_id": 9137263381265356417,
+      "committed_at": "2026-10-28T02:54:19.586000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_current_release",
+      "snapshot_id": 6689987145584100394,
+      "committed_at": "2026-10-28T02:50:04.216000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_release",
+      "snapshot_id": 2400460791515201684,
+      "committed_at": "2026-10-28T02:50:03.302000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_timeline",
+      "snapshot_id": 2159409375120900164,
+      "committed_at": "2026-10-28T02:50:03.674000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.gold_timeline_current",
+      "snapshot_id": 5267892647353791601,
+      "committed_at": "2026-10-28T02:50:03.976000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_daily",
+      "snapshot_id": 7683248450154684190,
+      "committed_at": "2026-10-28T02:49:57.037000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_daily",
+      "snapshot_id": 144188909163018734,
+      "committed_at": "2026-10-28T02:54:31.725000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_hourly",
+      "snapshot_id": 7360795095473572338,
+      "committed_at": "2026-10-28T02:49:55.556000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_hourly",
+      "snapshot_id": 4640409636162064959,
+      "committed_at": "2026-10-28T02:54:30.198000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_monthly",
+      "snapshot_id": 407701433325937076,
+      "committed_at": "2026-10-28T02:49:58.184000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_air_quality_monthly",
+      "snapshot_id": 6667821189000831667,
+      "committed_at": "2026-10-28T02:54:32.999000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_source_quality_daily",
+      "snapshot_id": 8531312493323554912,
+      "committed_at": "2026-10-28T02:49:58.821000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.mart_source_quality_daily",
+      "snapshot_id": 3239027815702387610,
+      "committed_at": "2026-10-28T02:54:33.899000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.ref_aqi_breakpoint",
+      "snapshot_id": 5918894231948857125,
+      "committed_at": "2026-10-28T02:49:36.845000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_test_perf_month34.ref_aqi_breakpoint",
+      "snapshot_id": 6216248676172848476,
+      "committed_at": "2026-10-28T02:54:12.119000",
+      "is_head": false,
+      "named_refs": []
+    }
+  ],
+  "unreferenced_snapshot_review_candidates": [],
+  "minimum_age_days": 90,
+  "note": "All released/rollback/input references protected. Review candidates may be intermediate or staged; no orphan-file or object deletion classification is made.",
+  "files": {
+    "nessie.gold_test_perf_input34.admin_boundary": {
+      "files": 2,
+      "head_bytes": 84126855,
+      "head_records": 3355,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_input34.admin_unit": {
+      "files": 1,
+      "head_bytes": 425702,
+      "head_records": 6710,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_input34.hourly_concentration": {
+      "files": 1,
+      "head_bytes": 58406,
+      "head_records": 154018,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_input34.ingestion_run": {
+      "files": 2,
+      "head_bytes": 16499,
+      "head_records": 5,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_month34.bridge_source_variable_metric": {
+      "files": 0,
+      "head_bytes": null,
+      "head_records": null,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_admin_unit": {
+      "files": 2,
+      "head_bytes": 13185,
+      "head_records": 72,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_air_quality_series": {
+      "files": 2,
+      "head_bytes": 14063,
+      "head_records": 68,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_aqi_method": {
+      "files": 2,
+      "head_bytes": 11931,
+      "head_records": 2,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_date": {
+      "files": 2,
+      "head_bytes": 4654,
+      "head_records": 33,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_geo_component": {
+      "files": 2,
+      "head_bytes": 2041559,
+      "head_records": 72,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_hour": {
+      "files": 2,
+      "head_bytes": 11297,
+      "head_records": 766,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_location": {
+      "files": 2,
+      "head_bytes": 12685,
+      "head_records": 68,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.dim_metric": {
+      "files": 2,
+      "head_bytes": 6573,
+      "head_records": 12,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.fact_air_quality_hourly": {
+      "files": 3,
+      "head_bytes": 62709,
+      "head_records": 156262,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.fact_aqi_daily": {
+      "files": 2,
+      "head_bytes": 16516,
+      "head_records": 1054,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.fact_aqi_hourly": {
+      "files": 3,
+      "head_bytes": 34026,
+      "head_records": 25296,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.fact_aqi_pollutant_daily": {
+      "files": 2,
+      "head_bytes": 25569,
+      "head_records": 7378,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.fact_aqi_pollutant_hourly": {
+      "files": 3,
+      "head_bytes": 186162,
+      "head_records": 151776,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.fact_measurement_provenance": {
+      "files": 3,
+      "head_bytes": 61978,
+      "head_records": 156262,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.gold_current_release": {
+      "files": 1,
+      "head_bytes": 6342,
+      "head_records": 1,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_month34.gold_release": {
+      "files": 2,
+      "head_bytes": 25678,
+      "head_records": 2,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_month34.gold_timeline": {
+      "files": 2,
+      "head_bytes": 11003,
+      "head_records": 2,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_month34.gold_timeline_current": {
+      "files": 1,
+      "head_bytes": 4238,
+      "head_records": 1,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_test_perf_month34.mart_air_quality_daily": {
+      "files": 2,
+      "head_bytes": 41774,
+      "head_records": 6324,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.mart_air_quality_hourly": {
+      "files": 3,
+      "head_bytes": 102406,
+      "head_records": 151776,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.mart_air_quality_monthly": {
+      "files": 2,
+      "head_bytes": 21003,
+      "head_records": 408,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.mart_source_quality_daily": {
+      "files": 2,
+      "head_bytes": 22642,
+      "head_records": 6324,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_test_perf_month34.ref_aqi_breakpoint": {
+      "files": 2,
+      "head_bytes": 6457,
+      "head_records": 204,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    }
+  }
+}

@@ -1,0 +1,1851 @@
+{
+  "provinceSnapshots": [
+    {
+      "metricQuality": {
+        "pm25": {
+          "qualityStatus": "ok",
+          "missingReason": null,
+          "observationTime": "2026-01-01T16:00:00Z",
+          "coverage": 1.0
+        },
+        "pm10": {
+          "qualityStatus": "ok",
+          "missingReason": null,
+          "observationTime": "2026-01-01T16:00:00Z",
+          "coverage": 1.0
+        },
+        "co": {
+          "qualityStatus": "ok",
+          "missingReason": null,
+          "observationTime": "2026-01-01T16:00:00Z",
+          "coverage": 1.0
+        },
+        "no2": {
+          "qualityStatus": "ok",
+          "missingReason": null,
+          "observationTime": "2026-01-01T16:00:00Z",
+          "coverage": 1.0
+        },
+        "so2": {
+          "qualityStatus": "ok",
+          "missingReason": null,
+          "observationTime": "2026-01-01T16:00:00Z",
+          "coverage": 1.0
+        },
+        "o3": {
+          "qualityStatus": "ok",
+          "missingReason": null,
+          "observationTime": "2026-01-01T16:00:00Z",
+          "coverage": 1.0
+        }
+      },
+      "aqiStatus": "valid",
+      "provinceCode": "01",
+      "provinceName": "H\u00e0 N\u1ed9i",
+      "aqi": 50,
+      "status": "T\u1ed1t",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "source": "hourly_fixture",
+      "seriesId": "50b0b679f977057265892d504d730c681e3e29298fd4896c7380e2b32089e4d0",
+      "locationId": "11c7fbe2af74200ae2406ee9685b75a80c49e6c6b7959d13956b87655ebaae8b",
+      "observationTime": "2026-01-01T16:00:00Z",
+      "sourceResolutionMinutes": 60,
+      "temporalSupport": "hourly_mean",
+      "applicabilityProfile": "area_estimate",
+      "qualityStatus": "ok",
+      "aqiMissingReason": null,
+      "coverage": 1.0,
+      "aqiMethodVersion": "vn-aqi-1459-2019-project-v1",
+      "aqiOrigin": "computed",
+      "dominantPollutants": [
+        "pm25"
+      ],
+      "publishedReleaseId": "4bdd7298c56cd0e31cfa17d5cfe6da59c79ecffacc6f515f344173515b480f08",
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "provinceCode": "04",
+      "provinceName": "Cao B\u1eb1ng",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "08",
+      "provinceName": "Tuy\u00ean Quang",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "11",
+      "provinceName": "\u0110i\u1ec7n Bi\u00ean",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "12",
+      "provinceName": "Lai Ch\u00e2u",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "14",
+      "provinceName": "S\u01a1n La",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "15",
+      "provinceName": "L\u00e0o Cai",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "19",
+      "provinceName": "Th\u00e1i Nguy\u00ean",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "20",
+      "provinceName": "L\u1ea1ng S\u01a1n",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "22",
+      "provinceName": "Qu\u1ea3ng Ninh",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "24",
+      "provinceName": "B\u1eafc Ninh",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "25",
+      "provinceName": "Ph\u00fa Th\u1ecd",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "31",
+      "provinceName": "H\u1ea3i Ph\u00f2ng",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "33",
+      "provinceName": "H\u01b0ng Y\u00ean",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "37",
+      "provinceName": "Ninh B\u00ecnh",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "38",
+      "provinceName": "Thanh Ho\u00e1",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "40",
+      "provinceName": "Ngh\u1ec7 An",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "42",
+      "provinceName": "H\u00e0 T\u0129nh",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "44",
+      "provinceName": "Qu\u1ea3ng Tr\u1ecb",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "46",
+      "provinceName": "Hu\u1ebf",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "48",
+      "provinceName": "\u0110\u00e0 N\u1eb5ng",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "51",
+      "provinceName": "Qu\u1ea3ng Ng\u00e3i",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "52",
+      "provinceName": "Gia Lai",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "56",
+      "provinceName": "Kh\u00e1nh Ho\u00e0",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "66",
+      "provinceName": "\u0110\u1eafk L\u1eafk",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "68",
+      "provinceName": "L\u00e2m \u0110\u1ed3ng",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "75",
+      "provinceName": "\u0110\u1ed3ng Nai",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "79",
+      "provinceName": "H\u1ed3 Ch\u00ed Minh",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "80",
+      "provinceName": "T\u00e2y Ninh",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "82",
+      "provinceName": "\u0110\u1ed3ng Th\u00e1p",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "86",
+      "provinceName": "V\u0129nh Long",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "91",
+      "provinceName": "An Giang",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "92",
+      "provinceName": "C\u1ea7n Th\u01a1",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    },
+    {
+      "provinceCode": "96",
+      "provinceName": "C\u00e0 Mau",
+      "aqi": null,
+      "status": null,
+      "pm25": null,
+      "pm10": null
+    }
+  ],
+  "emissionRecords": [],
+  "emissionSectors": [],
+  "dashboardTrendRecords": [
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T17:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T18:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T19:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T20:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T21:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T22:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-29T23:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T01:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T02:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T03:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T04:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T05:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T06:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T07:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T08:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T09:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T10:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T11:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T12:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T13:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T14:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T15:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 100,
+      "provinceCode": "01",
+      "date": "2025-12-30T16:00:00Z",
+      "pm25": 75.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 75,
+      "provinceCode": "01",
+      "date": "2025-12-30T17:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 62,
+      "provinceCode": "01",
+      "date": "2025-12-30T18:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 56,
+      "provinceCode": "01",
+      "date": "2025-12-30T19:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 53,
+      "provinceCode": "01",
+      "date": "2025-12-30T20:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 52,
+      "provinceCode": "01",
+      "date": "2025-12-30T21:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 51,
+      "provinceCode": "01",
+      "date": "2025-12-30T22:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-30T23:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T01:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T02:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T03:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T04:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 0,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T05:00:00Z",
+      "pm25": null,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T06:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T07:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T08:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T09:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T10:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T11:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T12:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T13:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T14:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T15:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 0
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T16:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": null,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T17:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T18:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T19:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T20:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T21:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T22:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2025-12-31T23:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T01:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T02:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T03:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T04:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T05:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T06:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T07:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T08:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T09:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T10:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T11:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T12:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T13:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T14:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T15:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    },
+    {
+      "metricSampleCounts": {
+        "pm25": 1,
+        "pm10": 1,
+        "co": 1,
+        "no2": 1,
+        "so2": 1,
+        "o3": 1
+      },
+      "aqi": 50,
+      "provinceCode": "01",
+      "date": "2026-01-01T16:00:00Z",
+      "pm25": 25.0,
+      "pm10": 10.0,
+      "o3": 10.0,
+      "no2": 10.0,
+      "so2": 10.0,
+      "co": 10.0
+    }
+  ],
+  "metadata": {
+    "publishedTimelineId": "e994b34995b0ff9a3fbea899b8979fff7c382d76fa21fea47458165c394982a1",
+    "compatibilityId": "21e3dd5c8a315d0eaf675a04b554097569cdad8d16345e8a3d5da573ded4a84a",
+    "publishedReleaseIds": [
+      "4bdd7298c56cd0e31cfa17d5cfe6da59c79ecffacc6f515f344173515b480f08",
+      "dd34815edd7f5d57523388a00dc040e739bc7705533d7145e0621c72682cda67"
+    ],
+    "missingScopes": [],
+    "publishedReleaseId": "4bdd7298c56cd0e31cfa17d5cfe6da59c79ecffacc6f515f344173515b480f08",
+    "source": "hourly_fixture",
+    "generation": "e994b34995b0ff9a3fbea899b8979fff7c382d76fa21fea47458165c394982a1",
+    "start": "2025-12-29T17:00:00+00:00",
+    "end": "2026-01-01T16:59:59+00:00",
+    "snapshotDate": "2026-01-01T16:00:00Z",
+    "metrics": {
+      "pm25": {
+        "unit": "\u00b5g/m\u00b3",
+        "quantity": "concentration",
+        "mapScale": {
+          "version": "analytical-concentration-colors-v1",
+          "statistic": "hourly_native_samples",
+          "referenceKind": "fixed_display_domains",
+          "note": "Thang n\u1ed3ng \u0111\u1ed9 ph\u00e2n t\u00edch c\u1ed1 \u0111\u1ecbnh; kh\u00f4ng ph\u1ea3i ph\u00e2n lo\u1ea1i nguy c\u01a1 s\u1ee9c kh\u1ecfe. So s\u00e1nh c\u00f9ng ch\u1ea5t, \u0111\u01a1n v\u1ecb v\u00e0 basis.",
+          "breakpoints": [
+            20.0,
+            60.0,
+            120.0
+          ],
+          "method": "absolute_concentration",
+          "sampleCount": 0,
+          "referenceStart": "2026-10-28",
+          "referenceEnd": "2026-10-28"
+        }
+      },
+      "pm10": {
+        "unit": "\u00b5g/m\u00b3",
+        "quantity": "concentration",
+        "mapScale": {
+          "version": "analytical-concentration-colors-v1",
+          "statistic": "hourly_native_samples",
+          "referenceKind": "fixed_display_domains",
+          "note": "Thang n\u1ed3ng \u0111\u1ed9 ph\u00e2n t\u00edch c\u1ed1 \u0111\u1ecbnh; kh\u00f4ng ph\u1ea3i ph\u00e2n lo\u1ea1i nguy c\u01a1 s\u1ee9c kh\u1ecfe. So s\u00e1nh c\u00f9ng ch\u1ea5t, \u0111\u01a1n v\u1ecb v\u00e0 basis.",
+          "breakpoints": [
+            40.0,
+            120.0,
+            240.0
+          ],
+          "method": "absolute_concentration",
+          "sampleCount": 0,
+          "referenceStart": "2026-10-28",
+          "referenceEnd": "2026-10-28"
+        }
+      },
+      "co": {
+        "unit": "\u00b5g/m\u00b3",
+        "quantity": "concentration",
+        "mapScale": {
+          "version": "analytical-concentration-colors-v1",
+          "statistic": "hourly_native_samples",
+          "referenceKind": "fixed_display_domains",
+          "note": "Thang n\u1ed3ng \u0111\u1ed9 ph\u00e2n t\u00edch c\u1ed1 \u0111\u1ecbnh; kh\u00f4ng ph\u1ea3i ph\u00e2n lo\u1ea1i nguy c\u01a1 s\u1ee9c kh\u1ecfe. So s\u00e1nh c\u00f9ng ch\u1ea5t, \u0111\u01a1n v\u1ecb v\u00e0 basis.",
+          "breakpoints": [
+            500.0,
+            1500.0,
+            5000.0
+          ],
+          "method": "absolute_concentration",
+          "sampleCount": 0,
+          "referenceStart": "2026-10-28",
+          "referenceEnd": "2026-10-28"
+        }
+      },
+      "no2": {
+        "unit": "\u00b5g/m\u00b3",
+        "quantity": "concentration",
+        "mapScale": {
+          "version": "analytical-concentration-colors-v1",
+          "statistic": "hourly_native_samples",
+          "referenceKind": "fixed_display_domains",
+          "note": "Thang n\u1ed3ng \u0111\u1ed9 ph\u00e2n t\u00edch c\u1ed1 \u0111\u1ecbnh; kh\u00f4ng ph\u1ea3i ph\u00e2n lo\u1ea1i nguy c\u01a1 s\u1ee9c kh\u1ecfe. So s\u00e1nh c\u00f9ng ch\u1ea5t, \u0111\u01a1n v\u1ecb v\u00e0 basis.",
+          "breakpoints": [
+            20.0,
+            60.0,
+            120.0
+          ],
+          "method": "absolute_concentration",
+          "sampleCount": 0,
+          "referenceStart": "2026-10-28",
+          "referenceEnd": "2026-10-28"
+        }
+      },
+      "so2": {
+        "unit": "\u00b5g/m\u00b3",
+        "quantity": "concentration",
+        "mapScale": {
+          "version": "analytical-concentration-colors-v1",
+          "statistic": "hourly_native_samples",
+          "referenceKind": "fixed_display_domains",
+          "note": "Thang n\u1ed3ng \u0111\u1ed9 ph\u00e2n t\u00edch c\u1ed1 \u0111\u1ecbnh; kh\u00f4ng ph\u1ea3i ph\u00e2n lo\u1ea1i nguy c\u01a1 s\u1ee9c kh\u1ecfe. So s\u00e1nh c\u00f9ng ch\u1ea5t, \u0111\u01a1n v\u1ecb v\u00e0 basis.",
+          "breakpoints": [
+            20.0,
+            80.0,
+            240.0
+          ],
+          "method": "absolute_concentration",
+          "sampleCount": 0,
+          "referenceStart": "2026-10-28",
+          "referenceEnd": "2026-10-28"
+        }
+      },
+      "o3": {
+        "unit": "\u00b5g/m\u00b3",
+        "quantity": "concentration",
+        "mapScale": {
+          "version": "analytical-concentration-colors-v1",
+          "statistic": "hourly_native_samples",
+          "referenceKind": "fixed_display_domains",
+          "note": "Thang n\u1ed3ng \u0111\u1ed9 ph\u00e2n t\u00edch c\u1ed1 \u0111\u1ecbnh; kh\u00f4ng ph\u1ea3i ph\u00e2n lo\u1ea1i nguy c\u01a1 s\u1ee9c kh\u1ecfe. So s\u00e1nh c\u00f9ng ch\u1ea5t, \u0111\u01a1n v\u1ecb v\u00e0 basis.",
+          "breakpoints": [
+            40.0,
+            100.0,
+            180.0
+          ],
+          "method": "absolute_concentration",
+          "sampleCount": 0,
+          "referenceStart": "2026-10-28",
+          "referenceEnd": "2026-10-28"
+        }
+      }
+    },
+    "temporalAggregation": "hourly_native_samples",
+    "timezone": "UTC",
+    "minimumSpatialCoverage": null,
+    "minimumMonthlyCoverage": null,
+    "note": "Gold \u0111\u00e3 materialize. AQI ch\u1ec9 c\u00f3 khi \u0111\u1ee7 eligibility; daily/monthly concentration l\u00e0 th\u1ed1ng k\u00ea m\u1eabu th\u1eadt, kh\u00f4ng n\u1ed9i suy. L\u1ecbch s\u1eed gh\u00e9p c\u00e1c scope \u0111\u00e3 c\u00f4ng b\u1ed1; kho\u1ea3ng ch\u01b0a c\u00f4ng b\u1ed1 gi\u1eef missing.",
+    "queryStart": "2025-12-29T17:00:00Z",
+    "queryEnd": "2026-01-01T16:59:59Z",
+    "availableYears": [
+      2025,
+      2026
+    ],
+    "observationStart": "2025-12-29T17:00:00+00:00",
+    "observationEnd": "2026-01-01T17:00:00+00:00"
+  }
+}

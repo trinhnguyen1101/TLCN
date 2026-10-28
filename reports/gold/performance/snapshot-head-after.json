@@ -1,0 +1,7 @@
+{
+  "current_snapshot": 3122964661279769931,
+  "latest_created_snapshot": 2390930523032166309,
+  "helper_snapshot": 3122964661279769931,
+  "helper_matches_head": true,
+  "scope": "isolated unregistered test table; all snapshots retained"
+}

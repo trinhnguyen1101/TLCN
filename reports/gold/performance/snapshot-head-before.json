@@ -1,0 +1,7 @@
+{
+  "current_snapshot": 6837475723041649735,
+  "latest_created_snapshot": 3895531335325257951,
+  "helper_snapshot": 3895531335325257951,
+  "helper_matches_head": false,
+  "scope": "isolated gold_test_perf_probe.snapshot_head; snapshots retained"
+}

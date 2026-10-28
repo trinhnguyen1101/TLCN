@@ -1,0 +1,3591 @@
+{
+  "dry_run": true,
+  "cleanup_enabled": false,
+  "delete_candidates": [],
+  "inventory_complete": true,
+  "missing_references": [],
+  "issues": [],
+  "protected_snapshots": [
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 3004070399627446270,
+      "committed_at": "2026-10-27T16:44:16.207000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 349162223638584948,
+      "committed_at": "2026-10-27T16:44:20.622000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 9080830965043712342,
+      "committed_at": "2026-10-27T17:10:37.975000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 3760284195278296123,
+      "committed_at": "2026-10-27T17:25:56.877000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 5280848085759013034,
+      "committed_at": "2026-10-27T17:35:26.543000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 6554053364123085533,
+      "committed_at": "2026-10-28T00:56:23.611000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 6999672106388532817,
+      "committed_at": "2026-10-28T01:12:12.775000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 3364496699053685591,
+      "committed_at": "2026-10-28T03:17:35.885000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 5884715442414323938,
+      "committed_at": "2026-10-27T16:44:05.854000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 1202427671479129970,
+      "committed_at": "2026-10-27T17:10:28.588000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 7232547691143102959,
+      "committed_at": "2026-10-27T17:25:47.522000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 4783037611794699192,
+      "committed_at": "2026-10-27T17:35:17.258000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 8886101667980360318,
+      "committed_at": "2026-10-28T00:56:14.492000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 2920832061998630894,
+      "committed_at": "2026-10-28T01:12:03.498000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 6441005549407258026,
+      "committed_at": "2026-10-28T03:17:26.195000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 8452107501920999500,
+      "committed_at": "2026-10-27T16:44:20.172000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 5570004984929733316,
+      "committed_at": "2026-10-27T17:10:37.520000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 8744458942345105061,
+      "committed_at": "2026-10-27T17:25:56.422000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 6346702329654640921,
+      "committed_at": "2026-10-27T17:35:26.070000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 3102599412288963898,
+      "committed_at": "2026-10-28T00:56:23.146000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 5110707776452132603,
+      "committed_at": "2026-10-28T01:12:12.312000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 2454741420463770928,
+      "committed_at": "2026-10-28T03:17:35.445000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 3079334054222932231,
+      "committed_at": "2026-10-27T16:44:07.788000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 9097781947782380625,
+      "committed_at": "2026-10-27T17:10:30.568000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 2393516499022566943,
+      "committed_at": "2026-10-27T17:25:49.529000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 1867100565085404631,
+      "committed_at": "2026-10-27T17:35:19.240000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 1715269250799804992,
+      "committed_at": "2026-10-28T00:56:16.432000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 5196552248867523620,
+      "committed_at": "2026-10-28T01:12:05.491000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 927002887986367981,
+      "committed_at": "2026-10-28T03:17:28.232000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 4832926279321499677,
+      "committed_at": "2026-10-27T16:44:07.459000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 6310784941046326830,
+      "committed_at": "2026-10-27T17:10:30.213000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 5427411749754267069,
+      "committed_at": "2026-10-27T17:25:49.183000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 1214025379277270642,
+      "committed_at": "2026-10-27T17:35:18.875000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 7046962274197652866,
+      "committed_at": "2026-10-28T00:56:16.085000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 7063995725918005903,
+      "committed_at": "2026-10-28T01:12:05.134000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 5073400090896429387,
+      "committed_at": "2026-10-28T03:17:27.872000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 3269833495155525952,
+      "committed_at": "2026-10-27T16:44:06.356000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 5005127130055117723,
+      "committed_at": "2026-10-27T17:10:29.090000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 1707108951286879923,
+      "committed_at": "2026-10-27T17:25:48.047000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 1858154298417295622,
+      "committed_at": "2026-10-27T17:35:17.770000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 7998205658631380178,
+      "committed_at": "2026-10-28T00:56:14.983000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 6958021582060646478,
+      "committed_at": "2026-10-28T01:12:04.012000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 5202413590153218354,
+      "committed_at": "2026-10-28T03:17:26.717000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 8567475932163348529,
+      "committed_at": "2026-10-27T16:44:07.094000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 5251498911296874962,
+      "committed_at": "2026-10-27T17:10:29.856000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 3833011785691159821,
+      "committed_at": "2026-10-27T17:25:48.828000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 222794437278003928,
+      "committed_at": "2026-10-27T17:35:18.510000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 2505388077316327819,
+      "committed_at": "2026-10-28T00:56:15.720000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 1970024240749188547,
+      "committed_at": "2026-10-28T01:12:04.794000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 8434220564181638317,
+      "committed_at": "2026-10-28T03:17:27.506000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 4810464297891435337,
+      "committed_at": "2026-10-27T16:44:06.738000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 8248997290965090507,
+      "committed_at": "2026-10-27T17:10:29.482000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 1193542138163677489,
+      "committed_at": "2026-10-27T17:25:48.435000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 8127988129716074188,
+      "committed_at": "2026-10-27T17:35:18.142000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 6736193407490618820,
+      "committed_at": "2026-10-28T00:56:15.355000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 8694674818721610517,
+      "committed_at": "2026-10-28T01:12:04.397000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 1876321832808827392,
+      "committed_at": "2026-10-28T03:17:27.103000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 3762324695510503462,
+      "committed_at": "2026-10-27T16:44:19.833000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 613267116949379832,
+      "committed_at": "2026-10-27T17:10:37.086000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 2306176928784686943,
+      "committed_at": "2026-10-27T17:25:56.007000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 7531434443690599616,
+      "committed_at": "2026-10-27T17:35:25.668000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 1217109700705237409,
+      "committed_at": "2026-10-28T00:56:22.731000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 7105237395112464968,
+      "committed_at": "2026-10-28T01:12:11.924000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 4194305450958205997,
+      "committed_at": "2026-10-28T03:17:35.023000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 7357199657478324867,
+      "committed_at": "2026-10-27T16:44:21.051000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 8685632399348593083,
+      "committed_at": "2026-10-27T17:10:38.402000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 6411677252444604216,
+      "committed_at": "2026-10-27T17:25:57.274000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 8516604477124297401,
+      "committed_at": "2026-10-27T17:35:26.964000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 1582162144416631184,
+      "committed_at": "2026-10-28T00:56:24.009000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 4928682516909848525,
+      "committed_at": "2026-10-28T01:12:13.198000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 2936113663336977981,
+      "committed_at": "2026-10-28T03:17:36.311000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 4807460829661494596,
+      "committed_at": "2026-10-27T16:44:24.344000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 6508082465523427508,
+      "committed_at": "2026-10-27T17:10:41.976000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 3688842584297871943,
+      "committed_at": "2026-10-27T17:26:00.854000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 8929680703930457926,
+      "committed_at": "2026-10-27T17:35:30.564000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 5927015020625839110,
+      "committed_at": "2026-10-28T00:56:27.515000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 5706422015196381765,
+      "committed_at": "2026-10-28T01:12:16.575000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 8309732750251479682,
+      "committed_at": "2026-10-28T03:17:39.648000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 5738171640971623727,
+      "committed_at": "2026-10-27T16:44:23.509000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 4678682500529678109,
+      "committed_at": "2026-10-27T17:10:40.902000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 1849700399474962713,
+      "committed_at": "2026-10-27T17:25:59.788000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 5503455596577742459,
+      "committed_at": "2026-10-27T17:35:29.519000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 8589001780619720516,
+      "committed_at": "2026-10-28T00:56:26.441000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 2457608048745192477,
+      "committed_at": "2026-10-28T01:12:15.538000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 4756755290240730261,
+      "committed_at": "2026-10-28T03:17:38.546000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 5928748809022314546,
+      "committed_at": "2026-10-27T16:44:23.973000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 6032587124345398877,
+      "committed_at": "2026-10-27T17:10:41.437000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 4456164250380707620,
+      "committed_at": "2026-10-27T17:26:00.357000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 8832892638386329081,
+      "committed_at": "2026-10-27T17:35:30.059000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 8614406468269465694,
+      "committed_at": "2026-10-28T00:56:26.975000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 417250733560322581,
+      "committed_at": "2026-10-28T01:12:16.112000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 3647325701177201613,
+      "committed_at": "2026-10-28T03:17:39.096000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 825189028876549143,
+      "committed_at": "2026-10-27T16:44:23.011000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 2094729682818442693,
+      "committed_at": "2026-10-27T17:10:40.410000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 2009645969738467018,
+      "committed_at": "2026-10-27T17:25:59.249000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 1011458774798893437,
+      "committed_at": "2026-10-27T17:35:28.953000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 9166736641884188638,
+      "committed_at": "2026-10-28T00:56:25.913000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 8413800022268764478,
+      "committed_at": "2026-10-28T01:12:15.089000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 2665879000292790016,
+      "committed_at": "2026-10-28T03:17:38.027000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 4174296110275950118,
+      "committed_at": "2026-10-28T03:17:49.473000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 7999193869679904542,
+      "committed_at": "2026-10-28T03:17:47.738000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline",
+      "snapshot_id": 4352268601485871061,
+      "committed_at": "2026-10-28T03:17:48.378000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline_current",
+      "snapshot_id": 4640510580389447966,
+      "committed_at": "2026-10-28T03:17:49.033000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "named_snapshot_reference"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 5998848416945067819,
+      "committed_at": "2026-10-27T16:44:26.267000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 4109382071818044860,
+      "committed_at": "2026-10-27T17:10:44.193000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 7030068687098057641,
+      "committed_at": "2026-10-27T17:26:03.110000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 5493044719655676830,
+      "committed_at": "2026-10-27T17:35:32.820000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 9096673398139806427,
+      "committed_at": "2026-10-28T00:56:29.756000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 255134592395672652,
+      "committed_at": "2026-10-28T01:12:18.696000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 568613331660345602,
+      "committed_at": "2026-10-28T03:17:41.654000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 9128532020765463606,
+      "committed_at": "2026-10-27T16:44:25.420000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 4895740015811772536,
+      "committed_at": "2026-10-27T17:10:43.265000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 3422139115145165691,
+      "committed_at": "2026-10-27T17:26:02.164000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 5042683512824392789,
+      "committed_at": "2026-10-27T17:35:31.898000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 1157348617174778665,
+      "committed_at": "2026-10-28T00:56:28.849000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 8990605388896969483,
+      "committed_at": "2026-10-28T01:12:17.724000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 7348211925223312605,
+      "committed_at": "2026-10-28T03:17:40.801000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 2403408495181421033,
+      "committed_at": "2026-10-27T16:44:26.892000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 7117545973980514480,
+      "committed_at": "2026-10-27T17:10:44.801000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 2885308000646830808,
+      "committed_at": "2026-10-27T17:26:03.720000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 8101914950990984103,
+      "committed_at": "2026-10-27T17:35:33.447000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 4132677874110958163,
+      "committed_at": "2026-10-28T00:56:30.403000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 2300159526037815032,
+      "committed_at": "2026-10-28T01:12:19.300000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 6703090057330394596,
+      "committed_at": "2026-10-28T03:17:42.275000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 5375316066273927882,
+      "committed_at": "2026-10-27T16:44:27.312000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 12644433172437639,
+      "committed_at": "2026-10-27T17:10:45.268000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 3085587644406007899,
+      "committed_at": "2026-10-27T17:26:04.199000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 3267438676888693679,
+      "committed_at": "2026-10-27T17:35:33.955000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 361423416160133122,
+      "committed_at": "2026-10-28T00:56:30.882000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 5854566953415968410,
+      "committed_at": "2026-10-28T01:12:19.753000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 1181696900529598321,
+      "committed_at": "2026-10-28T03:17:42.741000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 352416463666699938,
+      "committed_at": "2026-10-27T16:44:08.132000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 8418219875147859682,
+      "committed_at": "2026-10-27T17:10:30.954000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 7306082988947139339,
+      "committed_at": "2026-10-27T17:25:49.920000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 6200052379395341798,
+      "committed_at": "2026-10-27T17:35:19.624000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "timeline:aeca80f7509f75409cd6c4a3e682b5f017d6276edd76bbaf7f0ebe396ed5861a"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 6052959729297443050,
+      "committed_at": "2026-10-28T00:56:16.795000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "timeline:359f885163f6b279302d4a06a1f938d2abcdcbeef1a2b5ea3238440dc22d4379"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 1820339936092610031,
+      "committed_at": "2026-10-28T01:12:05.878000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "release:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "timeline:d023d88b18165b0b344fa47aa8b5e70f51d2bb650981006d25ac02856927915b"
+      ]
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 3739517036386029934,
+      "committed_at": "2026-10-28T03:17:28.629000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_release",
+        "current_table_head",
+        "named_snapshot_reference",
+        "release:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "timeline:231d2ac59e9f013a751f008fcf902babfd81071135d73cc5cf829373b4d8b079"
+      ]
+    },
+    {
+      "table": "nessie.silver.admin_boundary",
+      "snapshot_id": 6530732959169950407,
+      "committed_at": "2026-10-26T15:53:42.722000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.admin_unit",
+      "snapshot_id": 1498455736500090462,
+      "committed_at": "2026-10-26T15:49:58.015000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.admin_unit",
+      "snapshot_id": 2252229427493543824,
+      "committed_at": "2026-10-26T15:49:59.571000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.admin_unit",
+      "snapshot_id": 8230938466805355142,
+      "committed_at": "2026-10-26T15:53:40.211000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.admin_unit",
+      "snapshot_id": 5170689017209035660,
+      "committed_at": "2026-10-26T15:53:43.156000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_cube_standard",
+      "snapshot_id": 8698733158798754451,
+      "committed_at": "2026-10-26T15:30:47.186000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_cube_standard",
+      "snapshot_id": 9197557390622556818,
+      "committed_at": "2026-10-26T15:30:55.711000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_cube_standard",
+      "snapshot_id": 1741534254314839457,
+      "committed_at": "2026-10-26T15:40:10.338000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_cube_standard_source",
+      "snapshot_id": 6504186910053480391,
+      "committed_at": "2026-10-26T15:30:44.094000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_cube_standard_source",
+      "snapshot_id": 2411577713026036137,
+      "committed_at": "2026-10-26T15:30:52.462000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_cube_standard_source",
+      "snapshot_id": 8103154217731034710,
+      "committed_at": "2026-10-26T15:40:06.342000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_grid",
+      "snapshot_id": 5457987479455375076,
+      "committed_at": "2026-10-26T15:30:44.585000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_grid",
+      "snapshot_id": 1289738994983088866,
+      "committed_at": "2026-10-26T15:30:53.068000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_grid",
+      "snapshot_id": 3739020627665014705,
+      "committed_at": "2026-10-26T15:40:07.015000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_grid_point",
+      "snapshot_id": 1984509491692653013,
+      "committed_at": "2026-10-26T15:30:45.019000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_grid_point",
+      "snapshot_id": 5855159229258704412,
+      "committed_at": "2026-10-26T15:30:53.564000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.cams_grid_point",
+      "snapshot_id": 5402724372357560867,
+      "committed_at": "2026-10-26T15:40:07.785000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 6420487279276591979,
+      "committed_at": "2026-10-26T15:30:41.765000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 9154058031385424352,
+      "committed_at": "2026-10-26T15:40:00.335000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 5041335334607037983,
+      "committed_at": "2026-10-26T15:42:30.270000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 427087103703665293,
+      "committed_at": "2026-10-26T15:49:52.164000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 7873449595639163600,
+      "committed_at": "2026-10-26T15:52:31.994000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 3876985363905154567,
+      "committed_at": "2026-10-26T15:55:12.363000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 5824238219730235757,
+      "committed_at": "2026-10-26T15:57:05.695000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 9076542374933981049,
+      "committed_at": "2026-10-26T16:03:31.525000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 2297219784079638551,
+      "committed_at": "2026-10-26T16:03:43.470000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 5289639023203338317,
+      "committed_at": "2026-10-26T16:03:55.006000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 8692473565048842361,
+      "committed_at": "2026-10-26T16:04:06.592000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.dataset",
+      "snapshot_id": 898348258876339204,
+      "committed_at": "2026-10-26T16:04:18.347000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 6203246250997834573,
+      "committed_at": "2026-10-26T15:30:42.515000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 5786643513296145701,
+      "committed_at": "2026-10-26T15:30:47.813000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 6230685238231347605,
+      "committed_at": "2026-10-26T15:49:53.103000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 8582100226120947381,
+      "committed_at": "2026-10-26T15:50:00.192000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 165592707994739365,
+      "committed_at": "2026-10-26T15:52:33.048000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 7092559353049640151,
+      "committed_at": "2026-10-26T15:53:43.516000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 4711015884491723156,
+      "committed_at": "2026-10-26T15:55:13.446000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 3434599110762658673,
+      "committed_at": "2026-10-26T15:55:51.451000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 5856735903130052714,
+      "committed_at": "2026-10-26T15:57:06.841000",
+      "is_head": false,
+      "named_refs": [],
+      "reasons": [
+        "source_table_read_only"
+      ]
+    },
+    {
+      "table": "nessie.silver.ingestion_run",
+      "snapshot_id": 6559327147841412300,
+      "committed_at": "2026-10-26T15:57:20.701000",
+      "is_head": true,
+      "named_refs": [
+        "main"
+      ],
+      "reasons": [
+        "current_table_head",
+        "input:78c05d0b211f36f2390b86f5aad48552eaa7030f5171eef7487080686f3a7870",
+        "input:8dd731b7637cdca4c72ba4504fe30de6736b2c5b2cb963f6a14ab2ec5fa905b5",
+        "input:8f33307d4aa4099549c1b0011b544616edddab392215ed307d6214470e4ca4f0",
+        "input:b21d5904a2af949755b8faa9d23e0af90d74aabfe3f27a35cf1a45629deb6cc1",
+        "input:bfdb482411e4989329a2239b2e865900bdff9d371fa7705daa3273db7dd40aef",
+        "input:e3b6a045615da0bfb27f52e76b2b8397c781bacb0fb2164c31afa718ea06a973",
+        "input:f797bd4707ddad5b6f14fc43edfca6b661a9c58fbf9049de2c8b653f42f09e06",
+        "named_snapshot_reference",
+        "source_table_read_only"
+      ]
+    }
+  ],
+  "recent_unreferenced": [
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 4514394768455129068,
+      "committed_at": "2026-10-27T16:44:08.458000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 3118598860067415473,
+      "committed_at": "2026-10-27T16:44:08.711000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 8659205566579383517,
+      "committed_at": "2026-10-27T16:44:08.976000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 1952599619922508849,
+      "committed_at": "2026-10-27T16:44:09.222000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2737046690759943786,
+      "committed_at": "2026-10-27T16:44:09.458000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2709234556131366324,
+      "committed_at": "2026-10-27T16:44:09.732000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 4801564060906320389,
+      "committed_at": "2026-10-27T16:44:09.961000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 4141597926115222767,
+      "committed_at": "2026-10-27T16:44:10.184000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2594197756846753171,
+      "committed_at": "2026-10-27T16:44:10.410000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 4393707833655729715,
+      "committed_at": "2026-10-27T16:44:10.639000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 5450553523965341527,
+      "committed_at": "2026-10-27T16:44:10.869000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2555577189771654636,
+      "committed_at": "2026-10-27T16:44:11.094000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 4726770257236444768,
+      "committed_at": "2026-10-27T16:44:11.329000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 6343269816676174320,
+      "committed_at": "2026-10-27T16:44:11.556000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 9078586104477586707,
+      "committed_at": "2026-10-27T16:44:11.828000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 8239749463723684410,
+      "committed_at": "2026-10-27T16:44:12.070000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 1220360964933636532,
+      "committed_at": "2026-10-27T16:44:12.311000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 6159893398161407950,
+      "committed_at": "2026-10-27T16:44:12.534000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 6264396551029785426,
+      "committed_at": "2026-10-27T16:44:12.771000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 4042031316719111737,
+      "committed_at": "2026-10-27T16:44:13.009000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2200654039595488239,
+      "committed_at": "2026-10-27T16:44:13.234000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 1096195560112865179,
+      "committed_at": "2026-10-27T16:44:13.463000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2077412577648905756,
+      "committed_at": "2026-10-27T16:44:13.690000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 563124983734579427,
+      "committed_at": "2026-10-27T16:44:13.927000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 7543694659388339853,
+      "committed_at": "2026-10-27T16:44:14.161000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 3529573846395305870,
+      "committed_at": "2026-10-27T16:44:14.427000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 2620013782801532085,
+      "committed_at": "2026-10-27T16:44:14.641000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 1344929298766557150,
+      "committed_at": "2026-10-27T16:44:14.870000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 1925644725460523786,
+      "committed_at": "2026-10-27T16:44:15.102000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 3248690642067622797,
+      "committed_at": "2026-10-27T16:44:15.320000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 3269040051393673461,
+      "committed_at": "2026-10-27T16:44:15.538000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 3797946767661503224,
+      "committed_at": "2026-10-27T16:44:15.763000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_cams_region_weight",
+      "snapshot_id": 1540278660218438220,
+      "committed_at": "2026-10-27T16:44:15.987000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 8631680719441587946,
+      "committed_at": "2026-10-27T16:44:20.426000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 1677694524831433767,
+      "committed_at": "2026-10-27T17:10:37.772000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 1502189098831300955,
+      "committed_at": "2026-10-27T17:25:56.680000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 1414411745280319937,
+      "committed_at": "2026-10-27T17:35:26.346000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 1246714657978086462,
+      "committed_at": "2026-10-28T00:56:23.411000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 8955984232802938949,
+      "committed_at": "2026-10-28T01:12:12.577000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.bridge_source_variable_metric",
+      "snapshot_id": 9053875912310768877,
+      "committed_at": "2026-10-28T03:17:35.696000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 4643995325457779741,
+      "committed_at": "2026-10-27T16:44:05.447000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 7640779450181739384,
+      "committed_at": "2026-10-27T17:10:28.199000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 1887779550725572501,
+      "committed_at": "2026-10-27T17:25:47.110000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 7520348287689116977,
+      "committed_at": "2026-10-27T17:35:16.836000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 2127175755932728685,
+      "committed_at": "2026-10-28T00:56:14.089000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 1256913266719440127,
+      "committed_at": "2026-10-28T01:12:03.062000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_admin_unit",
+      "snapshot_id": 7294633672487922247,
+      "committed_at": "2026-10-28T03:17:25.766000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 5619418885062035670,
+      "committed_at": "2026-10-27T16:44:19.991000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 1880751831173314829,
+      "committed_at": "2026-10-27T17:10:37.317000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 2944924439183863245,
+      "committed_at": "2026-10-27T17:25:56.222000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 8902615182692499946,
+      "committed_at": "2026-10-27T17:35:25.869000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 2442178395115266614,
+      "committed_at": "2026-10-28T00:56:22.954000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 2537515099208558094,
+      "committed_at": "2026-10-28T01:12:12.120000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_air_quality_series",
+      "snapshot_id": 4204339838570680978,
+      "committed_at": "2026-10-28T03:17:35.240000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 2511114196546011701,
+      "committed_at": "2026-10-27T16:44:07.621000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 384235884668059782,
+      "committed_at": "2026-10-27T17:10:30.388000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 2294117841898047900,
+      "committed_at": "2026-10-27T17:25:49.355000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 7287342723109191957,
+      "committed_at": "2026-10-27T17:35:19.057000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 4612924817684613976,
+      "committed_at": "2026-10-28T00:56:16.259000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 7258387264453358533,
+      "committed_at": "2026-10-28T01:12:05.305000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_aqi_method",
+      "snapshot_id": 8228607021333146200,
+      "committed_at": "2026-10-28T03:17:28.056000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 7497863667462407626,
+      "committed_at": "2026-10-27T16:44:07.275000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 9078942773780448056,
+      "committed_at": "2026-10-27T17:10:30.036000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 3533485024667913249,
+      "committed_at": "2026-10-27T17:25:49.007000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 7821873833132486360,
+      "committed_at": "2026-10-27T17:35:18.689000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 2860910018774644851,
+      "committed_at": "2026-10-28T00:56:15.914000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 4253402984358672838,
+      "committed_at": "2026-10-28T01:12:04.961000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_date",
+      "snapshot_id": 6401984565162971825,
+      "committed_at": "2026-10-28T03:17:27.693000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 143268686614655569,
+      "committed_at": "2026-10-27T16:44:06.131000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 6218238168018145114,
+      "committed_at": "2026-10-27T17:10:28.885000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 1693643814908996086,
+      "committed_at": "2026-10-27T17:25:47.829000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 7421083152592566202,
+      "committed_at": "2026-10-27T17:35:17.549000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 1287606518049430375,
+      "committed_at": "2026-10-28T00:56:14.781000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 8762145989242586079,
+      "committed_at": "2026-10-28T01:12:03.802000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_geo_component",
+      "snapshot_id": 3147693545109475507,
+      "committed_at": "2026-10-28T03:17:26.495000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 5671943247041153459,
+      "committed_at": "2026-10-27T16:44:06.894000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 894552533778554378,
+      "committed_at": "2026-10-27T17:10:29.662000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 5960536593809048563,
+      "committed_at": "2026-10-27T17:25:48.616000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 2734119898637889131,
+      "committed_at": "2026-10-27T17:35:18.320000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 56819487021001948,
+      "committed_at": "2026-10-28T00:56:15.535000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 8658240666974705291,
+      "committed_at": "2026-10-28T01:12:04.607000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_hour",
+      "snapshot_id": 1489776097537180506,
+      "committed_at": "2026-10-28T03:17:27.301000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 4212746067666762118,
+      "committed_at": "2026-10-27T16:44:06.540000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 6381763585724683451,
+      "committed_at": "2026-10-27T17:10:29.277000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 3884982132292390456,
+      "committed_at": "2026-10-27T17:25:48.253000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 3587804097648836512,
+      "committed_at": "2026-10-27T17:35:17.956000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 7698172980174952102,
+      "committed_at": "2026-10-28T00:56:15.162000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 1731389313331470493,
+      "committed_at": "2026-10-28T01:12:04.206000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_location",
+      "snapshot_id": 7764674238266752748,
+      "committed_at": "2026-10-28T03:17:26.914000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 2141177012959344802,
+      "committed_at": "2026-10-27T16:44:19.640000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 5805778325508452933,
+      "committed_at": "2026-10-27T17:10:36.870000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 6212569059311594882,
+      "committed_at": "2026-10-27T17:25:55.789000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 5123275492129807967,
+      "committed_at": "2026-10-27T17:35:25.471000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 8801589101894886366,
+      "committed_at": "2026-10-28T00:56:22.521000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 2852670532954445891,
+      "committed_at": "2026-10-28T01:12:11.717000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.dim_metric",
+      "snapshot_id": 8714827548485767215,
+      "committed_at": "2026-10-28T03:17:34.824000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 5180893508292143291,
+      "committed_at": "2026-10-27T16:44:20.804000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 2975782928941748237,
+      "committed_at": "2026-10-27T17:10:38.168000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 788226097360536021,
+      "committed_at": "2026-10-27T17:25:57.048000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 6525607854190827145,
+      "committed_at": "2026-10-27T17:35:26.742000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 4715315936115078541,
+      "committed_at": "2026-10-28T00:56:23.801000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 6852993147152621189,
+      "committed_at": "2026-10-28T01:12:12.968000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_air_quality_hourly",
+      "snapshot_id": 5177984090177402048,
+      "committed_at": "2026-10-28T03:17:36.069000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 9001467867629680738,
+      "committed_at": "2026-10-27T16:44:24.167000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 5632010461728875063,
+      "committed_at": "2026-10-27T17:10:41.712000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 6952721756392489956,
+      "committed_at": "2026-10-27T17:26:00.620000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 169026077840764164,
+      "committed_at": "2026-10-27T17:35:30.306000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 6179959917852635204,
+      "committed_at": "2026-10-28T00:56:27.240000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 7150410263976931325,
+      "committed_at": "2026-10-28T01:12:16.336000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_daily",
+      "snapshot_id": 4953403560838623748,
+      "committed_at": "2026-10-28T03:17:39.385000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 458902424177918118,
+      "committed_at": "2026-10-27T16:44:23.257000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 7847990889475163146,
+      "committed_at": "2026-10-27T17:10:40.663000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 6977890051503454793,
+      "committed_at": "2026-10-27T17:25:59.509000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 2310803893968583747,
+      "committed_at": "2026-10-27T17:35:29.206000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 5681585064894464403,
+      "committed_at": "2026-10-28T00:56:26.162000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 5105480868461777928,
+      "committed_at": "2026-10-28T01:12:15.317000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_hourly",
+      "snapshot_id": 3346256185261859794,
+      "committed_at": "2026-10-28T03:17:38.278000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 3454415824054242452,
+      "committed_at": "2026-10-27T16:44:23.733000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 6880721273399075022,
+      "committed_at": "2026-10-27T17:10:41.170000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 3377606183616068386,
+      "committed_at": "2026-10-27T17:26:00.056000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 1890735706528823945,
+      "committed_at": "2026-10-27T17:35:29.794000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 8797152373880384332,
+      "committed_at": "2026-10-28T00:56:26.686000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 8355881083735296629,
+      "committed_at": "2026-10-28T01:12:15.814000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_daily",
+      "snapshot_id": 5112043744323499033,
+      "committed_at": "2026-10-28T03:17:38.802000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 486285730920204102,
+      "committed_at": "2026-10-27T16:44:22.670000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 5615380576213906399,
+      "committed_at": "2026-10-27T17:10:40.047000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 8785205696413702185,
+      "committed_at": "2026-10-27T17:25:58.875000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 4700754084908438082,
+      "committed_at": "2026-10-27T17:35:28.586000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 9181117621962795050,
+      "committed_at": "2026-10-28T00:56:25.524000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 3160731645556610744,
+      "committed_at": "2026-10-28T01:12:14.759000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.fact_aqi_pollutant_hourly",
+      "snapshot_id": 7813531461124392039,
+      "committed_at": "2026-10-28T03:17:37.703000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 4661199008201879608,
+      "committed_at": "2026-10-27T16:44:33.235000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 4931147485081631791,
+      "committed_at": "2026-10-27T17:10:53.145000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 3979205010052917597,
+      "committed_at": "2026-10-27T17:26:12.388000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 810899466775346467,
+      "committed_at": "2026-10-27T17:35:42.202000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 5685258917038062589,
+      "committed_at": "2026-10-28T00:56:40.419000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_current_release",
+      "snapshot_id": 3549025995128259825,
+      "committed_at": "2026-10-28T01:12:29.067000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 7973391988883009200,
+      "committed_at": "2026-10-27T16:44:32.913000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 3411150659606037050,
+      "committed_at": "2026-10-27T17:10:52.553000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 2839867293187572831,
+      "committed_at": "2026-10-27T17:26:11.750000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 2293704991328407589,
+      "committed_at": "2026-10-27T17:35:41.572000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 326273521025848857,
+      "committed_at": "2026-10-28T00:56:38.758000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_release",
+      "snapshot_id": 1133555869789902992,
+      "committed_at": "2026-10-28T01:12:27.370000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline",
+      "snapshot_id": 6392826570356098705,
+      "committed_at": "2026-10-27T18:15:56.084000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline",
+      "snapshot_id": 4167550630972805594,
+      "committed_at": "2026-10-28T00:56:39.359000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline",
+      "snapshot_id": 1126188376083579596,
+      "committed_at": "2026-10-28T01:12:27.952000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline_current",
+      "snapshot_id": 4034425747292465080,
+      "committed_at": "2026-10-27T18:15:56.662000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline_current",
+      "snapshot_id": 4534510911995930768,
+      "committed_at": "2026-10-28T00:56:39.956000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.gold_timeline_current",
+      "snapshot_id": 664018755653384447,
+      "committed_at": "2026-10-28T01:12:28.601000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 6899822769339445779,
+      "committed_at": "2026-10-27T16:44:25.577000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 6644701949530588934,
+      "committed_at": "2026-10-27T17:10:43.457000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 8011687020341620722,
+      "committed_at": "2026-10-27T17:26:02.360000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 2239354383184458082,
+      "committed_at": "2026-10-27T17:35:32.102000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 5390434932259034599,
+      "committed_at": "2026-10-28T00:56:29.051000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 7595876222517302471,
+      "committed_at": "2026-10-28T01:12:17.909000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_daily",
+      "snapshot_id": 494308945052490491,
+      "committed_at": "2026-10-28T03:17:40.996000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 2220386044053591010,
+      "committed_at": "2026-10-27T16:44:24.576000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 1582039173384406438,
+      "committed_at": "2026-10-27T17:10:42.286000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 7893093506076896765,
+      "committed_at": "2026-10-27T17:26:01.151000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 2457719510665957080,
+      "committed_at": "2026-10-27T17:35:30.932000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 1181943158094429866,
+      "committed_at": "2026-10-28T00:56:27.806000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 6741224060909682699,
+      "committed_at": "2026-10-28T01:12:16.857000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_hourly",
+      "snapshot_id": 1023728859356773070,
+      "committed_at": "2026-10-28T03:17:39.924000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 8283075244028784613,
+      "committed_at": "2026-10-27T16:44:26.421000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 2513119439611158180,
+      "committed_at": "2026-10-27T17:10:44.364000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 6439153161321935978,
+      "committed_at": "2026-10-27T17:26:03.276000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 1485270261264452707,
+      "committed_at": "2026-10-27T17:35:32.996000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 1164329550533634614,
+      "committed_at": "2026-10-28T00:56:29.930000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 687242275701178168,
+      "committed_at": "2026-10-28T01:12:18.862000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_air_quality_monthly",
+      "snapshot_id": 1922450017992672674,
+      "committed_at": "2026-10-28T03:17:41.820000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 2463244203640460728,
+      "committed_at": "2026-10-27T16:44:26.976000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 6537186097071929019,
+      "committed_at": "2026-10-27T17:10:44.921000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 2405930555907840239,
+      "committed_at": "2026-10-27T17:26:03.839000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 97110304420808418,
+      "committed_at": "2026-10-27T17:35:33.572000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 6637003156705183305,
+      "committed_at": "2026-10-28T00:56:30.521000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 4145542037811405190,
+      "committed_at": "2026-10-28T01:12:19.405000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.mart_source_quality_daily",
+      "snapshot_id": 6489992138830528683,
+      "committed_at": "2026-10-28T03:17:42.393000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 7547119145996395891,
+      "committed_at": "2026-10-27T16:44:07.947000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 6830902739462381884,
+      "committed_at": "2026-10-27T17:10:30.766000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 2981086571281316524,
+      "committed_at": "2026-10-27T17:25:49.712000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 6557163620048739611,
+      "committed_at": "2026-10-27T17:35:19.437000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 7133720050675530984,
+      "committed_at": "2026-10-28T00:56:16.613000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 1316716694015785256,
+      "committed_at": "2026-10-28T01:12:05.691000",
+      "is_head": false,
+      "named_refs": []
+    },
+    {
+      "table": "nessie.gold_pilot.ref_aqi_breakpoint",
+      "snapshot_id": 5004948997409174372,
+      "committed_at": "2026-10-28T03:17:28.441000",
+      "is_head": false,
+      "named_refs": []
+    }
+  ],
+  "unreferenced_snapshot_review_candidates": [],
+  "minimum_age_days": 90,
+  "note": "All released/rollback/input references protected. Review candidates may be intermediate or staged; no orphan-file or object deletion classification is made.",
+  "files": {
+    "nessie.gold_pilot.bridge_cams_region_weight": {
+      "files": 34,
+      "head_bytes": 184097,
+      "head_records": 265,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_pilot.bridge_source_variable_metric": {
+      "files": 7,
+      "head_bytes": 30314,
+      "head_records": 42,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_admin_unit": {
+      "files": 7,
+      "head_bytes": 46148,
+      "head_records": 252,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_air_quality_series": {
+      "files": 7,
+      "head_bytes": 50717,
+      "head_records": 238,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_aqi_method": {
+      "files": 7,
+      "head_bytes": 41759,
+      "head_records": 7,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_date": {
+      "files": 7,
+      "head_bytes": 15201,
+      "head_records": 14,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_geo_component": {
+      "files": 7,
+      "head_bytes": 7145457,
+      "head_records": 252,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_hour": {
+      "files": 7,
+      "head_bytes": 19485,
+      "head_records": 245,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_location": {
+      "files": 7,
+      "head_bytes": 44398,
+      "head_records": 238,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.dim_metric": {
+      "files": 7,
+      "head_bytes": 22983,
+      "head_records": 42,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.fact_air_quality_hourly": {
+      "files": 7,
+      "head_bytes": 108753,
+      "head_records": 4284,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.fact_aqi_daily": {
+      "files": 7,
+      "head_bytes": 59397,
+      "head_records": 238,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.fact_aqi_hourly": {
+      "files": 14,
+      "head_bytes": 124170,
+      "head_records": 5712,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.fact_aqi_pollutant_daily": {
+      "files": 7,
+      "head_bytes": 80579,
+      "head_records": 1666,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.fact_aqi_pollutant_hourly": {
+      "files": 14,
+      "head_bytes": 172890,
+      "head_records": 34272,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.gold_current_release": {
+      "files": 1,
+      "head_bytes": 6334,
+      "head_records": 1,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_pilot.gold_release": {
+      "files": 7,
+      "head_bytes": 93009,
+      "head_records": 7,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_pilot.gold_timeline": {
+      "files": 4,
+      "head_bytes": 21968,
+      "head_records": 4,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_pilot.gold_timeline_current": {
+      "files": 1,
+      "head_bytes": 4055,
+      "head_records": 1,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.gold_pilot.mart_air_quality_daily": {
+      "files": 7,
+      "head_bytes": 150334,
+      "head_records": 1428,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.mart_air_quality_hourly": {
+      "files": 14,
+      "head_bytes": 220438,
+      "head_records": 34272,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.mart_air_quality_monthly": {
+      "files": 7,
+      "head_bytes": 90748,
+      "head_records": 1428,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.mart_source_quality_daily": {
+      "files": 7,
+      "head_bytes": 53768,
+      "head_records": 1428,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.gold_pilot.ref_aqi_breakpoint": {
+      "files": 7,
+      "head_bytes": 22600,
+      "head_records": 714,
+      "scope": "head files only; not retained-snapshot union or object-store usage",
+      "unregistered_head_files": 0,
+      "unregistered_note": "Possible stages only; never label these orphan files or delete them automatically"
+    },
+    "nessie.silver.admin_boundary": {
+      "files": 2,
+      "head_bytes": 84126855,
+      "head_records": 3355,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.admin_unit": {
+      "files": 2,
+      "head_bytes": 461225,
+      "head_records": 6710,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.cams_cube_standard": {
+      "files": 1,
+      "head_bytes": 123778,
+      "head_records": 3,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.cams_cube_standard_source": {
+      "files": 1,
+      "head_bytes": 12742,
+      "head_records": 20,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.cams_grid": {
+      "files": 1,
+      "head_bytes": 5386,
+      "head_records": 1,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.cams_grid_point": {
+      "files": 1,
+      "head_bytes": 3811,
+      "head_records": 575,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.dataset": {
+      "files": 5,
+      "head_bytes": 20769,
+      "head_records": 5,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    },
+    "nessie.silver.ingestion_run": {
+      "files": 5,
+      "head_bytes": 40600,
+      "head_records": 5,
+      "scope": "head files only; not retained-snapshot union or object-store usage"
+    }
+  }
+}
