@@ -1,0 +1,13 @@
+{
+  "policy_version": "api-ninjas-ugm3-reviewed-2026-10-28",
+  "reference_url": "https://api-ninjas.com/api/airquality",
+  "checked_on": "2026-10-28",
+  "provider_concentration_unit": "ug/m3",
+  "pollutants": ["co", "no2", "o3", "so2", "pm25", "pm10"],
+  "observation_timestamp_provided": false,
+  "temporal_support": "provider_snapshot",
+  "spatial_representation": "city_proxy",
+  "production_enabled": false,
+  "migration": "Read-only review: compare pinned Silver variable standard_unit and successful-run metadata with the provider contract. Quarantine any mg/m3 label until source payload/conversion lineage proves whether it is only a label bug or an actual conversion. Never multiply already-ug/m3 values by 1000. Require verified proxy identity and retain snapshot/collection clocks separately. No Silver rewrite performed.",
+  "blocker": "Expected province_air_quality_* Silver inputs are absent in audited catalog; legacy Ninjas hourly table has zero rows. Current concentration fact requires observed_at_utc; unknown provider observation time additionally requires a reviewed nullable/provenance migration before activation."
+}

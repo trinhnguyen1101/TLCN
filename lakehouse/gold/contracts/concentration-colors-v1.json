@@ -1,0 +1,18 @@
+{
+  "version": "analytical-concentration-colors-v1",
+  "kind": "fixed_display_domains",
+  "unit": "ug/m3",
+  "effective_date": "2026-10-28",
+  "reference_dataset": null,
+  "reference_window": null,
+  "statistic_policies": ["hourly_native_samples", "daily_available_sample_mean", "monthly_sample_weighted_mean"],
+  "description": "Fixed project visualization domains for comparing the same pollutant, physical unit and statistic across dates. Chosen display cuts, not fitted quantiles, VN_AQI breakpoints, QCVN limits or official health categories. Native snapshots and means must remain separately labelled.",
+  "breakpoints": {
+    "pm25": [20, 60, 120],
+    "pm10": [40, 120, 240],
+    "co": [500, 1500, 5000],
+    "no2": [20, 60, 120],
+    "so2": [20, 80, 240],
+    "o3": [40, 100, 180]
+  }
+}

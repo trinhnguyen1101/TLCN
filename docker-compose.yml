@@ -167,6 +167,7 @@ services:
     volumes:
       - ./spark/jobs:/opt/spark/work-dir/jobs:ro
       - ./lakehouse/silver:/opt/spark/work-dir/lakehouse/silver:ro
+      - ./lakehouse/gold:/opt/spark/work-dir/lakehouse/gold:ro
       - ./data/landing:/opt/spark/work-dir/landing:ro
       - ./spark/config:/opt/spark/conf:ro
     healthcheck:
@@ -196,6 +197,7 @@ services:
     volumes:
       - ./spark/jobs:/opt/spark/work-dir/jobs:ro
       - ./lakehouse/silver:/opt/spark/work-dir/lakehouse/silver:ro
+      - ./lakehouse/gold:/opt/spark/work-dir/lakehouse/gold:ro
       - ./data/landing:/opt/spark/work-dir/landing:ro
       - ./spark/config:/opt/spark/conf:ro
     depends_on:

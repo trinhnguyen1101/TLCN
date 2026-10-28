@@ -1,0 +1,1 @@
+"""Versioned, materialized Gold processing."""

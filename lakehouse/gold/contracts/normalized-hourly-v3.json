@@ -1,0 +1,42 @@
+{
+  "contract_version": "normalized-hourly-interval-v3",
+  "silver_table": "hourly_concentration",
+  "source_system": "hourly_fixture",
+  "applicability_profile": "area_estimate",
+  "spatial_method": "silver_preaggregated_verified_v1",
+  "description": "ISOLATED hourly fixture contract with complete metric policies independent of input presence. Production remains disabled.",
+  "require_measurement_intervals": true,
+  "reviewed_for_production": false,
+  "metric_policies": {
+    "pm25": {
+      "measurement_kind": "concentration",
+      "unit": "ug/m3",
+      "vertical_support": "model_surface"
+    },
+    "pm10": {
+      "measurement_kind": "concentration",
+      "unit": "ug/m3",
+      "vertical_support": "model_surface"
+    },
+    "co": {
+      "measurement_kind": "concentration",
+      "unit": "ug/m3",
+      "vertical_support": "model_surface"
+    },
+    "no2": {
+      "measurement_kind": "concentration",
+      "unit": "ug/m3",
+      "vertical_support": "model_surface"
+    },
+    "so2": {
+      "measurement_kind": "concentration",
+      "unit": "ug/m3",
+      "vertical_support": "model_surface"
+    },
+    "o3": {
+      "measurement_kind": "concentration",
+      "unit": "ug/m3",
+      "vertical_support": "model_surface"
+    }
+  }
+}

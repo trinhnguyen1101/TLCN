@@ -1,0 +1,13 @@
+{
+  "contract_version": "cams-eac4-instant-v1",
+  "silver_table": "cams_cube_standard",
+  "source_resolution_minutes": 180,
+  "temporal_support": "instantaneous",
+  "timestamp_label": "instant",
+  "applicability_profile": "area_estimate",
+  "spatial_method": "spherical-cea-intersection-v1",
+  "minimum_spatial_coverage": 0.95,
+  "pollutants": {"pm2p5": "pm25", "pm10": "pm10", "co": "co", "no2": "no2", "so2": "so2", "o3": "o3"},
+  "unit": "ug/m3",
+  "vertical_support": {"pm25": "model_surface", "pm10": "model_surface", "co": "model_level_60", "no2": "model_level_60", "so2": "model_level_60", "o3": "model_level_60"}
+}

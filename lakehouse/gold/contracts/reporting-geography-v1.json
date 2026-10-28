@@ -1,0 +1,7 @@
+{
+  "policy_version": "reporting34-snapshot-v1",
+  "expected_root_count": 34,
+  "archipelago_parent_codes": {"20333": "48", "22736": "56"},
+  "boundary_policy": "Current Silver administrative snapshot; union parent with archipelago child geometry; components do not overlap",
+  "effective_date_policy": "Snapshot date is not a legal effective date"
+}

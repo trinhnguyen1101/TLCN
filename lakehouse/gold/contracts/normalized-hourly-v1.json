@@ -1,0 +1,8 @@
+{
+  "contract_version":"normalized-hourly-v1",
+  "silver_table":"hourly_concentration",
+  "source_system":"hourly_fixture",
+  "applicability_profile":"area_estimate",
+  "spatial_method":"silver_preaggregated_verified_v1",
+  "description":"Canonical future Silver concentration adapter. Fixture use only in gold_test* namespaces. Per-row temporal_support, resolution, unit, vertical support and QC are mandatory."
+}
