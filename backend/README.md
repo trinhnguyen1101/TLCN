@@ -7,7 +7,7 @@ pipeline. Native 3-hour observations for 2024–2025 and the monthly history for
 2003–2025 are included in the repository. Python 3.12
 is used for local verification.
 
-Quick setup in Vietnamese: [Thiết lập web dashboard](../docs/setup-web-dashboard.md).
+Quick setup in Vietnamese: [Thiết lập web dashboard](../docs/dashboard/setup-web-dashboard.md).
 
 ## Run
 

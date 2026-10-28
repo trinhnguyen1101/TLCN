@@ -1,5 +1,7 @@
 # Supabase Cloud Ingestion — tài liệu triển khai tổng hợp
 
+[Mục lục tài liệu](../README.md) / **Supabase**
+
 **Dự án:** TLCN — hệ thống dữ liệu chất lượng không khí Việt Nam  
 **Phiên bản tài liệu:** 2026-10-26  
 **Phạm vi:** Supabase Cloud operational / near-real-time ingestion, hai nguồn WAQI và API Ninjas; điểm kết nối với local Lakehouse.

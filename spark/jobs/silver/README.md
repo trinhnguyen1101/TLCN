@@ -160,7 +160,7 @@ rejects nonfinite quantities and inconsistent year/month periods, and
 allows absent optional `asset_type` metadata without fabricating a value.
 
 The complete five-dataset manual sequence, including both administrative
-sources and their shared tables, is in [docs/RUN.md](../../../docs/RUN.md).
+sources and their shared tables, is in [docs/operations/RUN.md](../../../docs/operations/RUN.md).
 
 ## Run from Bash
 

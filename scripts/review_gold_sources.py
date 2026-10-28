@@ -53,7 +53,7 @@ for path in (ROOT/'backend/data/samples').rglob('manifest.json'):
     report['dashboard_samples'].append({'file': path.relative_to(ROOT).as_posix(), **{
         k: manifest.get(k) for k in ['generation', 'province_count', 'boundary_policy', 'observation_start', 'observation_end', 'minimum_coverage']}})
 report['supabase'] = {'verification_limits': 'REST GET only; Cron schedules, deployed Edge Function code, RLS policies and raw object hashes not audited.'}
-target = ROOT / 'docs/gold-source-review.json'
+target = ROOT / 'docs/lakehouse/gold-source-review.json'
 if '--reuse-cloud' in sys.argv:
     previous = json.loads(target.read_text())
     report['supabase'] = previous['supabase']

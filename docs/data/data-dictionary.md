@@ -1,6 +1,8 @@
 # Từ điển dữ liệu trong thư mục `data/`
 
-Ngày kiểm tra: **2026-09-19**. Tài liệu mô tả các file đang có trên máy, các trường dữ liệu, ý nghĩa, đơn vị và những điểm cần chú ý khi đọc. Đây là cấu trúc dữ liệu nguồn, không phải schema cơ sở dữ liệu đích; thiết kế lưu trữ được trình bày riêng trong [database-schema.md](database-schema.md).
+[Mục lục tài liệu](../README.md) / **Dữ liệu nguồn**
+
+Ngày kiểm tra: **2026-09-19**. Tài liệu mô tả các file đang có trên máy, các trường dữ liệu, ý nghĩa, đơn vị và những điểm cần chú ý khi đọc. Đây là cấu trúc dữ liệu nguồn, không phải schema cơ sở dữ liệu đích; thiết kế lưu trữ hiện có được trình bày riêng trong [Silver contracts](../../lakehouse/silver/README.md) và [Gold schema](../../lakehouse/gold/SCHEMA.md).
 
 ## 1. Phạm vi và danh mục file
 
@@ -582,10 +584,10 @@ Phạm vi đã thực hiện:
 1. Liệt kê mọi file và thư mục rỗng trong `data/`; không sửa dữ liệu nguồn.
 2. Đọc toàn bộ 21 CSV bằng CSV parser, hỗ trợ UTF-8 BOM, trim khoảng trắng và bỏ dòng chú thích của CSV hành chính. Kiểm tra header, số dòng, ô trống, thời gian, giá trị số và các khóa nêu trong tài liệu.
 3. Parse 6 JSON và toàn bộ 34 dòng NDJSON; kiểm tra cấu trúc, danh mục, quan hệ cha–con và các biểu diễn trùng nhau. Đọc README, LICENSE và CFF đi kèm.
-4. Dùng [script kiểm kê sẵn có](../../scripts/profile_landing.py) quét header mọi message của 336 GRIB, giải mã metadata đầu/cuối mỗi file bằng ecCodes, kiểm tra trùng và SHA-256 của merged so với phép nối yearly.
+4. Dùng script `scripts/profile_landing.py` tại thời điểm kiểm tra để quét header mọi message của 336 GRIB, giải mã metadata đầu/cuối mỗi file bằng ecCodes, kiểm tra trùng và SHA-256 của merged so với phép nối yearly. Script này không có trong checkout hiện tại.
 5. Bổ sung kiểm tra tập timestamp của 14 merged trên lịch 3 giờ, giải mã 242 giá trị của message đầu mỗi merged để đọc mẫu và metadata đóng gói. **Không thực hiện kiểm định khoa học hoặc quét toàn bộ giá trị số GRIB.**
 
-Có thể chạy lại phần kiểm kê chính sau khi môi trường Python có ecCodes:
+Lệnh lịch sử dưới đây chỉ chạy được khi khôi phục đúng script kiểm kê và có môi trường Python/ecCodes tương ứng; không phải command có sẵn trong checkout hiện tại:
 
 ```powershell
 python scripts/profile_landing.py --output "$env:TEMP\tlcn-landing-profile.json"

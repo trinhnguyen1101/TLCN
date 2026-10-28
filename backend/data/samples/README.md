@@ -16,4 +16,4 @@ giữ trong `weights/` của generation hiện tại.
 
 API mặc định đọc mốc 3 giờ trong 7 ngày cuối, có bộ lọc thời gian và độ phân giải `3h`, `daily`, `monthly`. Trung bình ngày được tính từ quan sát 3 giờ; bảng tháng phục vụ lịch sử dài hạn. API nhận diện phạm vi quan sát đang có trên đĩa. Công cụ `app.etl.eac4` chuyển đổi toàn bộ GRIB sang Parquet; `python -m app.etl.sample --years 2` xuất phiên bản gọn giữ nguyên quan sát gốc của hai năm cuối và lịch sử tháng; `--years 0` giữ toàn bộ lịch sử quan sát. Có thể chọn phiên bản nguồn bằng `--source-generation <mã>`. Khi thay mẫu trong Git, cập nhật ngoại lệ của phiên bản tương ứng trong `.gitignore`. Các công cụ mặc định ghi vào đây, không chạy trong request. Dữ liệu GRIB gốc vẫn ở `data/landing/CAMS/EAC4/`.
 
-Thiết lập và chạy: [docs/setup-web-dashboard.md](../../../docs/setup-web-dashboard.md).
+Thiết lập và chạy: [docs/dashboard/setup-web-dashboard.md](../../../docs/dashboard/setup-web-dashboard.md).

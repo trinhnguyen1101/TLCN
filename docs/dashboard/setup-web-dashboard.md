@@ -1,5 +1,10 @@
 # Thiết lập web dashboard
 
+[Mục lục tài liệu](../README.md) / **Dashboard**
+
+Hướng dẫn này dùng backend legacy Parquet mặc định. Để chạy User/Admin dashboard
+trên Gold/Trino, xem [phần Silver → Gold trong RUN.md](../operations/RUN.md#silver--gold).
+
 ## 1. Yêu cầu
 
 - Python **3.12**, Node.js **24** kèm npm.
@@ -53,4 +58,4 @@ Xem bản build bằng `npm --prefix frontend run preview` khi API vẫn chạy.
 - **AQI/phát thải trống:** bộ CAMS hiện tại không có phát thải theo ngành và chưa tính AQI. Bản đồ dùng mốc 3 giờ hợp lệ cuối trong khoảng đang chọn; tỉnh không đủ độ phủ sẽ để trống.
 - **Khoảng thời gian:** mặc định xem 7 ngày cuối của nguồn, theo UTC. Chế độ 3 giờ hỗ trợ tối đa 31 ngày mỗi lần, chế độ ngày tối đa 366 ngày. Bộ mẫu kèm repo có quan sát 3 giờ năm 2024–2025; chọn trung bình tháng để xem lịch sử 2003–2025. API hỗ trợ `resolution`, `start`, `end` trên cả `/api/dashboard` và `/api/admin/dashboard`.
 
-Chỉ khi cần tạo lại mẫu từ GRIB mới cài `backend/requirements-etl.txt` và chạy công cụ chuyển đổi theo [backend/README.md](../backend/README.md). Công cụ mặc định cũng ghi vào `backend/data/samples/`.
+Chỉ khi cần tạo lại mẫu từ GRIB mới cài `backend/requirements-etl.txt` và chạy công cụ chuyển đổi theo [backend/README.md](../../backend/README.md). Công cụ mặc định cũng ghi vào `backend/data/samples/`.

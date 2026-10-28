@@ -2,7 +2,7 @@
 
 React, TypeScript, Vite, Tailwind CSS 4, and React Leaflet.
 
-Quick setup in Vietnamese: [Thiết lập web dashboard](../docs/setup-web-dashboard.md).
+Quick setup in Vietnamese: [Thiết lập web dashboard](../docs/dashboard/setup-web-dashboard.md).
 
 ## Development
 

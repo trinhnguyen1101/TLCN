@@ -1,5 +1,7 @@
 # Landing → Bronze trên MinIO
 
+[Mục lục tài liệu](../README.md) / **Lakehouse**
+
 Cập nhật 2026-10-03. Job chạy độc lập, chưa đưa vào Airflow và chưa tạo bảng Silver/Gold. Cả năm dataset Landing hiện có đã được nạp lên MinIO và đối chiếu SHA-256 thành công, gồm cả 20 file GRIB CAMS và 3.355 file GeoJSON.
 
 ## Landing và cấu hình hiện có

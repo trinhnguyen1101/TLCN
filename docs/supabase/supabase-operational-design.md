@@ -1,5 +1,7 @@
 # Thiết kế Supabase cho dữ liệu chất lượng không khí
 
+[Mục lục tài liệu](../README.md) / **Supabase**
+
 ## 1. Phạm vi và vai trò
 
 Supabase và local lakehouse đảm nhiệm hai vai trò khác nhau:

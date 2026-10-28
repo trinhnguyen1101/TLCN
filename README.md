@@ -9,16 +9,22 @@ The dashboard now reads native 3-hour UTC observations by default, with daily
 and monthly views for longer periods. The portable sample includes native
 2024–2025 rows; the local dataset retains full 2003–2025 native history.
 
+## Documentation
+
+Start with the [documentation index](docs/README.md), organized into operations,
+Lakehouse layers, Supabase, dashboard setup, and source data references.
+Manual pipeline commands are in [RUN.md](docs/operations/RUN.md).
+
 ## Run the dashboard
 
-See [Hướng dẫn thiết lập web dashboard](docs/setup-web-dashboard.md) for prerequisites,
+See [Hướng dẫn thiết lập web dashboard](docs/dashboard/setup-web-dashboard.md) for prerequisites,
 ETL, backend/frontend startup, time filters, checks, and deployment.
 The dashboard does not require the Docker Compose lakehouse services below.
 
 ## Architecture
 
 For the independent Landing → Bronze Spark ingestion and MinIO verification,
-see [docs/landing-to-bronze.md](docs/landing-to-bronze.md).
+see [docs/lakehouse/landing-to-bronze.md](docs/lakehouse/landing-to-bronze.md).
 
 The reviewed Silver Iceberg schema, logical keys, lineage requirements and
 source-specific normalization rules are documented in

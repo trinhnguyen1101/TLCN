@@ -1,5 +1,7 @@
 # Kế hoạch đồng bộ Supabase vào Bronze và Silver
 
+[Mục lục tài liệu](../README.md) / **Supabase**
+
 ## 1. Mục tiêu và phạm vi
 
 Tài liệu này mô tả kế hoạch triển khai hai job:
