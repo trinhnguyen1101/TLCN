@@ -8,6 +8,7 @@ dẫn vận hành vẫn chạy từ **thư mục gốc repository**, nơi có `d
 | Bạn muốn… | Đọc tài liệu |
 | --- | --- |
 | Chạy Landing → Bronze → Silver → Gold thủ công | [Hướng dẫn chạy pipeline](operations/RUN.md) |
+| Hiểu hai luồng Landing batch và Supabase daily | [Airflow orchestration cho Lakehouse](airflow/daily-supabase-pipeline.md) |
 | Hiểu dữ liệu được chuẩn hóa ở Silver | [Mô tả lớp Silver](lakehouse/SILVER.md) |
 | Hiểu hourly facts, AQI, marts và historical serving | [Mô tả lớp Gold](lakehouse/GOLD.md) |
 | Chạy FastAPI và User/Admin dashboard | [Thiết lập web dashboard](dashboard/setup-web-dashboard.md) |
@@ -19,6 +20,8 @@ dẫn vận hành vẫn chạy từ **thư mục gốc repository**, nơi có `d
 ```text
 docs/
 ├── README.md                         # Mục lục tài liệu
+├── airflow/                          # Orchestration và lịch pipeline
+│   └── daily-supabase-pipeline.md
 ├── operations/                       # Chạy và kiểm tra pipeline
 │   └── RUN.md
 ├── lakehouse/                        # Các lớp dữ liệu và thiết kế Lakehouse
@@ -37,6 +40,8 @@ docs/
 
 ## Lakehouse và pipeline
 
+- [Airflow orchestration cho Lakehouse](airflow/daily-supabase-pipeline.md): hai
+  DAG Landing batch/Supabase daily, task graph, retry, quality gate và Spark submission.
 - [Landing → Bronze](lakehouse/landing-to-bronze.md): raw files, manifest,
   checksum và cách kiểm tra dữ liệu trên MinIO.
 - [Silver](lakehouse/SILVER.md): chuẩn hóa theo từng nguồn, grain, units, clocks,
