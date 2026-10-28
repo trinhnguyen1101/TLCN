@@ -186,6 +186,14 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.fact_aqi_pollutant_hourly (
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
+    provider_sub_index DOUBLE,
+    observed_at_utc TIMESTAMP,
+    scheduled_at_utc TIMESTAMP,
+    collected_at_utc TIMESTAMP,
+    observation_time_kind STRING,
     hour_start_utc TIMESTAMP NOT NULL
 ) USING iceberg
 PARTITIONED BY (release_id, months(hour_start_utc))
@@ -205,6 +213,13 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.fact_aqi_hourly (
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
+    observed_at_utc TIMESTAMP,
+    scheduled_at_utc TIMESTAMP,
+    collected_at_utc TIMESTAMP,
+    observation_time_kind STRING,
     hour_start_utc TIMESTAMP NOT NULL
 ) USING iceberg
 PARTITIONED BY (release_id, months(hour_start_utc))
@@ -234,6 +249,9 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.fact_aqi_pollutant_daily (
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     aqi_date_local DATE NOT NULL
 ) USING iceberg
 PARTITIONED BY (release_id, months(aqi_date_local))
@@ -253,6 +271,9 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.fact_aqi_daily (
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     aqi_date_local DATE NOT NULL
 ) USING iceberg
 PARTITIONED BY (release_id, months(aqi_date_local))
@@ -283,6 +304,8 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.mart_air_quality_hourly (
     aqi_status STRING NOT NULL,
     aqi_missing_reason STRING,
     aqi_origin STRING NOT NULL,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     sub_index INT,
     provider_aqi INT,
     hour_start_utc TIMESTAMP NOT NULL,
@@ -318,6 +341,8 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.mart_air_quality_daily (
     aqi_status STRING NOT NULL,
     aqi_missing_reason STRING,
     aqi_origin STRING NOT NULL,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     sub_index INT,
     provider_aqi INT,
     aqi_date_local DATE NOT NULL,

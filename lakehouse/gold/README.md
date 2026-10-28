@@ -32,8 +32,11 @@ Snapshot inventory là dry-run fail-closed; chưa cho phép cleanup tự động
 | `gold_test_hourly` | Fixture 48 giờ + 11 giờ halo: 48 AQI giờ, 2 AQI ngày hợp lệ | Dữ liệu kiểm thử, tuyệt đối không production |
 | `gold_test_partition` | Fixture qua Jan/Feb và local midnight | Kiểm thử biên partition, không production |
 | `gold`, channel `native_sources` | WAQI daily provider AQI và Climate TRACE native facts/mart | Unit phát thải chưa xác minh; GADM chưa phân bổ. Channel air_quality production chưa publish |
+| `gold`, channel `provider_air_quality` | WAQI live27series và API Ninjas34city-proxy series đã publish từ succeeded Silver input | Một snapshot hour/source; hourly provider history, chưa suy daily/monthly AQI |
+| `gold_test_supabase`, channel `provider_air_quality` | WAQI live và API Ninjas provider AQI từ succeeded Silver input thật | Integration namespace; WAQI station mapping còn unresolved, Ninjas concentration chưa onboard |
 
-Không coi số snapshot Supabase là số quan trắc hợp lệ hoặc coi tồn tại DDL là Silver hoàn chỉnh.
+Supabase provider AQI adapter đã chạy integration; vẫn không coi số snapshot là
+concentration/AQI computed hoặc coi tồn tại DDL là production acceptance.
 Không thay đổi Bronze/Silver/Supabase để tạo pilot này. Compose chỉ thêm mount DDL/contracts Gold read-only.
 
 ## Kiến trúc
@@ -60,6 +63,19 @@ Trino 476 dùng `iceberg.<namespace>`. Parquet/Zstd, fact/mart hourly partition
 `release_id, months(hour_start_utc)`; dims nhỏ partition theo release.
 Release partition phục vụ isolation/cleanup; small files vẫn phải đo trước khi mở rộng.
 
+## Supabase Silver → Gold
+
+Job `spark/jobs/gold/supabase_live.py` materialize provider-reported AQI vào
+`fact_aqi_hourly`, `fact_aqi_pollutant_hourly`, `mart_air_quality_hourly` và
+`mart_source_quality_daily`. Schema extension là additive; bootstrap thêm các
+cột provider/origin/clock còn thiếu trên catalog cũ trước khi ghi release mới.
+
+WAQI station và API Ninjas city-proxy dùng chung physical AQI facts nhờ
+`series_id`, nhưng không dùng chung semantic identity. `dim_location.location_kind`,
+`spatial_representation`, series profile và provider scheme bắt buộc phân biệt
+chúng. Channel `provider_air_quality` có timeline riêng, không thay pointer
+`air_quality` của CAMS/computed VN_AQI.
+
 ## Bảng MVP và grain
 
 Mọi grain có thêm `release_id`, trừ bridge cache bất biến.
@@ -68,9 +84,9 @@ Mọi grain có thêm `release_id`, trừ bridge cache bất biến.
 | --- | --- |
 | `dim_admin_unit` | Admin version; 34 roots + 2 archipelago children trong reporting snapshot |
 | `dim_geo_component` | Mainland hoặc archipelago geometry thuộc province |
-| `dim_location` | Province geometry version; chỉ 34 location cấp tỉnh |
+| `dim_location` | Province geometry, WAQI station hoặc API Ninjas city-proxy; phân biệt bằng location kind/representation |
 | `dim_air_quality_series` | Dataset × location × semantic contract/cadence/representation |
-| `dim_metric` | Pollutant × concentration/unit/vertical support |
+| `dim_metric` | Pollutant × measurement kind × unit/vertical support, gồm concentration và provider AQI |
 | `bridge_source_variable_metric` | Dataset/source variable → metric |
 | `dim_date`, `dim_hour` | Ngày; slot UTC `[h,h+1h)` liên tục, kể cả halo |
 | `dim_aqi_method`, `ref_aqi_breakpoint` | Method version; pollutant/basis/breakpoint |

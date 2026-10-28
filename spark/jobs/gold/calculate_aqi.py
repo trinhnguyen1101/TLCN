@@ -20,9 +20,15 @@ def series_results(item,start,end,release_id,lineage):
         cs,overall=hourly(h,readings,profile)
         for c in cs:
             c.update(release_id=release_id,series_id=series_id,hour_start_utc=h,
-                     method_version=METHOD_VERSION,applicability_profile=profile,input_lineage_json=lineage)
+                     method_version=METHOD_VERSION,applicability_profile=profile,input_lineage_json=lineage,
+                     aqi_origin="computed",aqi_provider=None,provider_aqi_scheme=None,
+                     provider_sub_index=None,observed_at_utc=None,scheduled_at_utc=None,
+                     collected_at_utc=None,observation_time_kind=None)
             yield ("fact_aqi_pollutant_hourly",json.dumps(c,default=str))
-        overall.update(release_id=release_id,series_id=series_id,hour_start_utc=h,input_lineage_json=lineage)
+        overall.update(release_id=release_id,series_id=series_id,hour_start_utc=h,input_lineage_json=lineage,
+                       aqi_origin="computed",aqi_provider=None,provider_aqi_scheme=None,
+                       observed_at_utc=None,scheduled_at_utc=None,collected_at_utc=None,
+                       observation_time_kind=None)
         yield ("fact_aqi_hourly",json.dumps(overall,default=str))
         h+=HOUR
     day=start.astimezone(VN).date()
@@ -31,9 +37,11 @@ def series_results(item,start,end,release_id,lineage):
         cs,overall=daily(day,readings,profile)
         for c in cs:
             c.update(release_id=release_id,series_id=series_id,aqi_date_local=day,
-                     method_version=METHOD_VERSION,applicability_profile=profile,input_lineage_json=lineage)
+                     method_version=METHOD_VERSION,applicability_profile=profile,input_lineage_json=lineage,
+                     aqi_origin="computed",aqi_provider=None,provider_aqi_scheme=None)
             yield ("fact_aqi_pollutant_daily",json.dumps(c,default=str))
-        overall.update(release_id=release_id,series_id=series_id,aqi_date_local=day,input_lineage_json=lineage)
+        overall.update(release_id=release_id,series_id=series_id,aqi_date_local=day,input_lineage_json=lineage,
+                       aqi_origin="computed",aqi_provider=None,provider_aqi_scheme=None)
         yield ("fact_aqi_daily",json.dumps(overall,default=str))
         day+=HOUR*24
 

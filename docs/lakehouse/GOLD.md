@@ -45,6 +45,7 @@ unit, observed time, QC, coverage và input lineage.
 | CAMS instantaneous3h hiện tại | Chỉ materialize timestamps thật; missing giờ khác xuất hiện trong serving spine |
 | Verified hourly mean1h tương lai | Cùng schema hourly, adapter nhận intervals/source contract và có thể tính AQI nếu đủ gates |
 | Instantaneous1h/provider snapshot | Giữ đúng semantics; cadence60phút không đủ điều kiện AQI tham chiếu |
+| WAQI/API Ninjas provider AQI | Lưu trong AQI facts với `aqi_origin=provider`; station và city-proxy là các series/location kind riêng, không chạy lại VN_AQI |
 | WAQI daily historical | Native daily provider AQI, không chuyển thành hourly concentration |
 | Climate TRACE annual/monthly | Native emissions branch, không chuyển thành concentration hoặc AQI |
 
@@ -72,8 +73,8 @@ ngoại trừ immutable spatial cache và registry/timeline metadata theo keys r
 | Bridges | `bridge_source_variable_metric`, `bridge_cams_region_weight` | Source variable mapping; grid cell×region×grid/boundary/method version |
 | Concentration | `fact_air_quality_hourly` | Series×hour×metric, chỉ actual source records |
 | Provenance | `fact_measurement_provenance` | Cùng concentration key, independent clocks/interval/source version |
-| AQI components | `fact_aqi_pollutant_hourly`, `fact_aqi_pollutant_daily` | Series×hour/date×pollutant×basis×method/profile |
-| Overall AQI | `fact_aqi_hourly`, `fact_aqi_daily` | Series×hour/date×method/profile |
+| AQI components | `fact_aqi_pollutant_hourly`, `fact_aqi_pollutant_daily` | Series×hour/date×pollutant×basis×method/profile; hourly hỗ trợ `computed` và `provider` origin |
+| Overall AQI | `fact_aqi_hourly`, `fact_aqi_daily` | Series×hour/date×method/profile; hourly giữ provider/scheme và source clocks riêng |
 | Air-quality marts | `mart_air_quality_hourly`, `mart_air_quality_daily`, `mart_air_quality_monthly` | Long grain: series×time×pollutant |
 | Source quality | `mart_source_quality_daily` | Series×VN date×pollutant |
 | Publication | `gold_release`, `gold_current_release`, `gold_timeline`, `gold_timeline_current` | Chunk registry; legacy current pointer; immutable timeline; current timeline/channel |
@@ -167,6 +168,23 @@ AQI origin/method/profile, QC, coverage và published release/timeline identity.
 Unknown collection attempts/failed ingestions giữ NULL; cadence3h không tự bị
 gọi ingestion failure vì thiếu các hourly slots của lịch phân tích.
 
+### Supabase provider AQI
+
+`spark/jobs/gold/supabase_live.py` đọc succeeded Silver rows của WAQI live hoặc
+API Ninjas trong một scope ngày Việt Nam và publish channel
+`provider_air_quality`. Adapter dùng chung `fact_aqi_hourly` và
+`fact_aqi_pollutant_hourly`, nhưng bắt buộc giữ origin, provider, scheme,
+actual/scheduled/collection clocks và location semantics.
+
+- WAQI dùng `location_kind=station`, `spatial_representation=station_point` và
+  actual observation clock; IAQI không phải concentration.
+- API Ninjas dùng `location_kind=city_proxy`; actual observation clock là NULL,
+  scheduled hour chỉ là snapshot slot, không phải giá trị trung bình tỉnh.
+- Hai source là hai compatibility lane. Không tổng hợp hoặc lấy trung bình
+  provider AQI giữa station, city-proxy và province area series.
+- Hourly mart lưu pollutant provider index với unit `AQI`. Daily/monthly provider
+  AQI chưa được suy diễn; quality mart chỉ thống kê coverage slot.
+
 Concentration maps có versioned analytical color scales theo pollutant/unit/basis,
 tách sáu VN_AQI category colors. No-data neutral; unsupported Gold metrics như
 PM1/AOD/weather/column không hiện như đã có dữ liệu. National concentration KPI
@@ -196,7 +214,9 @@ Evidence của đợt nghiệm thu/hardening28/10/2026:
 
 | Nhóm | Kết quả và phạm vi |
 | --- | --- |
-| Gold/backend/frontend tests |29/29/35pass; TypeScript/Vite Gold build pass |
+| Gold unit tests |32pass, gồm provider origin/clock/fractional sub-index |
+| Supabase provider integration | WAQI:27series/27overall/162pollutant; API Ninjas:34series/34overall/204pollutant; replay pass trong `gold_test_supabase`, hai source đã publish channel `gold.provider_air_quality` |
+| Computed regression sau migration | Fixture1ngày:24hourly/1daily VN_AQI valid, publish pass trong `gold_test_regression` |
 | CAMS thực |612sparse facts,34series; AQI giờ/ngày NULL đúng instantaneous3h eligibility; chỉ validation input |
 | Hourly mean fixture |48hourly/2daily AQI hợp lệ; fixture riêng `gold_test*` |
 | Benchmark34tỉnh×6chất×31ngày |2chunks16+15ngày;25.296hourly rows/pollutant,1.054daily,34monthly qua API |
@@ -205,10 +225,11 @@ Evidence của đợt nghiệm thu/hardening28/10/2026:
 | Real integration |Spark correction/deletion/publish recovery/rollback và FastAPI/Trino month serving pass |
 | Rerun còn bị chặn |Full historical/metric-withdrawal launch bị Docker permission chặn; Chrome E2E bị sandbox socket chặn; prior pass evidence giữ riêng |
 
-**Chưa production ready:** chưa có Silver production hourly mean/EAC4 archive đủ
-reviewed semantics, station/proxy succeeded inputs, certified emission units/mapping,
-Airflow transport hoặc full-archive/concurrent-load benchmark. Không coi fixtures
-hay source validation pilot là production AQI.
+**Chưa production ready toàn hệ thống:** provider AQI path đã chạy với succeeded
+Silver input thật trong namespace kiểm thử, nhưng WAQI station-admin mapping còn
+unresolved và API Ninjas concentration/actual observation clock chưa đủ contract
+để tính VN_AQI. Airflow transport và full-archive/concurrent-load benchmark vẫn
+chưa hoàn tất. Không coi provider AQI là computed VN_AQI.
 
 ## 9. Đọc tiếp
 

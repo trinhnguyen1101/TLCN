@@ -226,7 +226,40 @@ WAQI daily giữ provider AQI. Climate TRACE giữ native values và unit status
 unit chưa xác minh vẫn NULL/unverified. Không đổi sang tonnes theo suy đoán,
 không phân bổ GADM bằng centroid hoặc cộng chồng totals/sectors/subsectors.
 
-### 6. Kiểm tra publish và đọc qua API
+### 6. Supabase Silver → Gold provider AQI
+
+Chạy riêng từng source trên cùng scope ngày Việt Nam. Job chỉ đọc Silver rows có
+`ingestion_run.status='succeeded'` và publish channel `provider_air_quality`;
+không thay channel `air_quality` của computed VN_AQI.
+
+```bash
+docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+  --master 'local[1]' --driver-memory 2g \
+  /opt/spark/work-dir/jobs/gold/supabase_live.py \
+  --source waqi --schema gold --silver-schema silver \
+  --start-date 2026-10-26 --end-date 2026-10-27
+
+docker compose exec -T spark-master /opt/spark/bin/spark-submit \
+  --master 'local[1]' --driver-memory 2g \
+  /opt/spark/work-dir/jobs/gold/supabase_live.py \
+  --source api_ninjas --schema gold --silver-schema silver \
+  --start-date 2026-10-26 --end-date 2026-10-27
+```
+
+`--end-date` exclusive. Rerun cùng Silver snapshots, scope, contract và code trả
+`GOLD_PROVIDER_REPLAY`. Kiểm tra origin, clocks và location semantics:
+
+```bash
+docker compose exec -T trino trino --execute "SELECT aqi_provider,aqi_origin,provider_aqi_scheme,count(*) rows,count_if(observed_at_utc IS NULL) observed_null,count_if(scheduled_at_utc IS NOT NULL) scheduled_present FROM iceberg.gold.fact_aqi_hourly GROUP BY 1,2,3"
+
+docker compose exec -T trino trino --execute "SELECT location_kind,spatial_representation,mapping_status,count(*) n FROM iceberg.gold.dim_location GROUP BY 1,2,3"
+```
+
+WAQI `observed_at_utc` phải có giá trị. API Ninjas phải giữ
+`observed_at_utc=NULL`, `scheduled_at_utc` có giá trị. Hourly provider mart có
+unit `AQI`; chưa tạo daily/monthly provider AQI và không tính trung bình AQI.
+
+### 7. Kiểm tra publish và đọc qua API
 
 Host runner lưu log tại `reports/gold/<start-date>-<schema>.log` và in exit code
 của từng chunk. Đọc các marker `GOLD_BEGIN`, `GOLD_TIMINGS`, `GOLD_PUBLISHED`
@@ -281,7 +314,7 @@ như trên: default backend hiện vẫn là legacy Parquet, frontend mode khôn
 repository backend. Khi Gold lỗi, API không tự fallback sample. Nếu port đã có
 server, dùng server tương ứng hoặc chọn port/proxy phù hợp, không chạy chồng.
 
-### 7. Kiểm thử và giới hạn vận hành
+### 8. Kiểm thử và giới hạn vận hành
 
 ```bash
 backend/.venv/bin/python -m unittest discover -s spark/jobs/gold/tests -v

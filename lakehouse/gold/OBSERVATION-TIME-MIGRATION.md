@@ -1,9 +1,12 @@
 # Unknown observation clocks — proposed additive onboarding migration
 
-Status: **Deferred with technical justification**. No production migration applied.
+Status: **Deferred for concentration facts**. No production concentration-clock migration applied.
 The current `fact_air_quality_hourly.observed_at_utc` is NOT NULL; the provenance
 sidecar deliberately permits NULL. API Ninjas pure adapter preserves an unknown
-actual observation time. It cannot yet be written through the province adapter.
+actual observation time. It cannot yet be written through the concentration
+province adapter. Provider-reported AQI is now published separately through the
+AQI facts with nullable source clocks and `aqi_origin=provider`; that path does
+not claim a concentration observation interval or enable computed VN_AQI.
 `verify_storage_clock` rejects that case before writes; collection or scheduled
 time never supplies a fabricated observation clock. Hourly means with a verified
 interval-end observation clock are supported and preserve that clock separately

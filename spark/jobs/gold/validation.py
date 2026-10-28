@@ -59,6 +59,9 @@ def validate(build):
                         (F.col('aqi').isNotNull() & ((F.col('status')!='valid') | F.col('missing_reason').isNotNull())) |
                         (F.col('aqi')<0) | (F.col('aqi')>500)).count():
             raise ValueError('Invalid AQI status/range')
+        if table.filter((F.col('aqi_origin')!='computed') | F.col('aqi_provider').isNotNull()
+                        | F.col('provider_aqi_scheme').isNotNull()).limit(1).count():
+            raise ValueError('Computed AQI fact has provider origin metadata')
     series_count=counts['dim_air_quality_series']
     expected_hours=int((build.end-build.start).total_seconds()/3600)
     declared_metrics=build.contract.get('metric_policies') or build.contract.get('pollutants')

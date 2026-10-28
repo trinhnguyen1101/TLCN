@@ -1,0 +1,14 @@
+{
+  "contract_version": "api-ninjas-provider-v1",
+  "source_system": "api_ninjas",
+  "dataset_name": "province_air_quality",
+  "aqi_origin": "provider",
+  "provider_aqi_scheme": "api-ninjas-provider-reported-v1",
+  "reference_url": "https://api-ninjas.com/api/airquality",
+  "temporal_support": "provider_snapshot",
+  "location_kind": "city_proxy",
+  "spatial_representation": "city_proxy",
+  "applicability_profile": "proxy_estimate",
+  "pollutants": ["pm25", "pm10", "co", "no2", "so2", "o3"],
+  "policy": "Preserve provider overall and pollutant AQI. The scheduled hour is an analytical snapshot label, not a fabricated source observation timestamp or province-wide mean."
+}

@@ -15,7 +15,7 @@ import time
 import zipfile
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from runtime import Build,bootstrap,spark_session,stable_id,identifier
+from runtime import Build,bootstrap,migrate_provider_aqi_columns,spark_session,stable_id,identifier
 from aqi.engine import local_day_bounds
 from dimensions import build_geography,build_time_method,build_spatial
 from adapters import cams,normalized_hourly
@@ -73,6 +73,7 @@ def execute(args):
         if args.adapter=='normalized_hourly' and not args.fixture and not contract.get('reviewed_for_production',False):
             raise ValueError('Normalized production contract requires explicit source/temporal review')
         bootstrap(spark,schema,args.schema_sql)
+        migrate_provider_aqi_columns(spark,schema)
         from aqi.reference import REFERENCE_SHA256
         reference=Path(args.schema_sql).parent/'references'/'1459-2019.pdf'
         if hashlib.sha256(reference.read_bytes()).hexdigest()!=REFERENCE_SHA256:

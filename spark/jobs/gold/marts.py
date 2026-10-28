@@ -21,7 +21,8 @@ def materialize(build):
            CASE WHEN f.hour_start_utc IS NULL THEN 'no_source_observation' ELSE f.missing_reason END missing_reason,
            f.spatial_coverage_ratio coverage,a.aqi,a.category aqi_category,a.color aqi_color,
            a.dominant_pollutants,a.method_version aqi_method_version,a.status aqi_status,
-           a.missing_reason aqi_missing_reason,'computed' aqi_origin,p.sub_index,cast(NULL AS INT) provider_aqi,
+           a.missing_reason aqi_missing_reason,a.aqi_origin,a.aqi_provider,a.provider_aqi_scheme,
+           p.sub_index,cast(NULL AS INT) provider_aqi,
            h.hour_start_utc,f.observed_at_utc observation_time,f.grid_cells,f.effective_cells
     FROM g_dim_air_quality_series s JOIN g_dim_location l ON l.location_id=s.location_id
     CROSS JOIN g_dim_hour h
@@ -53,7 +54,8 @@ def materialize(build):
            s.value,CASE WHEN s.valid_hours=24 THEN 'complete' WHEN s.valid_hours>0 THEN 'partial' ELSE 'missing' END quality_status,
            CASE WHEN s.valid_hours<24 THEN 'incomplete_hour_slots' END missing_reason,s.coverage,
            a.aqi,a.category aqi_category,a.color aqi_color,a.dominant_pollutants,a.method_version aqi_method_version,
-           a.status aqi_status,a.missing_reason aqi_missing_reason,'computed' aqi_origin,p.sub_index,cast(NULL AS INT) provider_aqi,
+           a.status aqi_status,a.missing_reason aqi_missing_reason,a.aqi_origin,a.aqi_provider,a.provider_aqi_scheme,
+           p.sub_index,cast(NULL AS INT) provider_aqi,
            s.aqi_date_local,s.concentration_sum,cast(s.valid_hours AS INT) valid_hours,24 expected_hours,
            cast(24-s.valid_hours AS INT) missing_hours,s.valid_hours/24.0 completeness_ratio,
            s.minimum,s.maximum,'available_native_samples_v1_calendar_vn' aggregation_policy

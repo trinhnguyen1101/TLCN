@@ -1,0 +1,14 @@
+{
+  "contract_version": "waqi-live-provider-v1",
+  "source_system": "waqi",
+  "dataset_name": "live",
+  "aqi_origin": "provider",
+  "provider_aqi_scheme": "waqi-provider-reported-v1",
+  "reference_url": "https://aqicn.org/api/",
+  "temporal_support": "provider_snapshot",
+  "location_kind": "station",
+  "spatial_representation": "station_point",
+  "applicability_profile": "station_reference",
+  "pollutants": ["pm25", "pm10", "co", "no2", "so2", "o3"],
+  "policy": "Preserve provider overall AQI and pollutant IAQI; never relabel either as concentration or computed VN_AQI."
+}

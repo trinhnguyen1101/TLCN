@@ -1,19 +1,21 @@
-# Kế hoạch đồng bộ Supabase vào Bronze và Silver
+# Đồng bộ Supabase qua Bronze, Silver và Gold
 
 [Mục lục tài liệu](../README.md) / **Supabase**
 
 ## 1. Mục tiêu và phạm vi
 
-Tài liệu này mô tả kế hoạch triển khai hai job:
+Tài liệu này mô tả ba bước ETL:
 
 1. Đồng bộ raw data của WAQI và API Ninjas từ Supabase Storage vào MinIO Bronze.
 2. Chuẩn hóa các Bronze batch đó vào Apache Iceberg Silver.
+3. Publish provider AQI từ Silver vào Gold historical facts/marts.
 
 Trạng thái triển khai: hai job và ba bảng `province_air_quality_*` đã được
 viết. Unit test và kiểm tra contract với một run Supabase của mỗi nguồn đã
 chạy. Cửa sổ API Ninjas 2026-10-26 04:00–05:00 UTC đã qua Bronze → Silver:
 34 location, 34 observation, 408 measurement; chạy lại cùng batch không tạo
-thêm run/observation. Chưa tạo DAG Airflow.
+thêm run/observation. Gold provider adapter đã chạy integration trên succeeded
+Silver input thật của cả hai source; chưa tạo DAG Airflow.
 
 Luồng mục tiêu:
 
@@ -27,6 +29,8 @@ Supabase Cron + Edge Functions
 MinIO Bronze
         ↓ Spark ETL
 Iceberg Silver
+        ↓ provider AQI adapter
+Iceberg Gold channel provider_air_quality
 ```
 
 Supabase PostgreSQL là operational layer phục vụ collector và dashboard gần
@@ -411,15 +415,15 @@ attempt thất bại có thể đã commit một số chunk trước khi dừng.
 
 ## 6. Orchestration
 
-Hiện tại `airflow/dags` chưa có DAG triển khai. Sau khi hai job được kiểm thử,
+Hiện tại `airflow/dags` chưa có DAG triển khai. Chuỗi task hằng ngày dự kiến:
 DAG hằng ngày dự kiến:
 
 ```text
 sync Supabase WAQI → Bronze
-                  └→ WAQI Bronze → Silver
+                  └→ WAQI Bronze → Silver → WAQI provider Gold
 
 sync Supabase API Ninjas → Bronze
-                         └→ Province air quality Bronze → Silver
+                         └→ Province air quality Bronze → Silver → Ninjas provider Gold
 ```
 
 Hai source có thể sync song song. Các task cùng ghi một bảng Silver không được
@@ -454,7 +458,18 @@ dụng checkpoint để tải bù raw objects đã tồn tại trên Supabase St
 - Thêm data-quality rules, deterministic IDs và MERGE idempotent.
 - Kiểm thử duplicate, conflicting retry, partial run và invalid payload.
 
-### Giai đoạn 4: end-to-end và Airflow
+### Giai đoạn 4: Silver → Gold provider AQI
+
+- Dùng chung `fact_aqi_hourly` và `fact_aqi_pollutant_hourly`, phân biệt bằng
+  series, location kind, origin, provider và scheme.
+- WAQI station giữ actual observation clock; API Ninjas city-proxy giữ actual
+  clock NULL và scheduled snapshot clock riêng.
+- Publish hourly mart và source-quality daily mart vào timeline channel
+  `provider_air_quality`; không chạy lại VN_AQI và không suy daily/monthly AQI.
+- Integration đã pass: WAQI27series/27overall/162pollutant; API Ninjas
+  34series/34overall/204pollutant; rerun API Ninjas trả replay.
+
+### Giai đoạn 5: end-to-end và Airflow
 
 - Chạy một cửa sổ nhỏ của cả hai source.
 - Đối chiếu object count, checksum, run count và output row count.
@@ -462,8 +477,10 @@ dụng checkpoint để tải bù raw objects đã tồn tại trên Supabase St
 - Kiểm tra query qua Trino và lineage ngược về raw object.
 - Sau khi ổn định mới tạo DAG và lịch daily sync.
 
-Đã xác minh một cửa sổ API Ninjas theo yêu cầu chạy thử; backfill nhiều giờ,
-kiểm thử toàn bộ lịch sử, DAG và lịch Airflow chưa triển khai.
+Đã xác minh cửa sổ Supabase qua Bronze/Silver và Gold provider trong namespace
+`gold_test_supabase`, sau đó publish hai source vào channel
+`gold.provider_air_quality`. Backfill nhiều ngày, full-history scale, DAG và lịch
+Airflow chưa triển khai.
 
 ## 8. Tiêu chí hoàn thành
 

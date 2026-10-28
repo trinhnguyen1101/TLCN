@@ -43,6 +43,53 @@ def bootstrap(spark, schema, path):
             spark.sql(statement)
 
 
+PROVIDER_AQI_COLUMNS = {
+    "fact_aqi_pollutant_hourly": [
+        ("aqi_origin", "STRING"), ("aqi_provider", "STRING"),
+        ("provider_aqi_scheme", "STRING"), ("provider_sub_index", "DOUBLE"),
+        ("observed_at_utc", "TIMESTAMP"), ("scheduled_at_utc", "TIMESTAMP"),
+        ("collected_at_utc", "TIMESTAMP"), ("observation_time_kind", "STRING"),
+    ],
+    "fact_aqi_hourly": [
+        ("aqi_origin", "STRING"), ("aqi_provider", "STRING"),
+        ("provider_aqi_scheme", "STRING"), ("observed_at_utc", "TIMESTAMP"),
+        ("scheduled_at_utc", "TIMESTAMP"), ("collected_at_utc", "TIMESTAMP"),
+        ("observation_time_kind", "STRING"),
+    ],
+    "fact_aqi_pollutant_daily": [
+        ("aqi_origin", "STRING"), ("aqi_provider", "STRING"),
+        ("provider_aqi_scheme", "STRING"),
+    ],
+    "fact_aqi_daily": [
+        ("aqi_origin", "STRING"), ("aqi_provider", "STRING"),
+        ("provider_aqi_scheme", "STRING"),
+    ],
+    "mart_air_quality_hourly": [
+        ("aqi_provider", "STRING"), ("provider_aqi_scheme", "STRING"),
+    ],
+    "mart_air_quality_daily": [
+        ("aqi_provider", "STRING"), ("provider_aqi_scheme", "STRING"),
+    ],
+}
+
+
+def migrate_provider_aqi_columns(spark, schema):
+    """Apply the additive provider-AQI schema extension to an existing catalog.
+
+    CREATE TABLE IF NOT EXISTS does not evolve Iceberg tables. Keeping this
+    migration beside bootstrap makes old local catalogs and clean installs use
+    the same physical schema without rewriting any published snapshot.
+    """
+    prefix = "nessie." + identifier(schema) + "."
+    for name, additions in PROVIDER_AQI_COLUMNS.items():
+        table = prefix + name
+        existing = set(spark.table(table).columns)
+        for column, data_type in additions:
+            if column not in existing:
+                spark.sql(f"ALTER TABLE {table} ADD COLUMN {column} {data_type}")
+                existing.add(column)
+
+
 def snapshot(spark,table):
     spark.catalog.refreshTable(table)
     # Iceberg currentSnapshot is the catalog head, including after a table
@@ -132,7 +179,7 @@ class Build:
         return release
 
     def activate(self,release):
-        if release['channel']=='air_quality':
+        if release['channel'] in ('air_quality','provider_air_quality'):
             from publication import publish,current
             if current(self.spark,self.prefix,release['channel']) is None:
                 legacy=self.spark.table(self.prefix+'gold_current_release').where("channel='air_quality'").collect()

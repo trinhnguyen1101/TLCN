@@ -30,10 +30,11 @@ No physical DDL migration accompanies this wire/query optimization.
 
 Quality now distinguishes `absent_slots` (expected minus observed records),
 `missing_value_slots` (observed minus valid minus invalid), and invalid values.
-For admitted sources every present record has an actual observation timestamp;
-do not relax that assumption without the coordinated
-[unknown-clock migration](OBSERVATION-TIME-MIGRATION.md). The current fact keeps
-`observed_at_utc NOT NULL`; sidecar nullable clocks do not waive that constraint.
+Concentration facts continue to require an actual observation timestamp. Provider
+AQI facts use additive nullable clocks: WAQI supplies actual observation time;
+API Ninjas deliberately leaves it NULL and keeps scheduled/collection clocks
+separate. This does not activate unknown-clock concentration onboarding in
+[unknown-clock migration](OBSERVATION-TIME-MIGRATION.md).
 
 For declared sources, serving spine uses contract metric scope even when every observation of a pollutant is withdrawn; concentration facts remain sparse. Per-pollutant QC/observation clocks survive the dashboard wide projection in `metricQuality`. Wide QC summary is partial when a declared pollutant is unavailable; shared spatial coverage is NULL when no single complete per-metric value applies. YoY uses matched province/calendar slots with valid values in both periods; a non-leap-year Feb28 is not reused for Feb29. Long marts repeat overall AQI across pollutant rows. Distribution reads exactly one canonical PM2.5 row per series/day/method (present even for missing PM2.5); it does not count six copies. `/history/aqi-distribution` and `/history/quality` expose pinned timeline identity and missing publication scopes. Quality expected counts describe published series-days, not ingestion attempts or national spatial representativeness. Collection counters remain NULL when unavailable.
 
@@ -245,6 +246,14 @@ release_id STRING NOT NULL,
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
+    provider_sub_index DOUBLE,
+    observed_at_utc TIMESTAMP,
+    scheduled_at_utc TIMESTAMP,
+    collected_at_utc TIMESTAMP,
+    observation_time_kind STRING,
     hour_start_utc TIMESTAMP NOT NULL
 ```
 
@@ -265,6 +274,13 @@ release_id STRING NOT NULL,
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
+    observed_at_utc TIMESTAMP,
+    scheduled_at_utc TIMESTAMP,
+    collected_at_utc TIMESTAMP,
+    observation_time_kind STRING,
     hour_start_utc TIMESTAMP NOT NULL
 ```
 
@@ -295,6 +311,9 @@ release_id STRING NOT NULL,
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     aqi_date_local DATE NOT NULL
 ```
 
@@ -315,6 +334,9 @@ release_id STRING NOT NULL,
     method_version STRING NOT NULL,
     applicability_profile STRING NOT NULL,
     input_lineage_json STRING NOT NULL,
+    aqi_origin STRING,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     aqi_date_local DATE NOT NULL
 ```
 
@@ -346,6 +368,8 @@ release_id STRING NOT NULL,
     aqi_status STRING NOT NULL,
     aqi_missing_reason STRING,
     aqi_origin STRING NOT NULL,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     sub_index INT,
     provider_aqi INT,
     hour_start_utc TIMESTAMP NOT NULL,
@@ -382,6 +406,8 @@ release_id STRING NOT NULL,
     aqi_status STRING NOT NULL,
     aqi_missing_reason STRING,
     aqi_origin STRING NOT NULL,
+    aqi_provider STRING,
+    provider_aqi_scheme STRING,
     sub_index INT,
     provider_aqi INT,
     aqi_date_local DATE NOT NULL,
