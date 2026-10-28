@@ -9,17 +9,23 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import os
 import re
 import tempfile
+import time
 from datetime import datetime, timezone
 from pathlib import PurePosixPath
 from urllib.parse import parse_qs, quote, urlsplit
+from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
 
 SAFE = re.compile(r"^[A-Za-z0-9_-]+$")
 SHA = re.compile(r"^[0-9a-f]{64}$")
 DATASETS = {"waqi": "live", "api_ninjas": "province_air_quality"}
+LOG = logging.getLogger("supabase_to_bronze")
+STORAGE_ATTEMPTS = 5
+RETRYABLE_HTTP_STATUS = {408, 429, 500, 502, 503, 504}
 
 
 def utc(value):
@@ -50,8 +56,29 @@ def storage_get(base_url, key, path):
         base_url + "/storage/v1/object/authenticated/raw-api/" + quote(path, safe="/"),
         headers={"apikey": key, "Authorization": "Bearer " + key},
     )
-    with urlopen(request, timeout=30) as response:
-        return response.read()
+    for attempt in range(1, STORAGE_ATTEMPTS + 1):
+        try:
+            with urlopen(request, timeout=30) as response:
+                return response.read()
+        except HTTPError as exc:
+            if exc.code not in RETRYABLE_HTTP_STATUS or attempt == STORAGE_ATTEMPTS:
+                raise
+            error = f"HTTP {exc.code}"
+        except (URLError, TimeoutError, ConnectionError) as exc:
+            if attempt == STORAGE_ATTEMPTS:
+                raise
+            error = f"{type(exc).__name__}: {exc}"
+        delay = min(2 ** (attempt - 1), 8)
+        LOG.warning(
+            "Supabase Storage retry path=%s attempt=%d/%d delay=%ds error=%s",
+            path,
+            attempt,
+            STORAGE_ATTEMPTS,
+            delay,
+            error,
+        )
+        time.sleep(delay)
+    raise AssertionError("unreachable")
 
 
 def source_path(path, source, run_id, hour):
@@ -116,12 +143,22 @@ def verified_manifest(run, source, base_url, key):
 
 def inventory(runs, source, base_url, key):
     objects = {}
-    for run in runs:
-        for path, payload, digest in verified_manifest(run, source, base_url, key):
+    for index, run in enumerate(runs, start=1):
+        run_objects = verified_manifest(run, source, base_url, key)
+        for path, payload, digest in run_objects:
             relative = source_path(path, source, str(run["run_id"]), utc(run["scheduled_hour_utc"]))
             if relative in objects:
                 raise ValueError("Duplicate Bronze relative path")
             objects[relative] = (path, payload, digest)
+        LOG.info(
+            "Verified Supabase Storage run source=%s hour=%s run=%d/%d objects=%d total_objects=%d",
+            source,
+            utc(run["scheduled_hour_utc"]).isoformat(),
+            index,
+            len(runs),
+            len(run_objects),
+            len(objects),
+        )
     if not objects:
         raise ValueError("No completed collection runs in requested window")
     fingerprint = hashlib.sha256()
@@ -242,6 +279,7 @@ def parse_args():
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s %(message)s")
     args = parse_args()
     if not args.window_start:
         raise ValueError("--window-start is empty; set window_start in this terminal before running Bronze")

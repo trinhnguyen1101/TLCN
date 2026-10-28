@@ -7,19 +7,37 @@ x-airflow-common: &airflow-common
   environment:
     AIRFLOW__CORE__EXECUTOR: LocalExecutor
     AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+    AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+    AIRFLOW__CORE__DEFAULT_TIMEZONE: Asia/Ho_Chi_Minh
     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
     AIRFLOW__WEBSERVER__EXPOSE_CONFIG: "true"
+    AIRFLOW__CORE__HIDE_SENSITIVE_VAR_CONN_FIELDS: "true"
     AWS_CONNECTION_STRING: ${AWS_CONNECTION_STRING}
     AWS_SECRET_KEY: ${AWS_SECRET_KEY}
+    MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+    MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    DOCKER_HOST: tcp://docker-proxy:2375
+    AIRFLOW_SUPABASE_START_DATE: ${AIRFLOW_SUPABASE_START_DATE:-2026-10-27}
+    AIRFLOW_SUPABASE_MAX_MISSING_HOURS: ${AIRFLOW_SUPABASE_MAX_MISSING_HOURS:-1}
+    LAKEHOUSE_SPARK_IMAGE: air-quality-spark:3.5.4-iceberg-1.7.1
+    LAKEHOUSE_DOCKER_API_VERSION: "1.45"
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/logs:/opt/airflow/logs
     - ./airflow/plugins:/opt/airflow/plugins
+    # These named bind volumes are also mounted by DockerOperator Spark tasks.
+    # Referencing them here guarantees Compose creates them before a DAG runs.
+    - airflow-spark-jobs:/opt/airflow/lakehouse-mounts/jobs:ro
+    - airflow-spark-config:/opt/airflow/lakehouse-mounts/spark-config:ro
+    - airflow-silver-definition:/opt/airflow/lakehouse-mounts/silver:ro
+    - airflow-gold-definition:/opt/airflow/lakehouse-mounts/gold:ro
+    - airflow-landing-data:/opt/airflow/lakehouse-mounts/landing:ro
   depends_on:
     postgres:
       condition: service_healthy
   networks:
     - lakehouse-net
+    - docker-api-net
   restart: unless-stopped
 
 services:
@@ -50,6 +68,8 @@ services:
       - -ec
       - |
         airflow db migrate
+        airflow pools set bronze_sync 2 "Parallel immutable Bronze ingestion"
+        airflow pools set iceberg_writer 1 "Single Iceberg writer across Lakehouse DAGs"
         airflow users create --username "$${AIRFLOW_ADMIN_USER}" --password "$${AIRFLOW_ADMIN_PASSWORD}" --firstname Local --lastname Admin --role Admin --email "$${AIRFLOW_ADMIN_EMAIL}" || true
     environment:
       AIRFLOW__CORE__EXECUTOR: LocalExecutor
@@ -84,6 +104,26 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+
+  # Airflow's DockerOperator launches the already verified Spark image for each
+  # task. Keep the Docker API off the main application network. POST access is
+  # still privileged and is appropriate only for this trusted local stack.
+  docker-proxy:
+    build:
+      context: ./docker/docker-proxy
+    image: air-quality-docker-socket-proxy:0.5.0-long-wait
+    environment:
+      CONTAINERS: 1
+      IMAGES: 1
+      NETWORKS: 1
+      INFO: 1
+      VERSION: 1
+      POST: 1
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - docker-api-net
+    restart: unless-stopped
 
   minio:
     image: cgr.dev/chainguard/minio:latest
@@ -240,8 +280,47 @@ networks:
   lakehouse-net:
     name: lakehouse-net
     driver: bridge
+  docker-api-net:
+    name: lakehouse-docker-api-net
+    driver: bridge
+    internal: true
 
 volumes:
   postgres-data:
   minio-data:
   nessie-data:
+  airflow-spark-jobs:
+    name: air-quality-airflow-spark-jobs
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/spark/jobs
+  airflow-spark-config:
+    name: air-quality-airflow-spark-config
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/spark/config
+  airflow-silver-definition:
+    name: air-quality-airflow-silver-definition
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/lakehouse/silver
+  airflow-gold-definition:
+    name: air-quality-airflow-gold-definition
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/lakehouse/gold
+  airflow-landing-data:
+    name: air-quality-airflow-landing-data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/data/landing

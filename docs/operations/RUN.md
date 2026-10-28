@@ -327,9 +327,9 @@ Các lệnh trên kiểm tra logic/contracts/build, không tự thay thế Spark
 Integration runners có thể ghi/correct/delete **test fixtures**, chỉ chạy tuần tự
 theo [Gold runbook](../../lakehouse/gold/RUNBOOK.md). Không chạy full archive trước
 pilot; không expire snapshots/remove orphan files hoặc xóa published references.
-Airflow chưa có verified Spark submit transport; host runner là đường vận hành
-hiện có. Rollback, withdrawal và retention dry-run xem runbook, không sửa pointer
-bằng SQL thủ công.
+Airflow DAG/transport DockerOperator đã có nhưng chưa được trigger nghiệm thu trong
+môi trường của người vận hành; host runner vẫn là đường fallback hiện có. Rollback,
+withdrawal và retention dry-run xem runbook, không sửa pointer bằng SQL thủ công.
 
 Kết quả đã chạy và các blocker được giữ ở
 [VALIDATION](../../reports/gold/VALIDATION.md) và

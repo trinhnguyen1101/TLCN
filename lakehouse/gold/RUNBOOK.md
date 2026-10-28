@@ -110,11 +110,11 @@ không phải national population-weighted exposure hoặc AQI toàn quốc.
 
 ## Airflow và monitoring
 
-Airflow 2.10.5 đã chạy nhưng image chỉ có metadata DB dependency, không có Spark client,
-job/DDL mounts hoặc remote submit transport. Không gắn Docker socket vào scheduler và không
-đưa một DAG không chạy được vào production. Hiện dùng host runner đã kiểm thử. Để chuyển
-sang Airflow cần provision/kiểm thử transport, pin Python runtime, pool một writer và nối
-Bronze/Silver success → Gold build → validation → publish; lịch chạy còn chưa bật.
+Airflow 2.10.5 có hai DAG dùng DockerOperator để chạy image Spark đã pin. Scheduler
+truy cập Docker qua proxy nội bộ, không mount socket trực tiếp; job/DDL/Landing được
+mount read-only và mọi Silver/Gold task dùng pool một writer. Lịch daily mặc định
+paused cho đến khi hoàn tất build, import check và một manual smoke run. Host runner
+đã kiểm thử vẫn là đường fallback trong giai đoạn nghiệm thu.
 
 Theo dõi quality mart và registry scope/published_at, số sample, coverage, NULL AQI reasons,
 Spark elapsed/RSS, Iceberg file count/bytes, Trino latency. Telemetry collection attempts và failed

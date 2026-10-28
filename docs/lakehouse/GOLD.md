@@ -202,8 +202,9 @@ Host runner `scripts/run_gold.py` hỗ trợ manual/incremental/backfill theo ch
 default7ngày, CLI ceiling31ngày. Adapter collect guard100.000rows gồm11hhalo;
 đây là bounded driver processing, chưa phải distributed normalization toàn archive.
 Spark/host runners có advisory locks cho một Compose writer; không phải distributed
-lock multi-host. Airflow chưa có verified Spark submit transport nên chưa bật DAG
-production mới; giữ host runner là đường chạy hiện có.
+lock multi-host. Hai Airflow DAG đã được thêm với DockerOperator và pool một
+Iceberg writer, nhưng chưa được người vận hành build/trigger nghiệm thu nên lịch
+production vẫn paused; giữ host runner là đường chạy fallback hiện có.
 
 Retention chỉ dry-run: bảo vệ registered releases, rollback timelines, current
 heads, named refs và referenced source snapshots. Không chạy automatic expiry,
@@ -228,8 +229,8 @@ Evidence của đợt nghiệm thu/hardening28/10/2026:
 **Chưa production ready toàn hệ thống:** provider AQI path đã chạy với succeeded
 Silver input thật trong namespace kiểm thử, nhưng WAQI station-admin mapping còn
 unresolved và API Ninjas concentration/actual observation clock chưa đủ contract
-để tính VN_AQI. Airflow transport và full-archive/concurrent-load benchmark vẫn
-chưa hoàn tất. Không coi provider AQI là computed VN_AQI.
+để tính VN_AQI. Airflow runtime smoke test và full-archive/concurrent-load
+benchmark vẫn chưa hoàn tất. Không coi provider AQI là computed VN_AQI.
 
 ## 9. Đọc tiếp
 

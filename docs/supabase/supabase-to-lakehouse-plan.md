@@ -15,7 +15,9 @@ viết. Unit test và kiểm tra contract với một run Supabase của mỗi n
 chạy. Cửa sổ API Ninjas 2026-10-26 04:00–05:00 UTC đã qua Bronze → Silver:
 34 location, 34 observation, 408 measurement; chạy lại cùng batch không tạo
 thêm run/observation. Gold provider adapter đã chạy integration trên succeeded
-Silver input thật của cả hai source; chưa tạo DAG Airflow.
+Silver input thật của cả hai source. DAG `supabase_daily_to_gold` và transport
+DockerOperator đã được thêm; runtime smoke test và unpause lịch vẫn dành cho
+người vận hành.
 
 Luồng mục tiêu:
 
@@ -475,12 +477,14 @@ dụng checkpoint để tải bù raw objects đã tồn tại trên Supabase St
 - Đối chiếu object count, checksum, run count và output row count.
 - Chạy lại cùng batch để chứng minh idempotency.
 - Kiểm tra query qua Trino và lineage ngược về raw object.
-- Sau khi ổn định mới tạo DAG và lịch daily sync.
+- DAG `supabase_daily_to_gold` đã được tạo; build/trigger smoke test trước khi
+  unpause lịch daily sync.
 
 Đã xác minh cửa sổ Supabase qua Bronze/Silver và Gold provider trong namespace
 `gold_test_supabase`, sau đó publish hai source vào channel
-`gold.provider_air_quality`. Backfill nhiều ngày, full-history scale, DAG và lịch
-Airflow chưa triển khai.
+`gold.provider_air_quality`. Code DAG và transport DockerOperator đã có; backfill
+nhiều ngày, full-history scale và runtime Airflow vẫn cần người vận hành nghiệm
+thu trước khi unpause.
 
 ## 8. Tiêu chí hoàn thành
 

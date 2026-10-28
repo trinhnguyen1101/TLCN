@@ -30,7 +30,8 @@ The reviewed Silver Iceberg schema, logical keys, lineage requirements and
 source-specific normalization rules are documented in
 [lakehouse/silver/README.md](lakehouse/silver/README.md).
 
-`Airflow` orchestrates future jobs. `Spark` will read/write Iceberg tables.
+`Airflow` orchestrates the manual Landing batch and daily Supabase DAGs. Spark
+jobs launched from those DAGs read/write Iceberg tables.
 Iceberg metadata is catalogued by `Nessie`, while the physical data lives in
 the `lakehouse` bucket in `MinIO` (`bronze/`, `silver/`, and `gold/` prefixes).
 `Trino` queries the same Nessie catalog and MinIO warehouse as Spark.

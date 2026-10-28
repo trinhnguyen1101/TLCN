@@ -5,6 +5,7 @@ import json
 import sys
 import unittest
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -61,6 +62,32 @@ class SupabaseBronzeContract(unittest.TestCase):
         with patch.object(bronze, "storage_get", side_effect=lambda _, __, path: blobs[path]):
             with self.assertRaisesRegex(ValueError, "outside"):
                 bronze.inventory([run], "waqi", "unused", "unused")
+
+    def test_storage_get_retries_transient_transport_error(self):
+        class Response:
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_):
+                return False
+
+            def read(self):
+                return b"payload"
+
+        with patch.object(bronze, "urlopen", side_effect=[URLError("temporary TLS"), Response()]) as request:
+            with patch.object(bronze.time, "sleep") as sleep:
+                self.assertEqual(bronze.storage_get("https://example.test", "key", "path"), b"payload")
+        self.assertEqual(request.call_count, 2)
+        sleep.assert_called_once_with(1)
+
+    def test_storage_get_does_not_retry_permanent_http_error(self):
+        error = HTTPError("https://example.test", 403, "forbidden", {}, None)
+        with patch.object(bronze, "urlopen", side_effect=error) as request:
+            with patch.object(bronze.time, "sleep") as sleep:
+                with self.assertRaises(HTTPError):
+                    bronze.storage_get("https://example.test", "key", "path")
+        request.assert_called_once()
+        sleep.assert_not_called()
 
 
 if __name__ == "__main__":

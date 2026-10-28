@@ -2,6 +2,11 @@
 
 [Mục lục tài liệu](../README.md) / **Airflow**
 
+Trạng thái triển khai: hai DAG nằm trong `airflow/dags/`, dùng
+`DockerOperator` để chạy đúng image Spark đã được kiểm chứng. DAG mới được tạo
+ở trạng thái paused theo mặc định của Airflow; người vận hành kiểm tra import và
+trigger thử trước khi unpause lịch daily.
+
 ## 1. Mục tiêu và phạm vi
 
 Airflow điều phối hai đường nạp dữ liệu có trigger và contract đầu vào khác
@@ -215,7 +220,7 @@ Spark DataFrame hoặc danh sách observation vào Airflow metadata database.
 
 Fail sớm nếu thành phần bắt buộc chưa sẵn sàng:
 
-- Spark master nhận submission.
+- Docker API proxy nhận request từ Airflow.
 - MinIO health endpoint trả thành công.
 - Nessie API v2 hoạt động.
 - Trino trả `/v1/info`.
@@ -234,7 +239,10 @@ mỗi source. Mỗi hour phải có ít nhất một attempt terminal `succeeded
 Quy tắc:
 
 - `partial` được phép đi tiếp; coverage/invalid records được giữ trong QC.
-- Thiếu cả collection hour phải fail thay vì âm thầm đóng ngày.
+- Mặc định cho phép thiếu tối đa một collection hour/source/ngày; giờ thiếu được
+  log/XCom như coverage warning và không tạo observation giả.
+- Thiếu quá `AIRFLOW_SUPABASE_MAX_MISSING_HOURS` phải fail thay vì âm thầm đóng
+  một ngày có coverage thấp. Đặt biến này bằng `0` để quay lại chính sách 24/24.
 - `running` quá hạn hoặc chỉ có `failed` phải được báo lỗi.
 - Audit không gọi lại provider API để “tái tạo” dữ liệu quá khứ.
 
@@ -380,7 +388,8 @@ cũ vẫn bất biến để rollback; Airflow không xóa snapshot hoặc sửa
 | Điểm lỗi | Hành vi |
 | --- | --- |
 | Landing thiếu file/manifest | Không tạo Bronze batch; sửa đầu vào rồi chạy lại cùng cấu hình |
-| Audit thiếu collection hour | Không chạy Bronze; retry/fail có cảnh báo |
+| Audit thiếu trong ngưỡng cấu hình | Tiếp tục, ghi coverage warning, không tạo dữ liệu giả |
+| Audit thiếu quá ngưỡng | Không chạy Bronze; retry/fail có cảnh báo |
 | Bronze checksum/fingerprint lỗi | Không chạy Silver của source |
 | Silver failed sau khi đã ghi một phần | Consumer bỏ qua vì run không succeeded |
 | Dataset Landing chưa có Gold adapter | Kết thúc tại Silver; không ép publish vào Gold |
@@ -412,29 +421,96 @@ Bronze có thể dùng hai slot. Tất cả Silver/Gold task dùng `iceberg_writ
 slot. Không tăng concurrency trước khi đo memory/driver/task size trên hardware
 thực tế.
 
-## 8. Spark submission từ Airflow
+## 8. Cách Airflow chạy Spark
 
-Trạng thái hiện tại: Airflow image chỉ có PostgreSQL metadata dependency; chưa
-có Java, Spark CLI/provider, job mounts hoặc transport đã kiểm chứng. DAG không
-nên gọi `docker compose exec` từ container và không nên mount Docker socket chỉ
-để điều phối Spark.
+Implementation dùng `DockerOperator` và image
+`air-quality-spark:3.5.4-iceberg-1.7.1`. Mỗi task tạo một container ngắn hạn,
+chạy `spark-submit --master local[1]`, tham gia `lakehouse-net`, rồi tự xóa khi
+thành công. Cách này giữ nguyên Java, ecCodes, Python packages và Iceberg JARs
+đã được kiểm chứng; đặc biệt không tạo một runtime CAMS thứ hai trong image
+Airflow.
 
-Hướng triển khai đề xuất là `SparkSubmitOperator`:
+Các source sau được mount read-only bằng named bind volume:
 
-1. Bổ sung Java/Spark 3.5.4 client và
-   `apache-airflow-providers-apache-spark` vào Airflow image.
-2. Dùng đúng Iceberg/AWS/Hadoop JAR versions như Spark image.
-3. Mount read-only `spark/jobs`, `spark/config`, `lakehouse/silver` và
-   `lakehouse/gold` vào Airflow scheduler.
-4. Tạo Airflow connection `spark_default` tới `spark://spark-master:7077`.
-5. Chạy client deploy mode và cấu hình driver hostname/port để Spark worker gọi
-   lại được container task trên `lakehouse-net`.
-6. Chạy smoke test trước DAG thật, sau đó test một daily scope trong namespace
-   `gold_test_*` rồi mới bật schema `gold`.
+```text
+spark/jobs       → /opt/spark/work-dir/jobs
+spark/config     → /opt/spark/conf
+lakehouse/silver → /opt/spark/work-dir/lakehouse/silver
+lakehouse/gold   → /opt/spark/work-dir/lakehouse/gold
+data/landing     → /opt/spark/work-dir/landing
+```
+
+Airflow không nhận trực tiếp `/var/run/docker.sock`. Service `docker-proxy` là
+thành phần duy nhất mount socket và chỉ xuất Docker API trên network internal
+`docker-api-net`. Vì API vẫn cho phép tạo container, đây vẫn là quyền cao trên
+host và chỉ phù hợp deployment local tin cậy; không mở port proxy ra host/LAN.
+Proxy image local tăng HAProxy client/server idle timeout lên 12 giờ để request
+`POST /containers/{id}/wait` của DockerOperator sống lâu bằng Spark task. Timeout
+HTTP request/connect vẫn giữ ngắn; Airflow `execution_timeout` vẫn giới hạn task.
+
+Supabase Bronze retry từng Storage object tối đa 5 lần với backoff 1/2/4/8 giây
+cho lỗi transport và HTTP 408/429/5xx. HTTP auth/not-found và checksum mismatch
+vẫn fail ngay. Log tiến độ theo từng collection run để phân biệt tải chậm với
+task bị treo.
 
 Airflow pool là single-writer control trong deployment local. Nếu chuyển sang
 Celery/Kubernetes hoặc nhiều host, advisory file lock hiện tại không còn đủ;
-cần distributed writer lock/fencing.
+cần distributed writer lock/fencing hoặc chuyển transport phù hợp nền tảng.
+
+### 8.1 Khởi động và kiểm tra DAG
+
+Chạy từ repository root để `${PWD}` của các named bind volume trỏ đúng project:
+
+```bash
+docker compose build spark-master spark-worker airflow-init airflow-webserver airflow-scheduler
+docker compose up -d docker-proxy postgres minio minio-init nessie trino
+docker compose up -d airflow-init
+docker compose up -d airflow-webserver airflow-scheduler
+
+docker compose exec -T airflow-scheduler airflow dags list-import-errors
+docker compose exec -T airflow-scheduler airflow dags list
+docker compose exec -T airflow-scheduler airflow pools list
+```
+
+Kỳ vọng không có import error và có hai pool `bronze_sync=2`,
+`iceberg_writer=1`.
+
+### 8.2 Trigger Landing batch
+
+Ví dụ chỉ chạy đến Silver:
+
+```bash
+docker compose exec -T airflow-scheduler airflow dags trigger \
+  landing_batch_to_gold \
+  --conf '{"dataset":"waqi/historical","batch_id":"waqi-history-20261028","ingestion_date":"2026-10-28","publish_gold":false}'
+```
+
+Ví dụ CAMS chạy tiếp Gold production:
+
+```bash
+docker compose exec -T airflow-scheduler airflow dags trigger \
+  landing_batch_to_gold \
+  --conf '{"dataset":"CAMS/EAC4","batch_id":"cams-20261028","ingestion_date":"2026-10-28","publish_gold":true,"gold":{"dataset_id":"REPLACE_WITH_VERIFIED_SILVER_DATASET_ID","start_date":"2026-01-01","end_date":"2026-01-02","allow_validation":false}}'
+```
+
+Không dùng dataset ID minh họa. Lấy ID từ successful Silver run đã kiểm tra.
+Với `waqi/historical` hoặc `climate_trace/climate_trace_vietnam`, đặt
+`publish_gold=true` sẽ gọi nhánh Gold `native_sources`. Job native hiện đọc cả
+WAQI historical và Climate TRACE; chỉ bật sau khi các bảng Silver của cả hai
+family đã tồn tại và có successful lineage.
+
+### 8.3 Bật daily Supabase
+
+`AIRFLOW_SUPABASE_START_DATE` xác định ngày bắt đầu catchup và mặc định là
+`2026-10-27`. Đặt lại trong `.env` trước khi khởi tạo scheduler nếu không muốn
+backfill từ ngày này. Sau khi test một logical date và kiểm tra Gold:
+
+```bash
+docker compose exec -T airflow-scheduler airflow dags unpause supabase_daily_to_gold
+```
+
+Không unpause khi Supabase chưa có đủ 24 manifested collection hours/source cho
+ngày đầu tiên; audit sẽ chủ động fail thay vì tạo batch thiếu.
 
 ## 9. Credentials và logging
 
@@ -518,6 +594,7 @@ liệu provider thay thế.
 - Hai source xuất hiện trong `provider_air_quality` timeline đúng scope.
 - API Ninjas actual observation clock vẫn NULL; WAQI actual clock vẫn có.
 - Có query/alert cho missing collection hours và failed DAG runs.
+- Gold giữ giờ thiếu là khoảng trống; không nội suy hoặc thay bằng AQI `0`.
 
 Sau khi đạt các điều kiện tương ứng mới bật DAG production. Lệnh ETL thủ công và
 truy vấn kiểm tra hiện có tại [RUN](../operations/RUN.md); chi tiết file batch tại
