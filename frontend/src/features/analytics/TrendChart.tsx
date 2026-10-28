@@ -18,7 +18,7 @@ interface TrendChartProps {
   metricLabel: string
   unit: string
   fileName: string
-  resolution?: '3h' | 'daily' | 'monthly'
+  resolution?: 'hourly' | '3h' | 'daily' | 'monthly'
   observationContext?: ObservationContext
   onExpandPeriod?: () => void
 }
@@ -44,8 +44,11 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
     const padding = { top: headingHeight + 22, right: 12, bottom: 36, left: Math.max(...ticks.map((tick) => chartTextWidth(tick.label, 11))) + 16 }
     const plotWidth = Math.max(1, WIDTH - padding.left - padding.right)
     const plotHeight = HEIGHT - padding.top - padding.bottom
+    const times = points.map(point => Date.parse(point.timestamp ?? ''))
+    const firstTime = times[0], lastTime = times.at(-1)!
+    const realTimeAxis = times.every(Number.isFinite) && lastTime > firstTime
     const coordinates = points.map((point, index) => ({
-      x: padding.left + (points.length === 1 ? plotWidth / 2 : (index / (points.length - 1)) * plotWidth),
+      x: padding.left + (points.length === 1 ? plotWidth / 2 : (realTimeAxis ? (times[index] - firstTime) / (lastTime - firstTime) : index / (points.length - 1)) * plotWidth),
       y: padding.top + ((max - point.value) / (max - min)) * plotHeight,
     }))
     // Reserve the endpoint labels, then add only labels that fit between them.
@@ -64,7 +67,13 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
       if (lastStart < previousEnd + 14 && labels.length === 1) labels.pop()
       labels.push(lastIndex)
     }
-    return { padding, ticks, labels, coordinates, path: coordinates.map((coordinate, index) => `${index === 0 ? 'M' : 'L'} ${coordinate.x} ${coordinate.y}`).join(' ') }
+    const segments: typeof coordinates[] = []
+    coordinates.forEach((coordinate, index) => {
+      if (index === 0 || points[index].breakBefore) segments.push([])
+      segments.at(-1)!.push(coordinate)
+    })
+    const paths = segments.map(segment => ({ path: segment.map((coordinate, index) => `${index === 0 ? 'M' : 'L'} ${coordinate.x} ${coordinate.y}`).join(' '), first: segment[0], last: segment.at(-1)! }))
+    return { padding, ticks, labels, coordinates, paths, path: paths.map(segment => segment.path).join(' ') }
   }, [points, unit, WIDTH, HEIGHT, headingHeight])
   const activePoint = points[activeIndex ?? -1] ?? points.at(-1)
 
@@ -98,13 +107,13 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
                   const y = geometry.padding.top + ratio * (HEIGHT - geometry.padding.top - geometry.padding.bottom)
                   return <g key={ratio}><line x1={geometry.padding.left} x2={WIDTH - geometry.padding.right} y1={y} y2={y} stroke="var(--color-border)" strokeDasharray="4 4" /><text x={geometry.padding.left - 9} y={y + 4} textAnchor="end">{label}</text></g>
                 })}
-                <path d={`${geometry.path} L ${geometry.coordinates.at(-1)!.x} ${HEIGHT - geometry.padding.bottom} L ${geometry.coordinates[0].x} ${HEIGHT - geometry.padding.bottom} Z`} fill={`url(#${gradientId})`} />
+                {geometry.paths.map((segment, index) => <path key={index} d={`${segment.path} L ${segment.last.x} ${HEIGHT - geometry.padding.bottom} L ${segment.first.x} ${HEIGHT - geometry.padding.bottom} Z`} fill={`url(#${gradientId})`} />)}
                 <path d={geometry.path} fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
                 {geometry.coordinates.map((coordinate, index) => (
                   <g key={`${points[index].label}-${index}`} onMouseEnter={() => setActiveIndex(index)} onMouseLeave={() => setActiveIndex(null)} onFocus={() => setActiveIndex(index)} onBlur={() => setActiveIndex(null)} tabIndex={0} className="focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-accent" role="img" aria-label={`${points[index].label}: ${points[index].value} ${unit}`}>
                     <title>{formatObservationTime(points[index].timestamp ?? points[index].label, resolution)}: {points[index].value} {unit}</title>
                     <circle cx={coordinate.x} cy={coordinate.y} r="11" fill="transparent" />
-                    <circle cx={coordinate.x} cy={coordinate.y} r={activeIndex === index ? 5 : points.length > 30 ? 0 : 3.5} fill="var(--color-surface)" stroke="var(--color-accent)" strokeWidth="2" />
+                    <circle cx={coordinate.x} cy={coordinate.y} r={activeIndex === index ? 5 : points.length > 30 && !points[index].breakBefore && !points[index + 1]?.breakBefore ? 0 : 3.5} fill="var(--color-surface)" stroke="var(--color-accent)" strokeWidth="2" />
                   </g>
                 ))}
                 {geometry.labels.map((index) => {

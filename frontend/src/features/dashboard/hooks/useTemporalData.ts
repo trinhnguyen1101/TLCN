@@ -1,3 +1,4 @@
+import { DEFAULT_RESOLUTION } from '../model/resolution'
 import { useEffect, useState } from 'react'
 import type { DashboardData } from '../types'
 import type { DashboardLoader } from '../api/dashboardTransport'
@@ -16,7 +17,7 @@ export function useTemporalData<T extends DashboardData>(load: DashboardLoader<T
       setState({ key, data, error: null, comparing: includeComparison, comparisonError: null })
       if (!includeComparison) return
       try {
-        const compared = await withComparison(data, request, new URLSearchParams(query).get('resolution') ?? '3h', comparisonYear)
+        const compared = await withComparison(data, request, new URLSearchParams(query).get('resolution') ?? DEFAULT_RESOLUTION, comparisonYear)
         if (!controller.signal.aborted) setState({ key, data: compared, error: null, comparing: false, comparisonError: null })
       } catch (error: unknown) {
         if (!controller.signal.aborted) setState({ key, data, error: null, comparing: false, comparisonError: error instanceof Error ? error.message : 'Không thể tải kỳ so sánh.' })

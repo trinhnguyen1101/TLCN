@@ -1,6 +1,7 @@
 import { sectorLabel } from '../../../utils/labels'
-import type { AdminDashboardData, DashboardFiltersValue, PriorityArea } from '../types'
-import { buildMonitoringView, comparisonYear, isFullYearPeriod, isNumber, matchesEmissionPeriod, matchesPeriod, mean, metricOptions, shiftPeriodYear } from './dashboardSelectors'
+import { shiftDateYear } from '../../../utils/dates'
+import type { AdminDashboardData, DashboardFiltersValue, DashboardTrendRecord, PriorityArea } from '../types'
+import { buildMonitoringView, comparisonYear, isFullYearPeriod, isNumber, matchesEmissionPeriod, matchesPeriod, weightedMetricMean, metricOptions, shiftPeriodYear } from './dashboardSelectors'
 import { periodYears } from './temporal'
 
 function trendFromChange(change: number | null): PriorityArea['trend'] {
@@ -9,6 +10,26 @@ function trendFromChange(change: number | null): PriorityArea['trend'] {
   if (change > 2) return 'slight-up'
   if (change <= -2) return 'down'
   return 'steady'
+}
+
+/** Compare only province/calendar slots with valid PM2.5 in both years. */
+function matchedYoY(current: DashboardTrendRecord[], previous: DashboardTrendRecord[], resolution: DashboardFiltersValue['resolution']) {
+  const width = resolution === 'monthly' ? 7 : resolution === 'daily' ? 10 : 13
+  const key = (row: DashboardTrendRecord, date = row.date) => `${row.provinceCode}|${date.slice(0, width)}`
+  const previousKeys = new Set(previous.filter(row => isNumber(row.pm25)).map(row => key(row)))
+  const currentPairs = current.filter(row => {
+    if (!isNumber(row.pm25)) return false
+    const shifted = shiftDateYear(row.date, -1)
+    // Feb29 has no daily/hourly counterpart in a non-leap year. Do not reuse
+    // Feb28 twice; period endpoints can still clamp through shiftPeriodYear.
+    if (resolution !== 'monthly' && shifted.slice(5, 10) !== row.date.slice(5, 10)) return false
+    return previousKeys.has(key(row, shifted))
+  })
+  const commonKeys = new Set(currentPairs.map(row => key(row, shiftDateYear(row.date, -1))))
+  const previousPairs = previous.filter(row => isNumber(row.pm25) && commonKeys.has(key(row)))
+  const value = weightedMetricMean(currentPairs, 'pm25')
+  const baseline = weightedMetricMean(previousPairs, 'pm25')
+  return value !== null && baseline !== null && baseline !== 0 ? (value - baseline) / baseline * 100 : null
 }
 
 export function buildAdminDashboardView(data: AdminDashboardData | null, filters: DashboardFiltersValue) {
@@ -23,10 +44,7 @@ export function buildAdminDashboardView(data: AdminDashboardData | null, filters
   const currentYear = baseYear ?? undefined
   const previousFilters = baseYear === null ? null : shiftPeriodYear(filters, -1)
   const previousRecords = previousFilters ? (data?.comparisonTrendRecords ?? trends).filter((record) => matchesPeriod(record, previousFilters, true, data?.metadata?.temporalAggregation)) : []
-  const currentPm25 = mean(currentRecords.map((record) => record.pm25))
-  const previousPm25 = mean(previousRecords.map((record) => record.pm25))
-  const yoy = currentPm25 !== null && previousPm25 !== null && previousPm25 !== 0
-    ? (currentPm25 - previousPm25) / previousPm25 * 100 : null
+  const yoy = matchedYoY(currentRecords, previousRecords, filters.resolution)
   const filteredEmissions = (data?.emissionRecords ?? []).filter((record) => matchesEmissionPeriod(record, filters))
   const sectorGroups = new Map<string, number>()
   filteredEmissions.forEach((record) => {
@@ -40,9 +58,8 @@ export function buildAdminDashboardView(data: AdminDashboardData | null, filters
     .map((area) => {
       const areaCurrent = currentRecords.filter((record) => record.provinceCode === area.provinceCode)
       const areaPrevious = previousRecords.filter((record) => record.provinceCode === area.provinceCode)
-      const pm25Average = mean(areaCurrent.map((record) => record.pm25))
-      const previousAverage = mean(areaPrevious.map((record) => record.pm25))
-      const change = pm25Average !== null && previousAverage !== null && previousAverage !== 0 ? (pm25Average - previousAverage) / previousAverage * 100 : null
+      const pm25Average = weightedMetricMean(areaCurrent, 'pm25')
+      const change = matchedYoY(areaCurrent, areaPrevious, filters.resolution)
       const areaEmissions = filteredEmissions.filter((record) => record.provinceCode === area.provinceCode)
       const emissionsTotal = areaEmissions.length ? areaEmissions.reduce((sum, record) => sum + (isNumber(record.emissionTonnes) ? record.emissionTonnes : 0), 0) : null
       const sectors = new Map<string, number>()

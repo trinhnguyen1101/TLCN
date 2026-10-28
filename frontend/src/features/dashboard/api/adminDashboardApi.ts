@@ -1,3 +1,4 @@
+import { DEFAULT_RESOLUTION } from '../model/resolution'
 import type { AdminDashboardData } from '../types'
 import { createDashboardLoader, type LoadOptions } from './dashboardTransport'
 
@@ -19,6 +20,6 @@ const load = createDashboardLoader<AdminDashboardData>('/api/admin/dashboard', (
   }
 }, 'Không thể tải dữ liệu quản lý. Vui lòng kiểm tra kết nối và thử lại.')
 
-export function loadAdminDashboardData(query = 'resolution=3h', options?: LoadOptions): Promise<AdminDashboardData> {
+export function loadAdminDashboardData(query = `resolution=${DEFAULT_RESOLUTION}`, options?: LoadOptions): Promise<AdminDashboardData> {
   return load(query, options)
 }

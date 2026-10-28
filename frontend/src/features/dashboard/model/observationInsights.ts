@@ -19,7 +19,7 @@ export function observationContext(snapshots: ProvinceSnapshot[], metric: Pollut
     if (index && region.value !== values[index - 1].value) rank = index + 1
     return { ...region, rank }
   })
-  const average = regions.length ? regions.reduce((sum, region) => sum + region.value, 0) / regions.length : null
+  const average = metric !== 'aqi' && regions.length ? regions.reduce((sum, region) => sum + region.value, 0) / regions.length : null
   const selected = regions.find((region) => region.id === selectedId) ?? null
   return { regions, totalRegions: snapshots.length, average, selected,
     difference: selected && average !== null ? selected.value - average : null,

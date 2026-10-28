@@ -1,3 +1,4 @@
+import { RESOLUTION_OPTIONS } from '../model/resolution'
 import { useEffect, useId, useRef, useState } from 'react'
 import type { DashboardFiltersValue, DashboardMetadata, Pollutant, ProvinceSnapshot } from '../types'
 import { DashboardIcon } from '../../../components/ui/DashboardIcon'
@@ -58,7 +59,7 @@ export function DashboardFilters({ variant = 'admin', years, pollutantOptions, d
       <div className="filter-resolution hidden min-w-0 items-center gap-2 sm:flex">
         <DashboardIcon name="filter" size="small" className="max-sm:hidden text-accent" />
         <SegmentedControl aria-label="Xem dữ liệu theo" className="min-w-0! shrink!">
-          {([{ value: '3h', label: '3 giờ' }, { value: 'daily', label: 'Ngày' }, { value: 'monthly', label: 'Tháng' }] as const).map((option) =>
+          {RESOLUTION_OPTIONS.map((option) =>
             <Button variant="segment" key={option.value} aria-pressed={value.resolution === option.value} onClick={() => onChange({ ...value, resolution: option.value, year: 'all', month: 'all', startDate: '', endDate: '' })}>{option.label}</Button>)}
         </SegmentedControl>
       </div>

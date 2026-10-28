@@ -1,8 +1,9 @@
+import { DEFAULT_RESOLUTION } from './resolution'
 import type { DashboardData, DashboardFiltersValue, DashboardMetadata } from '../types'
 import { formatDate, formatDateTime } from '../../../utils/dates'
 
 export function temporalQuery(filters: Partial<DashboardFiltersValue>) {
-  const params = new URLSearchParams({ resolution: filters.resolution ?? '3h' })
+  const params = new URLSearchParams({ resolution: filters.resolution ?? DEFAULT_RESOLUTION })
   if (filters.startDate) params.set('start', filters.startDate)
   if (filters.endDate) params.set('end', filters.endDate)
   return params.toString()
@@ -20,8 +21,8 @@ export function inputInstant(value?: string | null) {
   return value?.slice(0, 16) ?? ''
 }
 
-export function periodDefaults(metadata?: DashboardMetadata | null, resolution: DashboardFiltersValue['resolution'] = '3h') {
-  const size = resolution === '3h' ? 16 : 10
+export function periodDefaults(metadata?: DashboardMetadata | null, resolution: DashboardFiltersValue['resolution'] = DEFAULT_RESOLUTION) {
+  const size = (resolution === '3h' || resolution === 'hourly') ? 16 : 10
   return { startDate: metadata?.queryStart?.slice(0, size) ?? '', endDate: metadata?.queryEnd?.slice(0, size) ?? '' }
 }
 
@@ -29,16 +30,17 @@ export function calendarPeriod(filters: DashboardFiltersValue, years: number[], 
   if (year === 'all' && month === 'all') return { ...filters, year, month, startDate: '', endDate: '' }
   const selectedYear = year === 'all' ? Number(filters.endDate.slice(0, 4)) || years[0] : year
   if (!selectedYear) return filters
-  const selectedMonth = month === 'all' ? (filters.resolution === '3h' ? Number(filters.endDate.slice(5, 7)) || 1 : 1) : month
-  const endMonth = month === 'all' && filters.resolution !== '3h' ? 12 : selectedMonth
+  const selectedMonth = month === 'all' ? ((filters.resolution === '3h' || filters.resolution === 'hourly') ? Number(filters.endDate.slice(5, 7)) || 1 : 1) : month
+  const endMonth = month === 'all' && (filters.resolution !== '3h' && filters.resolution !== 'hourly') ? 12 : selectedMonth
   const start = `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`
   const end = `${selectedYear}-${String(endMonth).padStart(2, '0')}-${new Date(Date.UTC(selectedYear, endMonth, 0)).getUTCDate()}`
   return { ...filters, year: selectedYear, month,
-    startDate: filters.resolution === '3h' ? `${start}T00:00` : start,
-    endDate: filters.resolution === '3h' ? `${end}T21:00` : end }
+    startDate: (filters.resolution === '3h' || filters.resolution === 'hourly') ? `${start}T00:00` : start,
+    endDate: (filters.resolution === '3h' || filters.resolution === 'hourly') ? `${end}T${filters.resolution === 'hourly' ? '23' : '21'}:00` : end }
 }
 
 export function trendDescription(resolution: DashboardFiltersValue['resolution']) {
+  if (resolution === 'hourly') return 'Slot một giờ; nồng độ chỉ có tại timestamp thực của nguồn. AQI hiển thị cho một tỉnh và một mốc giờ đủ dữ liệu.'
   return resolution === '3h' ? 'Số liệu mỗi 3 giờ theo giờ quốc tế (UTC). Giá trị toàn quốc là trung bình các tỉnh, thành phố có dữ liệu tại cùng thời điểm.'
     : `Giá trị trung bình theo ${resolution === 'daily' ? 'ngày' : 'tháng'} trong phạm vi đang chọn.`
 }
@@ -54,7 +56,7 @@ export function chartLabel(date: string, resolution: DashboardFiltersValue['reso
 
 export function inDateRange(date: string, start: string, end: string, resolution: DashboardFiltersValue['resolution']) {
   // Aggregate rows represent calendar periods, not instants on the first day.
-  if (resolution !== '3h') {
+  if ((resolution !== '3h' && resolution !== 'hourly')) {
     const size = resolution === 'monthly' ? 7 : 10
     return (!start || date.slice(0, size) >= start.slice(0, size)) && (!end || date.slice(0, size) <= end.slice(0, size))
   }

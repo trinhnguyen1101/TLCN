@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { buildPeriodMapSnapshots } from '../src/features/geography/periodMapData.ts'
-import type { DashboardData, DashboardFiltersValue } from '../src/types/dashboard.ts'
+import type { DashboardData, DashboardFiltersValue } from '../src/features/dashboard/types.ts'
 
-const filters: DashboardFiltersValue = { provinceCode: 'all', pollutant: 'pm25', year: 'all', month: 'all', startDate: '', endDate: '', sector: 'all' }
+const filters: DashboardFiltersValue = { resolution: 'monthly', provinceCode: 'all', pollutant: 'pm25', year: 'all', month: 'all', startDate: '', endDate: '', sector: 'all' }
 const data: DashboardData = {
   provinceSnapshots: ['a', 'b'].map(code => ({ provinceCode: code, provinceName: code, pm1: 999, pm25: 999, pm10: 999, aqi: 50, status: 'Tốt' })),
   dashboardTrendRecords: [

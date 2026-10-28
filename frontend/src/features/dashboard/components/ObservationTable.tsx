@@ -15,16 +15,18 @@ interface ObservationTableProps {
   unit: string
   dataReady: boolean
   loading: boolean
+  timezone?: string
 }
 
 const PAGE_SIZE = 50
 
-export function ObservationTable({ records, provinces, provinceCode, pollutant, metricLabel, unit, dataReady, loading }: ObservationTableProps) {
+export function ObservationTable({ records, provinces, provinceCode, pollutant, metricLabel, unit, dataReady, loading, timezone = 'UTC' }: ObservationTableProps) {
+  const zone = timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : timezone
   const [selection, setPage] = useState(0)
   const names = useMemo(() => new Map(provinces.map((province) => [province.provinceCode, province.provinceName])), [provinces])
   const rows = useMemo(() => records.filter((record) => provinceCode === 'all' || record.provinceCode === provinceCode), [records, provinceCode])
   const page = Math.min(selection, Math.max(0, Math.ceil(rows.length / PAGE_SIZE) - 1))
-  const csvRows = useMemo(() => dataReady ? rows.map((row) => ({ Thoi_gian_UTC: row.date, Ma_vung: row.provinceCode,
+  const csvRows = useMemo(() => dataReady ? rows.map((row) => ({ [zone === 'UTC' ? 'Thoi_gian_UTC' : 'Thoi_gian_dia_phuong']: row.date, Mui_gio: timezone, Ma_vung: row.provinceCode,
     Ten_vung: names.get(row.provinceCode) ?? row.provinceCode, [metricLabel]: row[pollutant] ?? null, Don_vi: unit })) : [], [dataReady, rows, names, metricLabel, pollutant, unit])
   return (
     <section className="observation-panel mx-auto mt-6 w-full min-w-0 max-w-[960px] overflow-hidden rounded-card border border-border bg-surface shadow-card" aria-label="Bảng dữ liệu theo thời gian">
@@ -37,7 +39,7 @@ export function ObservationTable({ records, provinces, provinceCode, pollutant, 
         <div className="max-h-[420px] overflow-auto" tabIndex={0} role="region" aria-label="Chi tiết dữ liệu theo tỉnh, thành phố">
           <table className="observation-table data-table w-full min-w-[520px] table-fixed border-separate border-spacing-0 text-left text-sm">
             <colgroup><col className="w-[32%]" /><col className="w-[40%]" /><col className="w-[28%]" /></colgroup>
-            <thead className="sticky top-0 z-1 bg-surface-subtle text-xs text-secondary"><tr><th scope="col">Thời gian (UTC)</th><th scope="col">Tỉnh, thành phố</th><th scope="col" className="text-right">{metricLabel}{unit && <span className="mt-1 block font-normal text-muted">{unit}</span>}</th></tr></thead>
+            <thead className="sticky top-0 z-1 bg-surface-subtle text-xs text-secondary"><tr><th scope="col">Thời gian ({zone})</th><th scope="col">Tỉnh, thành phố</th><th scope="col" className="text-right">{metricLabel}{unit && <span className="mt-1 block font-normal text-muted">{unit}</span>}</th></tr></thead>
             <tbody>{rows.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE).map((row) => <tr key={`${row.provinceCode}-${row.date}`}><td className="whitespace-nowrap text-secondary tabular-nums"><time dateTime={row.date}>{formatDateTime(row.date)}</time></td><th scope="row" className="font-medium text-heading">{names.get(row.provinceCode) ?? row.provinceCode}</th><td className={`text-right tabular-nums ${row[pollutant] == null ? 'text-xs text-muted' : 'font-semibold text-heading'}`}>{row[pollutant]?.toLocaleString('vi-VN', { maximumFractionDigits: 3 }) ?? 'Chưa có dữ liệu'}</td></tr>)}</tbody>
           </table>
         </div>

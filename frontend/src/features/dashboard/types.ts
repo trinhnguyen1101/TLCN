@@ -5,6 +5,8 @@ export type Pollutant = 'aqi' | 'pm25' | 'pm10' | 'o3' | 'no2' | 'so2' | 'co' | 
 export type ProvinceCode = string
 
 export interface ProvinceSnapshot extends Partial<Record<Pollutant, number | null>> {
+  metricQuality?: Partial<Record<Pollutant,{qualityStatus?:string|null;missingReason?:string|null;observationTime?:string|null;coverage?:number|null}>>
+  aqiStatus?: string | null
   provinceCode: ProvinceCode
   provinceName: string
   aqi: number | null
@@ -12,6 +14,17 @@ export interface ProvinceSnapshot extends Partial<Record<Pollutant, number | nul
   pm25: number | null
   pm10: number | null
   pm1?: number | null
+  source?: string | null
+  seriesId?: string | null
+  observationTime?: string | null
+  sourceResolutionMinutes?: number | null
+  temporalSupport?: string | null
+  applicabilityProfile?: string | null
+  qualityStatus?: string | null
+  aqiMissingReason?: string | null
+  coverage?: number | null
+  aqiMethodVersion?: string | null
+  publishedReleaseId?: string | null
 }
 
 export interface EmissionRecord {
@@ -48,7 +61,7 @@ export interface AnnualProvinceSummary {
 export type DashboardProvince = ProvinceCode | 'all'
 
 export interface DashboardFiltersValue {
-  resolution: '3h' | 'daily' | 'monthly'
+  resolution: 'hourly' | '3h' | 'daily' | 'monthly'
   provinceCode: ProvinceCode | 'all'
   pollutant: Pollutant
   year: number | 'all'
@@ -59,6 +72,7 @@ export interface DashboardFiltersValue {
 }
 
 export interface DashboardTrendRecord {
+  metricSampleCounts?: Partial<Record<Pollutant, number>> | null
   aqi?: number | null
   provinceCode: ProvinceCode
   date: string
@@ -83,6 +97,10 @@ export interface DashboardTrendRecord {
 }
 
 export interface ConcentrationScale {
+  version?: string | null
+  statistic?: string | null
+  referenceKind?: string | null
+  note?: string | null
   breakpoints: number[]
   method: 'absolute_concentration'
   sampleCount: number
@@ -97,6 +115,11 @@ export interface MetricMetadata {
 }
 
 export interface DashboardMetadata {
+  publishedTimelineId?: string | null
+  compatibilityId?: string | null
+  publishedReleaseIds?: string[]
+  missingScopes?: Array<{start:string;end:string;reason:string}>
+  publishedReleaseId?: string | null
   source: string
   generation: string
   start: string
@@ -104,8 +127,8 @@ export interface DashboardMetadata {
   snapshotDate: string | null
   temporalAggregation: string
   timezone: string
-  minimumSpatialCoverage: number
-  minimumMonthlyCoverage: number
+  minimumSpatialCoverage: number | null
+  minimumMonthlyCoverage: number | null
   metrics: Partial<Record<Pollutant, MetricMetadata>>
   note: string
   queryStart?: string | null
@@ -116,6 +139,7 @@ export interface DashboardMetadata {
 }
 
 export interface ChartPoint {
+  breakBefore?: boolean
   label: string
   value: number
   timestamp?: string

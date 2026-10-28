@@ -6,10 +6,11 @@ interface AQISummaryCardProps {
   scopeLabel: string
   period: string
   snapshotDate?: string | null
+  calendarTimezone?: string
   loading?: boolean
 }
 
-export function AQISummaryCard({ aqi, scopeLabel, period, snapshotDate, loading }: AQISummaryCardProps) {
+export function AQISummaryCard({ aqi, scopeLabel, period, snapshotDate, calendarTimezone = 'UTC', loading }: AQISummaryCardProps) {
   const level = aqiLevel(aqi)
   return <section className="overflow-hidden rounded-card border border-border border-t-4 bg-surface p-5 shadow-card" style={{ borderTopColor: level?.color ?? 'var(--color-accent)' }} aria-label="Tóm tắt AQI" aria-busy={loading}>
     <p className="text-xs font-medium text-muted">{period}</p>
@@ -18,7 +19,7 @@ export function AQISummaryCard({ aqi, scopeLabel, period, snapshotDate, loading 
       <strong className={aqi === null ? 'text-xl text-muted' : 'text-5xl font-semibold tabular-nums'} style={{ color: level?.textColor }}>{loading ? 'Đang tải…' : aqi === null ? 'Chưa có dữ liệu AQI' : Math.round(aqi)}</strong>
       {level && <span className="rounded-full border px-3 py-1 text-xs font-semibold" style={{ color: level.textColor, borderColor: `${level.color}60`, backgroundColor: `${level.color}15` }}>{level.label}</span>}
     </div>
-    <p className="text-xs leading-relaxed text-muted">{aqi === null ? 'Nguồn dữ liệu chưa cung cấp AQI cho phạm vi này.' : 'AQI trung bình trong phạm vi đang chọn.'}</p>
-    <p className="mt-2 text-xs text-muted">{snapshotDate ? `Kỳ dữ liệu: ${formatDate(snapshotDate)} (UTC)` : 'Thời điểm cập nhật: nguồn chưa cung cấp'}</p>
+    <p className="text-xs leading-relaxed text-muted">{aqi === null ? 'Chọn một tỉnh và một mốc giờ/ngày đủ dữ liệu để xem AQI.' : 'AQI tại tỉnh và mốc thời gian đang chọn.'}</p>
+    <p className="mt-2 text-xs text-muted">{snapshotDate ? `Kỳ dữ liệu: ${formatDate(snapshotDate)} (${calendarTimezone})` : 'Thời điểm cập nhật: nguồn chưa cung cấp'}</p>
   </section>
 }

@@ -17,6 +17,8 @@ export function sectorLabel(value: string) {
 }
 
 export function sourceLabel(value?: string) {
+  if (value === 'cams') return 'CAMS EAC4 · mô hình'
+  if (value === 'hourly_fixture') return 'Fixture 1 giờ · kiểm thử'
   if (value === 'CAMS EAC4 sample') return 'Dữ liệu mẫu CAMS EAC4'
   return value?.replace(/\bsample\b/gi, 'mẫu dữ liệu').replace(/\bmock demo\b/gi, 'Dữ liệu minh họa')
 }

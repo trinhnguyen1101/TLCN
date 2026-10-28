@@ -17,7 +17,7 @@ export function formatDateTime(value: string | null | undefined, seconds = false
   return `${label}${time ? ` ${time[1]}${seconds ? time[2] ?? ':00' : ''}` : ''}${timezone ? ' UTC' : ''}`
 }
 
-export function formatObservationTime(value: string, resolution: '3h' | 'daily' | 'monthly') {
+export function formatObservationTime(value: string, resolution: 'hourly' | '3h' | 'daily' | 'monthly') {
   return resolution === 'monthly' ? `Tháng ${value.slice(5, 7)}/${value.slice(0, 4)}`
     : resolution === 'daily' ? formatDate(value) : formatDateTime(value, false, true)
 }

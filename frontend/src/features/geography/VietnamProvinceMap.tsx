@@ -1,3 +1,4 @@
+import { aggregationLabel } from '../../utils/labels'
 import { memo, useEffect, useMemo, useState } from 'react'
 import { formatDateTime } from '../../utils/dates'
 import { MapContainer, Pane, useMap, ZoomControl } from 'react-leaflet'
@@ -175,7 +176,7 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
         {colorScale?.labels.map((label, index) => <span key={label} className="inline-flex items-center gap-1.5 text-secondary"><i className="size-3.5 shrink-0 rounded-sm" style={{ backgroundColor: colorScale.colors[index] }} />{label} · {colorScale.ranges[index]}</span>)}
         {!colorScale && <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 rounded-sm bg-map-unclassified" />Có giá trị · chưa có thang nồng độ</span>}
         <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 shrink-0 rounded-sm border border-map-province-border bg-map-province-fill" />Chưa có dữ liệu</span>
-        {metric === 'aqi' ? <p className="basis-full text-muted">Dải màu hiển thị tùy chỉnh: xanh lá (tốt) → đỏ đậm (nguy hại).</p> : <p className="basis-full text-muted">{colorScale ? 'Xanh lá → vàng → cam → đỏ: nồng độ tăng dần theo thang nguồn dữ liệu; không phải mức AQI.' : 'Nguồn chưa cung cấp thang nồng độ hợp lệ. Xem giá trị khi trỏ hoặc chọn tỉnh.'}</p>}
+        {metric === 'aqi' ? <p className="basis-full text-muted">Sáu mức màu VN_AQI theo Quyết định 1459/QĐ-TCMT.</p> : <p className="basis-full text-muted">{colorScale ? `${concentrationScale?.note ?? 'Thang nồng độ phân tích; không phải mức AQI.'} Bản đồ dùng trung bình mẫu hợp lệ trong bộ lọc; một mốc giữ giá trị gốc. ${concentrationScale?.version ?? ''} · basis đầu vào: ${aggregationLabel(concentrationScale?.statistic ?? '')}` : 'Nguồn chưa cung cấp thang nồng độ hợp lệ. Xem giá trị khi trỏ hoặc chọn tỉnh.'}</p>}
       </div>
     </section>
   )

@@ -6,8 +6,8 @@ export const MAP_METRIC_LABELS: Record<MapMetric, string> = { aqi: 'AQI', ...Obj
 export interface MapColorScale { breakpoints: number[]; colors: string[]; labels: string[]; ranges: string[] }
 const AQI_SCALE: MapColorScale = {
   breakpoints: [50, 100, 150, 200, 300],
-  // Custom display palette: green → yellow → orange → deep red.
-  colors: ['#16a34a', '#a3c932', '#facc15', '#f97316', '#ef4444', '#b91c1c'],
+  // VN_AQI 1459 table 1 RGB colors.
+  colors: ['#00e400', '#ffff00', '#ff7e00', '#ff0000', '#8f3f97', '#7e0023'],
   labels: ['Tốt', 'Trung bình', 'Kém', 'Xấu', 'Rất xấu', 'Nguy hại'],
   ranges: ['≤ 50', '> 50–100', '> 100–150', '> 150–200', '> 200–300', '> 300'],
 }
@@ -27,9 +27,8 @@ export function getMapColorScale(metric: MapMetric, scale?: ConcentrationScale |
   if (cuts.length !== 3 || cuts.some((cut, index) => !Number.isFinite(cut) || (index > 0 && cut <= cuts[index - 1]))) return null
   return {
     breakpoints: cuts,
-    // Increasing concentration follows the same green-to-red direction;
-    // the source's concentration cutoffs remain independent of AQI categories.
-    colors: ['#16a34a', '#facc15', '#f97316', '#b91c1c'],
+    // Sequential blue display domains are separate from AQI health categories.
+    colors: ['#dbeafe', '#93c5fd', '#3b82f6', '#1e3a8a'],
     labels: ['Mức 1', 'Mức 2', 'Mức 3', 'Mức 4'],
     ranges: [`≤ ${format(cuts[0])}`, ...cuts.slice(1).map((cut, index) => `> ${format(cuts[index])}–${format(cut)}`), `> ${format(cuts[cuts.length - 1])}`],
   }

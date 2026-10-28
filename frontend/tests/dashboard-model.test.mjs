@@ -47,7 +47,8 @@ test('historical data never inherits a current AQI snapshot or unavailable gas',
   const view = buildMonitoringView(data, { ...DEFAULT_FILTERS, year: 2026 })
   assert.equal(view.aqi, null)
   assert.equal(view.metrics.co, null)
-  assert.equal(buildMonitoringView(data, DEFAULT_FILTERS, true).aqi, 200)
+  assert.equal(buildMonitoringView(data, DEFAULT_FILTERS, true).aqi, null)
+  assert.equal(buildMonitoringView(data, { ...DEFAULT_FILTERS, provinceCode: '01' }, true).aqi, 200)
 })
 test('pollutant selection updates ranking, unit and series consistently', () => {
   const view = buildAdminDashboardView(data, { ...DEFAULT_FILTERS, pollutant: 'pm10', year: 2026, month: 1 })
@@ -188,4 +189,88 @@ test('date filtering retains three-hour observations and inclusive UTC day bound
   assert.equal(matchesPeriod(record('01', '2026-01-15T03:00:00Z', 1), instant), true)
   assert.equal(matchesPeriod(record('01', '2026-01-15T09:00:00Z', 1), instant), false)
   assert.equal(shiftPeriodYear({ ...instant, startDate: '2024-02-29T03:00' }, -1).startDate, '2023-02-28T03:00')
+})
+
+const { validatePeriod } = await import(sourceModule('../src/features/dashboard/model/filterPeriods.ts'))
+test('hourly supports every aligned hour, preserves gaps, and rejects minutes', () => {
+  const filters = { ...DEFAULT_FILTERS, resolution: 'hourly', startDate: '2026-01-02T01:00', endDate: '2026-01-02T23:00' }
+  assert.equal(validatePeriod(filters), null)
+  assert.ok(validatePeriod({ ...filters, endDate: '2026-01-02T23:30' }))
+  const source = { ...data, dashboardTrendRecords: [record('01', '2026-01-02T01:00:00Z', 10), record('01', '2026-01-02T03:00:00Z', 20)] }
+  assert.equal(buildMonitoringView(source, filters).chartPoints.length, 2)
+})
+test('AQI is never averaged over provinces or multiple periods', () => {
+  const source = { ...data, dashboardTrendRecords: [
+    { ...record('01', '2026-01-02T01:00:00Z', 10), aqi: 50 },
+    { ...record('79', '2026-01-02T01:00:00Z', 20), aqi: 100 },
+    { ...record('01', '2026-01-02T02:00:00Z', 10), aqi: 80 },
+  ] }
+  const filters = { ...DEFAULT_FILTERS, resolution: 'hourly', pollutant: 'aqi' }
+  assert.equal(buildMonitoringView(source, filters).aqi, null)
+  assert.equal(buildMonitoringView(source, { ...filters, provinceCode: '01' }).aqi, null)
+  assert.equal(buildMonitoringView(source, { ...filters, provinceCode: '01', startDate: '2026-01-02T01:00', endDate: '2026-01-02T01:00' }).aqi, 50)
+})
+
+test('daily concentration weighting uses actual sample counts', () => {
+  const source = { ...data, dashboardTrendRecords: [
+    { ...record('01', '2026-01-02', 10), metricSampleCounts: { pm25: 24 } },
+    { ...record('01', '2026-01-03', 100), metricSampleCounts: { pm25: 1 } },
+  ] }
+  const view = buildMonitoringView(source, { ...DEFAULT_FILTERS, resolution: 'daily', provinceCode: '01' })
+  assert.equal(view.metrics.pm25, 13.6)
+})
+
+test('fixed concentration colors cover six physical pollutants without reusing AQI categories', async () => {
+  const { getMapColorScale, concentrationColor } = await import(sourceModule('../src/features/geography/mapColorScale.ts'))
+  const policy = JSON.parse(readFileSync(new URL('../../lakehouse/gold/contracts/concentration-colors-v1.json', import.meta.url), 'utf8'))
+  assert.equal(policy.unit, 'ug/m3')
+  for (const pollutant of ['pm25','pm10','co','no2','so2','o3']) {
+    const scale=getMapColorScale(pollutant,{method:'absolute_concentration',breakpoints:policy.breakpoints[pollutant]})
+    assert.equal(scale.colors.length,4)
+    assert.equal(concentrationColor(null,scale),null)
+    assert.equal(concentrationColor(policy.breakpoints[pollutant][0],scale),scale.colors[0])
+    assert.equal(concentrationColor(policy.breakpoints[pollutant][2]+1,scale),scale.colors[3])
+    assert.deepEqual(scale.labels,['Mức 1','Mức 2','Mức 3','Mức 4'])
+  }
+  assert.equal(getMapColorScale('aqi').colors.length,6)
+})
+
+test('Gold national concentration KPI uses valid sample weights across provinces', () => {
+  const scoped={...data,metadata:{publishedReleaseId:'gold-test',metrics:{pm25:{unit:'µg/m³',quantity:'concentration'}}},
+    dashboardTrendRecords:[{...record('01','2026-01-01',10),metricSampleCounts:{pm25:24}},
+                           {...record('79','2026-01-01',100),metricSampleCounts:{pm25:1}}]}
+  const view=buildMonitoringView(scoped,{...DEFAULT_FILTERS,year:2026,month:1})
+  assert.equal(view.metrics.pm25,(10*24+100)/25)
+  assert.equal(view.aqi,null)
+})
+
+test('hourly YoY excludes a current hour without a matching prior-year hour', () => {
+  const paired={...data,dashboardTrendRecords:[record('01','2024-01-01T00:00:00Z',10),record('01','2025-01-01T00:00:00Z',20),record('01','2025-01-01T01:00:00Z',200)]}
+  assert.equal(buildAdminDashboardView(paired,{...DEFAULT_FILTERS,resolution:'hourly',year:2025,month:1}).yoy,100)
+})
+
+test('daily YoY does not reuse February 28 as the baseline for February 29', () => {
+  const paired={...data,dashboardTrendRecords:[record('01','2023-02-28',10),record('01','2024-02-28',20),record('01','2024-02-29',200)]}
+  assert.equal(buildAdminDashboardView(paired,{...DEFAULT_FILTERS,resolution:'daily',year:2024,month:2}).yoy,100)
+})
+
+test('period labels retain UTC hour slots and use the VN calendar for Gold daily/monthly', () => {
+  const range={...DEFAULT_FILTERS,startDate:'2026-01-01',endDate:'2026-01-02'}
+  assert.match(periodLabel({...range,resolution:'daily'},'Asia/Ho_Chi_Minh'),/UTC\+7$/)
+  assert.match(periodLabel(range,'Asia/Ho_Chi_Minh'),/UTC\+7$/)
+  assert.match(periodLabel({...range,resolution:'hourly'},'Asia/Ho_Chi_Minh'),/ UTC$/)
+})
+
+test('Gold metric contract excludes stale unsupported values and keeps unavailable AQI neutral', async () => {
+  const {metricOptions}=await import(selectorsUrl)
+  const scoped={...data,metadata:{publishedTimelineId:'v',metrics:{pm25:{unit:'µg/m³',quantity:'concentration'}}},
+    provinceSnapshots:data.provinceSnapshots.map(p=>({...p,aqi:null,pm1:999,t2m:300})),
+    dashboardTrendRecords:data.dashboardTrendRecords.map(r=>({...r,aqi:null,pm1:999,aod550:4,t2m:300}))}
+  const options=metricOptions(scoped)
+  assert.deepEqual(options.map(o=>o.value),['aqi','pm25'])
+  assert.match(options[0].label,/chưa đủ dữ liệu/)
+  const monthly = { ...scoped, metadata: { ...scoped.metadata, temporalAggregation: 'monthly_sample_weighted_mean' } }
+  assert.match(metricOptions(monthly)[0].label,/không định nghĩa theo tháng/)
+  const {aqiLevel}=await import(sourceModule('../src/features/geography/mapColorScale.ts'))
+  assert.equal(aqiLevel(null),null)
 })

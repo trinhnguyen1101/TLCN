@@ -38,9 +38,12 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, 
   return (
     <>
       {data.features.map((feature) => {
-        const metrics = metricsByProvince.get(feature.id)
+        const metrics = metricsByProvince.get(feature.id) ?? metricsByProvince.get(feature.properties.parentProvinceCode ?? '')
+        const quality=metrics?.metricQuality?.[metric]
+        const observed=quality ? quality.observationTime : metrics?.observationTime
+        const qc=metric==='aqi' ? metrics?.aqiStatus : quality?.qualityStatus ?? metrics?.qualityStatus
         const selectProvince = () => {
-          setHighlightedCode(feature.id)
+          setHighlightedCode(feature.properties.parentProvinceCode ?? feature.id)
           if (metrics) onProvinceSelect?.(metrics)
         }
 
@@ -72,7 +75,7 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, 
               <strong className="font-semibold text-heading">{feature.properties.fullName}</strong><br />
               {metrics ? <>
                 <span style={{ color: aqiLevel(metrics.aqi)?.textColor }}>AQI: {metrics.aqi == null ? 'Chưa có dữ liệu' : Math.round(metrics.aqi)} {aqiLevel(metrics.aqi)?.label}</span><br />
-                {metric !== 'aqi' && <>{METRIC_META[metric].label}: {metrics[metric]?.toLocaleString('vi-VN', { maximumFractionDigits: 3 }) ?? 'Chưa có dữ liệu'} {metricUnit}</>}
+                {metrics.applicabilityProfile && <><span>{metrics.applicabilityProfile === 'station_reference' ? 'Chuỗi trạm' : 'Ước tính mô hình / vùng / proxy'}</span><br /></>}{observed && <><span>Quan sát gần nhất trong snapshot nguồn: {observed}</span><br /></>}{metrics.source && <><span>Nguồn: {metrics.source}</span><br /></>}{qc && <><span>QC tại snapshot nguồn: {qc}</span><br /></>}{quality?.missingReason && <><span>{quality.missingReason}</span><br /></>}{metrics.temporalSupport && <><span>{metrics.temporalSupport} · {metrics.sourceResolutionMinutes} phút</span><br /></>}{metric !== 'aqi' && <>{METRIC_META[metric].label}: {metrics[metric]?.toLocaleString('vi-VN', { maximumFractionDigits: 3 }) ?? 'Chưa có dữ liệu'} {metricUnit}</>}
               </> : 'Chưa có dữ liệu'}
             </Tooltip>
           </GeoJSON>

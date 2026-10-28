@@ -10,7 +10,7 @@ interface Props {
   point: ChartPoint
   metricLabel: string
   unit: string
-  resolution: '3h' | 'daily' | 'monthly'
+  resolution: 'hourly' | '3h' | 'daily' | 'monthly'
   context?: ObservationContext
   onExpand?: () => void
 }
@@ -22,7 +22,7 @@ const number = (value: number) => value.toLocaleString('vi-VN', Math.abs(value) 
 export function SingleObservationChart({ chartId, width, point, metricLabel, unit, resolution, context, onExpand }: Props) {
   const sideBySide = width >= 620
   const heroWidth = sideBySide ? width * .38 : width - 32
-  const label = resolution === '3h' ? 'Giá trị tại thời điểm đã chọn' : resolution === 'daily' ? 'Trung bình ngày' : 'Trung bình tháng'
+  const label = (resolution === '3h' || resolution === 'hourly') ? 'Giá trị tại thời điểm đã chọn' : resolution === 'daily' ? 'Trung bình ngày' : 'Trung bình tháng'
   const date = formatObservationTime(point.timestamp ?? point.label, resolution)
   const value = number(point.value)
   const fontSize = Math.min(44, Math.max(20, heroWidth / (value.length * .65)))
@@ -47,7 +47,7 @@ export function SingleObservationChart({ chartId, width, point, metricLabel, uni
   const height = Math.max(infoY + (context?.selected ? 76 : 48), bars.length ? nextY + 16 : 0)
   const difference = context?.difference
   const insight = context?.selected && difference !== null && difference !== undefined && context.regions.length > 1
-    ? `${context.selected.label} ${Math.abs(difference) < 1e-9 ? 'bằng trung bình' : `${difference > 0 ? 'cao hơn' : 'thấp hơn'} trung bình ${number(Math.abs(difference))}${unit ? ` ${unit}` : ''}`} của ${context.regions.length} vùng có dữ liệu trong cùng ${resolution === '3h' ? 'mốc quan sát' : 'kỳ'}.`
+    ? `${context.selected.label} ${Math.abs(difference) < 1e-9 ? 'bằng trung bình' : `${difference > 0 ? 'cao hơn' : 'thấp hơn'} trung bình ${number(Math.abs(difference))}${unit ? ` ${unit}` : ''}`} của ${context.regions.length} vùng có dữ liệu trong cùng ${(resolution === '3h' || resolution === 'hourly') ? 'mốc quan sát' : 'kỳ'}.`
     : context?.highest && context.lowest && context.regions.length > 1
       ? `Cao nhất: ${context.highest.label} (${number(context.highest.value)} ${unit}). Thấp nhất: ${context.lowest.label} (${number(context.lowest.value)} ${unit}).`
       : 'Dữ liệu hiện chỉ có một thời điểm. Mở rộng khoảng thời gian để xem giá trị thay đổi như thế nào.'
@@ -63,12 +63,12 @@ export function SingleObservationChart({ chartId, width, point, metricLabel, uni
       <text x="16" y={valueY + 23} fontSize="13" fill="var(--color-muted)">{unit}</text>
       <text x="16" y={dateY + 5} fontSize="12" fill="var(--color-heading)">{date}</text>
       {context && <>
-        <text x="16" y={infoY + 5} fontSize="11" fill="var(--color-muted)">{context.selected ? 'Trung bình các vùng có dữ liệu' : 'Phạm vi so sánh'}</text>
+        <text x="16" y={infoY + 5} fontSize="11" fill="var(--color-muted)">{context.selected && context.average !== null ? 'Trung bình các vùng có dữ liệu' : 'Phạm vi so sánh'}</text>
         <text x="16" y={infoY + 28} fontSize="17" fontWeight="600" fill="var(--color-heading)">{context.selected && context.average !== null ? `${number(context.average)} ${unit}` : `${context.regions.length}/${context.totalRegions} vùng có dữ liệu`}</text>
         {context.selected && <text x="16" y={infoY + 53} fontSize="12" fill="var(--color-accent)">Hạng {context.selected.rank}/{context.regions.length} theo giá trị</text>}
       </>}
       {bars.length > 0 && <>
-        <text x={barLeft} y={barTop + 4} fontSize="12" fontWeight="600" fill="var(--color-heading)">So sánh cùng {resolution === '3h' ? 'mốc' : 'kỳ'}</text>
+        <text x={barLeft} y={barTop + 4} fontSize="12" fontWeight="600" fill="var(--color-heading)">So sánh cùng {(resolution === '3h' || resolution === 'hourly') ? 'mốc' : 'kỳ'}</text>
         <text x={barLeft} y={barTop + 23} fontSize="10" fill="var(--color-muted)">{context?.selected ? 'Các vùng cao nhất và vùng đang chọn' : `${Math.min(limit, context?.regions.length ?? 0)} vùng có giá trị cao nhất`}</text>
         {bars.map((region) => {
           const selected = region.id === context?.selected?.id

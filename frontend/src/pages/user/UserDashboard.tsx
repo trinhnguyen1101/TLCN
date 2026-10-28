@@ -39,7 +39,7 @@ export default function UserDashboard() {
   const selectFilters = useCallback((next: DashboardFiltersValue) => setFilters((value) => mergeFilterSelection(value, next, filters)), [filters])
   const selectProvince = useCallback((province: ProvinceSnapshot) => setFilters((value) => ({ ...value, provinceCode: province.provinceCode })), [])
   const selectPollutant = useCallback((next: Pollutant) => setFilters((value) => ({ ...value, pollutant: next })), [])
-  const period = periodLabel(filters)
+  const period = periodLabel(filters, data?.metadata?.timezone)
   const expandedPeriod = view.chartPoints.length === 1 ? expandTrendPeriod(filters, view.chartPoints[0].timestamp, data?.metadata) : null
 
   return <main className="mx-auto w-full max-w-[1800px] px-8 pt-6 pb-8 wrap-anywhere max-md:px-4 max-md:pt-4">
@@ -57,14 +57,14 @@ export default function UserDashboard() {
     <div className="grid grid-cols-[minmax(0,2.5fr)_minmax(270px,1fr)] items-start gap-4 max-lg:grid-cols-1">
       <VietnamProvinceMap variant="user" provinceSnapshots={view.snapshots} snapshotDate={dataReady && current ? data?.metadata?.snapshotDate : null} metricMetadata={data?.metadata?.metrics} selectedProvinceCode={filters.provinceCode} metric={pollutant} periodLabel={period} layerVisible={mapLayerVisible} onLayerVisibilityChange={setMapLayerVisible} onProvinceSelect={selectProvince} />
       <aside className="grid min-w-0 gap-4 max-lg:grid-cols-2 max-[640px]:grid-cols-1">
-        <AQISummaryCard aqi={view.aqi} scopeLabel={view.scopeLabel} period={period} snapshotDate={current ? data?.metadata?.snapshotDate : null} loading={loading} />
+        <AQISummaryCard calendarTimezone={data?.metadata?.timezone} aqi={view.aqi} scopeLabel={view.scopeLabel} period={period} snapshotDate={current ? data?.metadata?.snapshotDate : null} loading={loading} />
         <section className="min-w-0" aria-label="Các chất ô nhiễm chính"><h2 className="mb-3 text-sm font-semibold text-heading">Chất ô nhiễm chính</h2><PollutantMetrics metrics={view.metrics} metadata={data?.metadata?.metrics} pollutants={pollutants} selected={pollutant} onSelect={selectPollutant} /><p className="mt-2 text-[.7rem] leading-relaxed text-muted">{current ? 'Số liệu tại thời điểm gần nhất trong dữ liệu nguồn. Các chỉ số chưa có dữ liệu được để trống.' : 'Giá trị trung bình trong khoảng thời gian đã chọn.'}{pollutants.some((key) => key.endsWith('Column')) && ' Các chỉ số khí tổng cột có đơn vị mg/m².'}</p></section>
         <p className="rounded-xl border border-accent-border bg-accent-soft p-3 text-xs leading-relaxed text-secondary max-lg:col-span-full">Chọn tỉnh trên bản đồ để xem thông tin khu vực. Màu nồng độ và mức AQI có chú giải riêng.</p>
       </aside>
     </div>
     <div className="mt-4"><TrendChart dataReady={dataReady} loading={loading} title={`${view.metric.label} · ${view.scopeLabel}`} description={trendDescription(resolution)} points={view.chartPoints} resolution={resolution} observationContext={view.observationContext} onExpandPeriod={expandedPeriod ? () => selectFilters(expandedPeriod) : undefined} metricLabel={view.metric.label} unit={view.metric.unit} fileName={`xu-huong-${pollutant}-${filters.provinceCode}`} /></div>
     <div className="mt-4"><DashboardComparison data={dataReady ? data : null} filters={filters} years={years} unit={view.metric.unit} loading={loading} load={loadDashboardData} /></div>
-    <ObservationTable key={`${query}-${filters.provinceCode}`} records={view.records} provinces={data?.provinceSnapshots ?? []} provinceCode={filters.provinceCode} pollutant={pollutant} metricLabel={view.metric.label} unit={view.metric.unit} dataReady={dataReady} loading={loading} />
+    <ObservationTable key={`${query}-${filters.provinceCode}`} records={view.records} provinces={data?.provinceSnapshots ?? []} provinceCode={filters.provinceCode} pollutant={pollutant} timezone={data?.metadata?.timezone} metricLabel={view.metric.label} unit={view.metric.unit} dataReady={dataReady} loading={loading} />
     {data?.metadata?.note && <details className="mt-4 text-xs leading-relaxed text-muted"><summary className="cursor-pointer">Thông tin nguồn dữ liệu</summary><p className="mt-2">{sourceNote(data.metadata.note)}</p></details>}
   </main>
 }

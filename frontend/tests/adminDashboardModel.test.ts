@@ -1,9 +1,11 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { buildAdminDashboardView } from '../src/services/adminDashboardModel.ts'
-import type { AdminDashboardData, DashboardFiltersValue } from '../src/types/dashboard.ts'
+import { sourceModule } from './source-module.mjs'
+const {buildAdminDashboardView}=await import(sourceModule(new URL('../src/features/dashboard/model/adminDashboardModel.ts',import.meta.url)))
+import type { AdminDashboardData, DashboardFiltersValue } from '../src/features/dashboard/types.ts'
 
 const filters: DashboardFiltersValue = {
+  resolution: 'monthly',
   provinceCode: 'all',
   pollutant: 'pm25',
   year: 'all',
@@ -63,14 +65,14 @@ const data: AdminDashboardData = {
 
 test('all years aggregates all selected records and emissions', () => {
   const view = buildAdminDashboardView(data, filters)
-  assert.equal(view.currentPm25, 20)
+  assert.equal(view.monitoring.metrics.pm25, 20)
   assert.equal(view.totalEmissions, 20)
 })
 test('province drilldown scopes the highest-province KPI to the selected province', () => {
   const view = buildAdminDashboardView(data, { ...filters, provinceCode: 'a', year: 2025 })
-  assert.equal(view.currentPm25, 30)
-  assert.deepEqual(view.provinceRanking, [{ id: 'a', label: 'a', value: 30 }])
-  assert.equal(view.bestProvince?.id, 'a')
+  assert.equal(view.monitoring.metrics.pm25, 30)
+  assert.deepEqual(view.monitoring.ranking, [{ id: 'a', label: 'a', value: 30 }])
+  assert.equal(view.monitoring.ranking[0]?.id, 'a')
 })
 test('mid-month dates select monthly values and never prorate exceedance counts', () => {
   const view = buildAdminDashboardView(data, {
@@ -79,15 +81,16 @@ test('mid-month dates select monthly values and never prorate exceedance counts'
     startDate: '2025-01-15',
     endDate: '2025-01-20',
   })
-  assert.equal(view.currentPm25, 30)
+  assert.equal(view.monitoring.metrics.pm25, 30)
   assert.equal(view.totalEmissions, 10)
-  assert.equal(view.filteredEmissionRecords.length, 1)
-  assert.equal(view.exceedanceDays, null)
+  assert.equal(view.sectorRanking.length, 1)
+  assert.equal(view.sectorRanking[0].value, 10)
+  assert.ok(view.priorityAreaRows.every((area) => area.exceedanceDays === null))
   assert.equal(view.priorityAreaRows[0].exceedanceDays, null)
 })
 test('empty filtered scope never falls back to stale annual values', () => {
   const view = buildAdminDashboardView(data, { ...filters, month: 2 })
-  assert.equal(view.currentPm25, null)
+  assert.equal(view.monitoring.metrics.pm25, null)
   assert.equal(view.priorityAreaRows[0].pm25Average, null)
   assert.equal(view.priorityAreaRows[0].totalEmissions, null)
   assert.equal(view.priorityAreaRows[0].yearOverYearPercent, null)
