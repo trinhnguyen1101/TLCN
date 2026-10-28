@@ -3,6 +3,7 @@
 import hashlib
 import json
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 from urllib.error import HTTPError, URLError
@@ -88,6 +89,22 @@ class SupabaseBronzeContract(unittest.TestCase):
                     bronze.storage_get("https://example.test", "key", "path")
         request.assert_called_once()
         sleep.assert_not_called()
+
+    def test_staged_get_reads_only_validated_relative_path(self):
+        run, blobs = self.fixture()
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for object_path, payload in blobs.items():
+                relative = bronze.source_path(
+                    object_path, "waqi", str(run["run_id"]), bronze.utc(run["scheduled_hour_utc"])
+                )
+                target = root / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.write_bytes(payload)
+            objects, _ = bronze.inventory(
+                [run], "waqi", "unused", "", landing_root=root
+            )
+        self.assertEqual(len(objects), 2)
 
 
 if __name__ == "__main__":

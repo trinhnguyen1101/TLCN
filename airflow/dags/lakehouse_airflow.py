@@ -9,6 +9,7 @@ from urllib.request import urlopen
 
 from airflow.exceptions import AirflowException
 from airflow.providers.docker.operators.docker import DockerOperator
+from airflow.utils.template import literal
 from docker.types import Mount
 
 from lakehouse_config import (
@@ -23,6 +24,7 @@ LOG = logging.getLogger(__name__)
 SPARK_IMAGE = os.getenv(
     "LAKEHOUSE_SPARK_IMAGE", "air-quality-spark:3.5.4-iceberg-1.7.1"
 )
+RCLONE_IMAGE = os.getenv("LAKEHOUSE_RCLONE_IMAGE", "rclone/rclone:1.75.2")
 DOCKER_URL = os.getenv("DOCKER_HOST", "tcp://docker-proxy:2375")
 NETWORK = os.getenv("LAKEHOUSE_DOCKER_NETWORK", "lakehouse-net")
 
@@ -32,6 +34,12 @@ SPARK_MOUNTS = [
     Mount("/opt/spark/work-dir/lakehouse/silver", "air-quality-airflow-silver-definition", type="volume", read_only=True),
     Mount("/opt/spark/work-dir/lakehouse/gold", "air-quality-airflow-gold-definition", type="volume", read_only=True),
     Mount("/opt/spark/work-dir/landing", "air-quality-airflow-landing-data", type="volume", read_only=True),
+    Mount("/opt/spark/work-dir/supabase-sync", "air-quality-airflow-supabase-sync", type="volume", read_only=True),
+]
+
+RCLONE_MOUNTS = [
+    Mount("/opt/spark/work-dir/jobs", "air-quality-airflow-spark-jobs", type="volume", read_only=True),
+    Mount("/data", "air-quality-airflow-supabase-sync", type="volume", read_only=False),
 ]
 
 
@@ -41,10 +49,17 @@ def _private_environment() -> dict[str, str]:
         "MINIO_ROOT_PASSWORD",
         "AWS_CONNECTION_STRING",
         "AWS_SECRET_KEY",
-        "AWS_REGION",
-        "AWS_DEFAULT_REGION",
     )
-    return {name: os.environ[name] for name in names if os.environ.get(name)}
+    environment = {
+        name: os.environ[name] for name in names if os.environ.get(name)
+    }
+    # Iceberg S3FileIO uses AWS SDK v2, which requires an explicit region even
+    # for the local MinIO endpoint. DockerOperator tasks do not inherit the
+    # spark-master service environment.
+    region = os.getenv("AWS_REGION", "us-east-1")
+    environment["AWS_REGION"] = region
+    environment["AWS_DEFAULT_REGION"] = os.getenv("AWS_DEFAULT_REGION", region)
+    return environment
 
 
 def spark_task(
@@ -88,6 +103,84 @@ def spark_task(
         retries=retries,
         retry_delay=timedelta(minutes=10),
         execution_timeout=timedelta(hours=8),
+        do_xcom_push=False,
+    )
+
+
+def check_supabase_s3_config() -> None:
+    required = (
+        "SUPABASE_S3_ENDPOINT",
+        "SUPABASE_S3_REGION",
+        "SUPABASE_S3_ACCESS_KEY_ID",
+        "SUPABASE_S3_SECRET_ACCESS_KEY",
+    )
+    missing = [name for name in required if not os.getenv(name)]
+    if missing:
+        raise AirflowException(
+            "Missing Supabase S3 settings for rclone: " + ", ".join(missing)
+        )
+    endpoint = os.environ["SUPABASE_S3_ENDPOINT"]
+    if not endpoint.startswith("https://") or not endpoint.endswith("/storage/v1/s3"):
+        raise AirflowException(
+            "SUPABASE_S3_ENDPOINT must be the HTTPS endpoint ending in /storage/v1/s3"
+        )
+
+
+def _rclone_private_environment() -> dict[str, str]:
+    return {
+        "RCLONE_CONFIG_SUPABASE_TYPE": "s3",
+        "RCLONE_CONFIG_SUPABASE_PROVIDER": "Other",
+        "RCLONE_CONFIG_SUPABASE_ACCESS_KEY_ID": os.environ.get(
+            "SUPABASE_S3_ACCESS_KEY_ID", ""
+        ),
+        "RCLONE_CONFIG_SUPABASE_SECRET_ACCESS_KEY": os.environ.get(
+            "SUPABASE_S3_SECRET_ACCESS_KEY", ""
+        ),
+        "RCLONE_CONFIG_SUPABASE_ENDPOINT": os.environ.get(
+            "SUPABASE_S3_ENDPOINT", ""
+        ),
+        "RCLONE_CONFIG_SUPABASE_REGION": os.environ.get("SUPABASE_S3_REGION", ""),
+        "RCLONE_CONFIG_SUPABASE_FORCE_PATH_STYLE": "true",
+        "RCLONE_CONFIG_SUPABASE_NO_CHECK_BUCKET": "true",
+        "SUPABASE_S3_BUCKET": os.getenv("SUPABASE_S3_BUCKET", "raw-api"),
+        "RCLONE_TRANSFERS": os.getenv("RCLONE_TRANSFERS", "8"),
+        "RCLONE_CHECKERS": os.getenv("RCLONE_CHECKERS", "16"),
+        "RCLONE_RETRIES": os.getenv("RCLONE_RETRIES", "5"),
+        "RCLONE_LOW_LEVEL_RETRIES": os.getenv("RCLONE_LOW_LEVEL_RETRIES", "10"),
+        "RCLONE_CONNECT_TIMEOUT": os.getenv("RCLONE_CONNECT_TIMEOUT", "15s"),
+        "RCLONE_IO_TIMEOUT": os.getenv("RCLONE_IO_TIMEOUT", "5m"),
+    }
+
+
+def rclone_supabase_task(
+    *, task_id: str, source: str, hour_prefixes: str, batch_id: str
+) -> DockerOperator:
+    if source not in {"waqi", "api_ninjas"}:
+        raise ValueError(f"Unsupported Supabase source: {source}")
+    destination = f"/data/{source}/{batch_id}"
+    return DockerOperator(
+        task_id=task_id,
+        image=RCLONE_IMAGE,
+        entrypoint=["/bin/sh"],
+        command=[
+            literal("/opt/spark/work-dir/jobs/bronze/rclone_supabase_day.sh"),
+            source,
+            hour_prefixes,
+            destination,
+        ],
+        docker_url=DOCKER_URL,
+        api_version=os.getenv("LAKEHOUSE_DOCKER_API_VERSION", "1.45"),
+        network_mode=NETWORK,
+        mounts=RCLONE_MOUNTS,
+        user=os.getenv("LAKEHOUSE_DATA_USER", "1000:1000"),
+        mount_tmp_dir=False,
+        auto_remove="success",
+        force_pull=False,
+        private_environment=_rclone_private_environment(),
+        pool="bronze_sync",
+        retries=2,
+        retry_delay=timedelta(minutes=5),
+        execution_timeout=timedelta(hours=2),
         do_xcom_push=False,
     )
 

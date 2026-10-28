@@ -18,6 +18,10 @@ class DailyWindowTests(unittest.TestCase):
         self.assertEqual(result["window_end_utc"], "2026-10-28T17:00:00Z")
         self.assertEqual(result["ingestion_date"], "2026-10-29")
         self.assertIn("20261027T170000Z", result["waqi_batch_id"])
+        prefixes = result["rclone_hour_prefixes"].split(",")
+        self.assertEqual(len(prefixes), 24)
+        self.assertEqual(prefixes[0], "2026/10/27/17")
+        self.assertEqual(prefixes[-1], "2026/10/28/16")
 
 
 class LandingConfigTests(unittest.TestCase):

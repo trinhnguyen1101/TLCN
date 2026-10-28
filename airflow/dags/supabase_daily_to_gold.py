@@ -13,6 +13,8 @@ from airflow.operators.python import PythonOperator
 from lakehouse_airflow import (
     audit_supabase_collection_runs,
     check_services,
+    check_supabase_s3_config,
+    rclone_supabase_task,
     spark_task,
 )
 from lakehouse_config import daily_window
@@ -56,6 +58,10 @@ with DAG(
         retries=2,
         retry_delay=timedelta(minutes=2),
     )
+    s3_config = PythonOperator(
+        task_id="check_supabase_s3_config",
+        python_callable=check_supabase_s3_config,
+    )
     audit = PythonOperator(
         task_id="audit_supabase_collection_runs",
         python_callable=audit_supabase_collection_runs,
@@ -63,6 +69,19 @@ with DAG(
         retries=6,
         retry_delay=timedelta(minutes=15),
         execution_timeout=timedelta(hours=2),
+    )
+
+    waqi_rclone = rclone_supabase_task(
+        task_id="waqi_rclone_daily_folder",
+        source="waqi",
+        hour_prefixes=xcom("rclone_hour_prefixes"),
+        batch_id=xcom("waqi_batch_id"),
+    )
+    ninja_rclone = rclone_supabase_task(
+        task_id="ninjas_rclone_daily_folder",
+        source="api_ninjas",
+        hour_prefixes=xcom("rclone_hour_prefixes"),
+        batch_id=xcom("api_ninjas_batch_id"),
     )
 
     waqi_bronze = spark_task(
@@ -79,6 +98,8 @@ with DAG(
             xcom("waqi_batch_id"),
             "--ingestion-date",
             xcom("ingestion_date"),
+            "--staging-root",
+            "/opt/spark/work-dir/supabase-sync/waqi/" + xcom("waqi_batch_id"),
         ],
         driver_memory="1g",
         pool="bronze_sync",
@@ -98,6 +119,9 @@ with DAG(
             xcom("api_ninjas_batch_id"),
             "--ingestion-date",
             xcom("ingestion_date"),
+            "--staging-root",
+            "/opt/spark/work-dir/supabase-sync/api_ninjas/"
+            + xcom("api_ninjas_batch_id"),
         ],
         driver_memory="1g",
         pool="bronze_sync",
@@ -173,7 +197,9 @@ with DAG(
     )
     complete = EmptyOperator(task_id="supabase_pipeline_complete")
 
-    resolve_window >> services >> audit >> [waqi_bronze, ninja_bronze]
+    resolve_window >> services >> s3_config >> audit >> [waqi_rclone, ninja_rclone]
+    waqi_rclone >> waqi_bronze
+    ninja_rclone >> ninja_bronze
     waqi_bronze >> waqi_silver
     [waqi_silver, ninja_bronze] >> ninja_silver
     ninja_silver >> waqi_gold >> ninja_gold >> complete

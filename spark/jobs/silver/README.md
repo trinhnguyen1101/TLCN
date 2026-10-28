@@ -32,7 +32,11 @@ AQI and concentration are separate variable IDs. API Ninjas concentration
 confirmed. WAQI IAQI is recorded as AQI, not mass concentration. Invalid
 provider responses remain in Bronze; the Silver job records quality issues
 and skips those observations. `partial` responses retain missing fields with
-their reason. Conflicting logical keys fail the run.
+their reason. WAQI may repeat one station `data.time.iso` while correcting IAQI
+or weather values in a later collection hour. Bronze retains every snapshot;
+Silver selects the row with the latest `collected_at_utc` and records
+`waqi_provider_correction_superseded`. Other unresolved conflicting logical keys
+still fail the run.
 The proxy location row points to the provider manifest that supplied its
 query coordinates; observation rows point to raw response files.
 

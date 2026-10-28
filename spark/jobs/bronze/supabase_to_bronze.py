@@ -1,6 +1,7 @@
 """Copy completed Supabase collection runs to an immutable MinIO Bronze batch.
 
-The database selects runs; the private Storage bucket supplies original bytes.
+The database selects runs.  Airflow normally stages the private Storage folder
+with rclone; the REST reader remains a backwards-compatible manual fallback.
 No source response is parsed or rewritten at this layer.
 """
 
@@ -15,7 +16,7 @@ import re
 import tempfile
 import time
 from datetime import datetime, timezone
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 from urllib.parse import parse_qs, quote, urlsplit
 from urllib.error import HTTPError, URLError
 from urllib.request import Request, urlopen
@@ -35,11 +36,11 @@ def utc(value):
     return result.astimezone(timezone.utc)
 
 
-def settings():
+def settings(require_storage_key=True):
     jdbc = os.environ["AWS_CONNECTION_STRING"]
-    key = os.environ["AWS_SECRET_KEY"]
-    if not jdbc.startswith("jdbc:postgresql://") or not key:
-        raise ValueError("Expected JDBC PostgreSQL URL and nonempty Storage secret")
+    key = os.environ.get("AWS_SECRET_KEY", "")
+    if not jdbc.startswith("jdbc:postgresql://") or (require_storage_key and not key):
+        raise ValueError("Expected JDBC PostgreSQL URL and required Storage secret")
     uri = urlsplit(jdbc[5:])
     parameters = parse_qs(uri.query, strict_parsing=True)
     user, password = parameters["user"][0], parameters["password"][0]
@@ -81,6 +82,24 @@ def storage_get(base_url, key, path):
     raise AssertionError("unreachable")
 
 
+def staged_get(landing_root, path, source, run_id, hour):
+    """Read one rclone-staged object without allowing path traversal."""
+    root = Path(landing_root).resolve(strict=True)
+    relative = source_path(path, source, run_id, hour)
+    target = (root / relative).resolve(strict=True)
+    if root not in target.parents:
+        raise ValueError("Staged object resolves outside its batch directory")
+    if not target.is_file():
+        raise ValueError(f"Staged Supabase object is not a regular file: {relative}")
+    return target.read_bytes()
+
+
+def object_get(base_url, key, path, source, run_id, hour, landing_root=None):
+    if landing_root is not None:
+        return staged_get(landing_root, path, source, run_id, hour)
+    return storage_get(base_url, key, path)
+
+
 def source_path(path, source, run_id, hour):
     parts = PurePosixPath(path).parts
     prefix = (source, hour.strftime("%Y"), hour.strftime("%m"), hour.strftime("%d"), hour.strftime("%H"), run_id)
@@ -92,13 +111,13 @@ def source_path(path, source, run_id, hour):
     return "/".join(parts[1:])
 
 
-def verified_manifest(run, source, base_url, key):
+def verified_manifest(run, source, base_url, key, landing_root=None):
     run_id = str(run["run_id"])
     hour = utc(run["scheduled_hour_utc"])
     path = run["manifest_object_path"]
     if not path or source_path(path, source, run_id, hour).split("/")[-1] != "manifest.json":
         raise ValueError("Run has no valid manifest path")
-    payload = storage_get(base_url, key, path)
+    payload = object_get(base_url, key, path, source, run_id, hour, landing_root)
     if not SHA.fullmatch(str(run["manifest_sha256"])) or hashlib.sha256(payload).hexdigest() != run["manifest_sha256"]:
         raise ValueError("Supabase manifest SHA-256 mismatch")
     manifest = json.loads(payload)
@@ -133,7 +152,7 @@ def verified_manifest(run, source, base_url, key):
         if suffix != str(record[target_key]) + ".raw.json" or raw_path in seen:
             raise ValueError("Raw path/target mismatch or duplicate")
         seen.add(raw_path)
-        raw = storage_get(base_url, key, raw_path)
+        raw = object_get(base_url, key, raw_path, source, run_id, hour, landing_root)
         digest = record.get("payload_sha256")
         if not SHA.fullmatch(str(digest)) or hashlib.sha256(raw).hexdigest() != digest:
             raise ValueError("Raw object SHA-256 mismatch")
@@ -141,10 +160,10 @@ def verified_manifest(run, source, base_url, key):
     return objects
 
 
-def inventory(runs, source, base_url, key):
+def inventory(runs, source, base_url, key, landing_root=None):
     objects = {}
     for index, run in enumerate(runs, start=1):
-        run_objects = verified_manifest(run, source, base_url, key)
+        run_objects = verified_manifest(run, source, base_url, key, landing_root)
         for path, payload, digest in run_objects:
             relative = source_path(path, source, str(run["run_id"]), utc(run["scheduled_hour_utc"]))
             if relative in objects:
@@ -275,6 +294,11 @@ def parse_args():
     parser.add_argument("--window-end", required=True)
     parser.add_argument("--batch-id")
     parser.add_argument("--ingestion-date")
+    parser.add_argument(
+        "--staging-root",
+        type=Path,
+        help="rclone batch directory; when set, no Storage REST downloads occur",
+    )
     return parser.parse_args()
 
 
@@ -302,7 +326,10 @@ def main():
     batch_id = args.batch_id or hashlib.sha256(f"{args.source}|{start.isoformat()}|{end.isoformat()}".encode()).hexdigest()[:24]
     if not SAFE.fullmatch(batch_id):
         raise ValueError("Unsafe batch ID")
-    db, base_url, key = settings()
+    staging_root = args.staging_root.resolve(strict=True) if args.staging_root else None
+    if staging_root is not None and not staging_root.is_dir():
+        raise ValueError("--staging-root must be a directory")
+    db, base_url, key = settings(require_storage_key=staging_root is None)
     with psycopg.connect(**db, sslmode="require", connect_timeout=15,
                          options="-c default_transaction_read_only=on", row_factory=dict_row) as conn:
         runs = conn.execute(
@@ -313,7 +340,9 @@ def main():
             "ORDER BY scheduled_hour_utc, attempt_number, run_id",
             (args.source, start, end),
         ).fetchall()
-    objects, fingerprint = inventory(runs, args.source, base_url, key)
+    objects, fingerprint = inventory(
+        runs, args.source, base_url, key, landing_root=staging_root
+    )
     spark = SparkSession.builder.appName("supabase-to-bronze").getOrCreate()
     spark.conf.set("spark.sql.session.timeZone", "UTC")
     try:

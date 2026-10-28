@@ -104,6 +104,28 @@ class SupabaseTransformTest(unittest.TestCase):
                             for r in measurements))
         self.assertTrue(any(r["value_native"] == 0 for r in measurements))
 
+    def test_waqi_latest_collection_wins_for_repeated_observation_clock(self):
+        hour_one = datetime(2026, 10, 26, 17, tzinfo=timezone.utc)
+        hour_two = datetime(2026, 10, 26, 18, tzinfo=timezone.utc)
+        meta_one = types.SimpleNamespace(source_file="2026/10/26/17/a/1583.raw.json")
+        meta_two = types.SimpleNamespace(source_file="2026/10/26/18/b/1583.raw.json")
+        common = {"requested_source_uid": "1583", "validation_status": "valid"}
+        raw_one = {"status": "ok", "data": {"idx": 1583,
+                   "time": {"iso": "2026-10-26T17:00:00+07:00"},
+                   "iaqi": {"o3": {"v": 6}}}}
+        raw_two = {"status": "ok", "data": {"idx": 1583,
+                   "time": {"iso": "2026-10-26T17:00:00+07:00"},
+                   "iaqi": {"o3": {"v": 9}}}}
+        records = [
+            (hour_one, "a", dict(common, collected_at_utc="2026-10-26T17:00:09Z"), raw_one, meta_one),
+            (hour_two, "b", dict(common, collected_at_utc="2026-10-26T18:00:08Z"), raw_two, meta_two),
+        ]
+        selected, superseded = module.latest_waqi_records(records)
+        self.assertEqual(superseded, 1)
+        self.assertEqual(len(selected), 1)
+        self.assertEqual(selected[0][3]["data"]["iaqi"]["o3"]["v"], 9)
+        self.assertEqual(selected[0][4].source_file, meta_two.source_file)
+
 
 if __name__ == "__main__":
     unittest.main()

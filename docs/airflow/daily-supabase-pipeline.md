@@ -3,7 +3,7 @@
 [Mục lục tài liệu](../README.md) / **Airflow**
 
 Trạng thái triển khai: hai DAG nằm trong `airflow/dags/`, dùng
-`DockerOperator` để chạy đúng image Spark đã được kiểm chứng. DAG mới được tạo
+`DockerOperator` để chạy đúng image Spark và rclone đã pin. DAG mới được tạo
 ở trạng thái paused theo mặc định của Airflow; người vận hành kiểm tra import và
 trigger thử trước khi unpause lịch daily.
 
@@ -18,7 +18,9 @@ Luồng batch lịch sử                    Luồng cloud hằng ngày
 
 Landing files                          Supabase Storage/PostgreSQL
       ↓                                           ↓
-MinIO Bronze                           MinIO Bronze
+MinIO Bronze                           rclone daily staging
+                                                  ↓
+                                        MinIO Bronze
       ↓                                           ↓
 Iceberg Silver                         Iceberg Silver
       ↓                                           ↓
@@ -99,6 +101,10 @@ Luồng này đồng bộ một daily micro-batch từ Supabase Cloud về local
 ```text
 Supabase Storage/PostgreSQL
         ↓
+rclone copy đúng 24 UTC-hour prefix
+        ↓
+data/supabase-sync/<source>/<batch_id>
+        ↓
 MinIO Bronze
         ↓
 Iceberg Silver
@@ -155,9 +161,12 @@ cùng logical run phải luôn tạo lại đúng window, batch ID và Bronze pa
 ```mermaid
 flowchart TD
   A[resolve_daily_window] --> B[check_lakehouse_services]
-  B --> C[audit_supabase_collection_runs]
-  C --> D1[waqi_supabase_to_bronze]
-  C --> D2[ninjas_supabase_to_bronze]
+  B --> B2[check_supabase_s3_config]
+  B2 --> C[audit_supabase_collection_runs]
+  C --> R1[waqi_rclone_daily_folder]
+  C --> R2[ninjas_rclone_daily_folder]
+  R1 --> D1[waqi_supabase_to_bronze]
+  R2 --> D2[ninjas_supabase_to_bronze]
   D1 --> E1[waqi_bronze_to_silver]
   D2 --> E2[ninjas_bronze_to_silver]
   E1 --> F[verify_silver_runs]
@@ -190,10 +199,11 @@ business_date
 window_start_utc
 window_end_utc
 ingestion_date
+rclone_hour_prefixes
 waqi_batch_id
-ninja_batch_id
+api_ninjas_batch_id
 waqi_bronze_path
-ninja_bronze_path
+api_ninjas_bronze_path
 ```
 
 Batch ID chỉ dùng ký tự an toàn và phải ổn định theo source/window, ví dụ:
@@ -216,6 +226,10 @@ s3a://lakehouse/bronze/api_ninjas/province_air_quality/
 XCom chỉ chứa các chuỗi điều phối nhỏ này; không đưa raw payload, credential,
 Spark DataFrame hoặc danh sách observation vào Airflow metadata database.
 
+`rclone_hour_prefixes` luôn có đúng 24 prefix UTC. Ví dụ ngày Việt Nam
+`2026-10-28` bắt đầu bằng `2026/10/27/17` và kết thúc bằng
+`2026/10/28/16`; không copy nguyên hai ngày UTC rồi lọc muộn.
+
 #### 3.3.2 `check_lakehouse_services`
 
 Fail sớm nếu thành phần bắt buộc chưa sẵn sàng:
@@ -225,6 +239,7 @@ Fail sớm nếu thành phần bắt buộc chưa sẵn sàng:
 - Nessie API v2 hoạt động.
 - Trino trả `/v1/info`.
 - Supabase PostgreSQL/Storage có thể truy cập bằng secret của task.
+- Supabase S3 endpoint, region và access key cho rclone đã được cấu hình.
 
 Health check chỉ đọc, không bootstrap/xóa dữ liệu và không coi một service
 container ở trạng thái `running` là đủ nếu endpoint chưa healthy.
@@ -249,7 +264,38 @@ Quy tắc:
 Task có thể retry đến deadline vận hành, ví dụ 02:00 giờ Việt Nam. Sau deadline,
 DAG fail và cần reconciliation/backfill khi raw object đã có.
 
-#### 3.3.4 Supabase → Bronze
+#### 3.3.4 Supabase Storage → rclone staging
+
+Hai `DockerOperator` dùng image pin `rclone/rclone:1.75.2` và chạy song song.
+Mỗi task thực hiện một lệnh `rclone copy` từ private bucket `raw-api`, với
+`--include-from` chứa đúng 24 UTC-hour prefix của daily window. Đích local:
+
+```text
+data/supabase-sync/waqi/<waqi_batch_id>/
+data/supabase-sync/api_ninjas/<api_ninjas_batch_id>/
+```
+
+Thiết lập mặc định:
+
+```text
+--transfers 8
+--checkers 16
+--checksum
+--retries 5
+--low-level-retries 10
+--contimeout 15s
+--timeout 5m
+```
+
+Dùng `copy`, không dùng `sync`: retry được bỏ qua object đã khớp nhưng tuyệt đối
+không xóa lịch sử local nếu object cloud bị xóa. Rclone vẫn thực hiện nhiều S3
+GET bên dưới, nhưng tải song song và tái sử dụng HTTP connection. Các file trong
+staging chưa được tin cậy cho đến khi Spark kiểm tra manifest và SHA-256.
+Không bật `--fast-list`: remote root chứa toàn bộ lịch sử và recursive listing
+toàn source sẽ ngày càng chậm; bộ lọc giờ cho phép rclone chỉ duyệt các nhánh
+ngày/giờ cần thiết.
+
+#### 3.3.5 rclone staging → Bronze
 
 Mỗi source gọi:
 
@@ -260,11 +306,15 @@ spark/jobs/bronze/supabase_to_bronze.py
   --window-end <UTC>
   --batch-id <stable ID>
   --ingestion-date <stable date>
+  --staging-root /opt/spark/work-dir/supabase-sync/<source>/<batch_id>
 ```
 
-Job chọn succeeded/partial collection runs, tải manifest/raw objects, kiểm tra
-SHA-256, ghi immutable files, `_file_metadata`, `_ingestion_manifest/_SUCCESS`
-và checkpoint. Task thành công chỉ khi batch đọc lại được và `_SUCCESS` tồn tại.
+Job chọn succeeded/partial collection runs từ PostgreSQL, chỉ đọc các
+manifest/raw object tương ứng trong staging, kiểm tra path và SHA-256, rồi ghi
+immutable files, `_file_metadata`, `_ingestion_manifest/_SUCCESS` và checkpoint.
+Airflow daily path không tải từng object bằng Storage REST nữa. Chế độ REST cũ
+chỉ được giữ làm fallback tương thích cho lệnh manual không truyền
+`--staging-root`.
 
 Retry semantics:
 
@@ -272,7 +322,7 @@ Retry semantics:
 - Cùng batch ID nhưng fingerprint khác: fail, không overwrite.
 - Không có eligible collection run: fail; không tạo batch rỗng.
 
-#### 3.3.5 Bronze → Silver
+#### 3.3.6 Bronze → Silver
 
 Mỗi source gọi:
 
@@ -285,6 +335,10 @@ spark/jobs/silver/supabase_bronze_to_silver.py
 WAQI ghi station/hourly observations và pollutant IAQI. API Ninjas ghi
 city-proxy locations, hourly observations và measurement rows. Silver chỉ dùng
 successful ingestion lineage; logical run đã succeeded sẽ được skip khi replay.
+WAQI đôi khi trả cùng provider `time.iso` trong nhiều giờ thu thập nhưng sửa lại
+pollutant/weather values. Bronze giữ mọi raw snapshot; Silver nhóm theo
+`station UID + observation_time` và chọn snapshot có `collected_at_utc` mới
+nhất, đồng thời ghi quality warning `waqi_provider_correction_superseded`.
 
 Sau cả hai job, `verify_silver_runs` kiểm tra:
 
@@ -294,7 +348,7 @@ Sau cả hai job, `verify_silver_runs` kiểm tra:
 - output row count lớn hơn 0;
 - API Ninjas proxy mapping vẫn tham chiếu admin version hợp lệ.
 
-#### 3.3.6 Silver → Gold
+#### 3.3.7 Silver → Gold
 
 Mỗi source gọi:
 
@@ -337,7 +391,7 @@ sau khi keys, origin, provider scheme, clocks, row counts và location semantics
 đạt contract. Hai source được publish thành hai compatibility lane trong channel
 `provider_air_quality`; không thay pointer `air_quality` của computed VN_AQI.
 
-#### 3.3.7 `verify_gold_publication`
+#### 3.3.8 `verify_gold_publication`
 
 Trino quality gate tối thiểu:
 
@@ -430,7 +484,7 @@ thành công. Cách này giữ nguyên Java, ecCodes, Python packages và Iceber
 đã được kiểm chứng; đặc biệt không tạo một runtime CAMS thứ hai trong image
 Airflow.
 
-Các source sau được mount read-only bằng named bind volume:
+Các source sau được mount read-only vào Spark bằng named bind volume:
 
 ```text
 spark/jobs       → /opt/spark/work-dir/jobs
@@ -438,7 +492,11 @@ spark/config     → /opt/spark/conf
 lakehouse/silver → /opt/spark/work-dir/lakehouse/silver
 lakehouse/gold   → /opt/spark/work-dir/lakehouse/gold
 data/landing     → /opt/spark/work-dir/landing
+data/supabase-sync → /opt/spark/work-dir/supabase-sync
 ```
+
+Riêng container rclone mount `data/supabase-sync` read-write tại `/data`; Spark
+chỉ đọc lại staging sau khi transfer hoàn tất.
 
 Airflow không nhận trực tiếp `/var/run/docker.sock`. Service `docker-proxy` là
 thành phần duy nhất mount socket và chỉ xuất Docker API trên network internal
@@ -448,10 +506,10 @@ Proxy image local tăng HAProxy client/server idle timeout lên 12 giờ để r
 `POST /containers/{id}/wait` của DockerOperator sống lâu bằng Spark task. Timeout
 HTTP request/connect vẫn giữ ngắn; Airflow `execution_timeout` vẫn giới hạn task.
 
-Supabase Bronze retry từng Storage object tối đa 5 lần với backoff 1/2/4/8 giây
-cho lỗi transport và HTTP 408/429/5xx. HTTP auth/not-found và checksum mismatch
-vẫn fail ngay. Log tiến độ theo từng collection run để phân biệt tải chậm với
-task bị treo.
+Rclone retry transfer/S3 request và tải tối đa 8 object đồng thời theo mặc định.
+Spark không tin checksum transport: nó đọc lại staging và đối chiếu SHA-256 trong
+manifest trước khi ghi Bronze. REST fallback vẫn retry từng object tối đa 5 lần,
+nhưng daily DAG không dùng fallback này.
 
 Airflow pool là single-writer control trong deployment local. Nếu chuyển sang
 Celery/Kubernetes hoặc nhiều host, advisory file lock hiện tại không còn đủ;
@@ -463,6 +521,7 @@ Chạy từ repository root để `${PWD}` của các named bind volume trỏ đ
 
 ```bash
 docker compose build spark-master spark-worker airflow-init airflow-webserver airflow-scheduler
+docker pull rclone/rclone:1.75.2
 docker compose up -d docker-proxy postgres minio minio-init nessie trino
 docker compose up -d airflow-init
 docker compose up -d airflow-webserver airflow-scheduler
@@ -512,11 +571,94 @@ docker compose exec -T airflow-scheduler airflow dags unpause supabase_daily_to_
 Không unpause khi Supabase chưa có đủ 24 manifested collection hours/source cho
 ngày đầu tiên; audit sẽ chủ động fail thay vì tạo batch thiếu.
 
+### 8.4 Troubleshooting đã gặp khi nghiệm thu
+
+| Dấu hiệu trong log | Nguyên nhân | Cách xử lý |
+| --- | --- | --- |
+| `TemplateNotFound: ...rclone_supabase_day.sh` | Airflow coi chuỗi kết thúc `.sh` là Jinja template path | Factory rclone phải bọc đường dẫn bằng `airflow.utils.template.literal()` |
+| `mkdir: can't create directory '/data/...': Permission denied` | Named volume staging bị Docker tạo sớm thành volume thường `root:root`, không phải bind volume | Kiểm tra volume options và recreate **chỉ khi staging trống** |
+| `Unable to load region from any of the providers` | Container Spark DockerOperator không kế thừa region từ `spark-master` | Truyền `AWS_REGION` và `AWS_DEFAULT_REGION=us-east-1` trong private environment |
+| `waqi_hourly_measurement: conflicting logical key` | WAQI sửa values nhưng giữ nguyên provider `time.iso` giữa hai lần collection | Bronze giữ cả hai; Silver chọn snapshot có `collected_at_utc` mới nhất |
+
+Kiểm tra staging volume:
+
+```bash
+docker volume inspect air-quality-airflow-supabase-sync \
+  --format '{{json .Options}}'
+```
+
+Kết quả đúng phải chứa `type=none`, `o=bind` và `device` trỏ tới
+`<project>/data/supabase-sync`. Kiểm tra quyền bằng đúng UID/GID của rclone:
+
+```bash
+docker run --rm --entrypoint /bin/sh --user 1000:1000 \
+  -v air-quality-airflow-supabase-sync:/data \
+  rclone/rclone:1.75.2 \
+  -c 'mkdir -p /data/permission-test && rmdir /data/permission-test'
+```
+
+Không xóa volume chỉ vì permission error. Trước hết mount read-only và xác nhận
+không có file cần giữ. Nếu volume sai và hoàn toàn trống, pause DAG, remove các
+container Airflow còn giữ mount và remove đúng volume staging. Sau đó chạy
+`docker compose up -d airflow-webserver airflow-scheduler`; Compose sẽ tạo lại
+bind volume theo `docker-compose.yml`. Không áp dụng thao tác này cho
+MinIO/PostgreSQL/Nessie.
+
+Khi cần retry ngay một task, ưu tiên Clear đúng task instance trong Airflow UI
+và giữ nguyên `run_id`; không dùng `airflow tasks clear` chỉ với ngày nếu trong
+ngày có nhiều manual run, vì CLI có thể clear cùng task của tất cả run phù hợp.
+
+### 8.5 Nghiệm thu end-to-end ngày 28/10/2026
+
+Manual run `manual__2026-10-28T15:39:49.120472+00:00` đã hoàn tất `success` lúc
+`2026-10-28 15:56:22 UTC` (`22:56:22 Asia/Ho_Chi_Minh`):
+
+```text
+WAQI rclone:       736 files, success
+API Ninjas rclone: 840 files, success
+WAQI Bronze/Silver/Gold:       success
+API Ninjas Bronze/Silver/Gold: success
+supabase_pipeline_complete:    success
+```
+
+Đây là bằng chứng smoke/E2E cho một daily window trên môi trường local hiện tại,
+không phải cam kết throughput cho mọi ngày. Rclone hoàn tất hai source trong
+khoảng vài chục giây ở lần chạy này; theo dõi stats thực tế trước khi tăng
+`RCLONE_TRANSFERS` quá 8.
+
 ## 9. Credentials và logging
 
 Credential Supabase/MinIO chỉ đi qua Airflow Connection, environment hoặc secret
 backend. Không đưa service-role key, JDBC password, raw manifest hay signed URL
 vào DAG code, XCom hoặc log.
+
+Mọi Spark DockerOperator nhận `AWS_REGION` và `AWS_DEFAULT_REGION=us-east-1`
+cho MinIO/Iceberg `S3FileIO`. Container task không kế thừa environment của
+service `spark-master`; thiếu hai biến này làm AWS SDK v2 thử EC2 metadata rồi
+fail trước khi đọc Iceberg metadata.
+
+Rclone cần bộ S3 credential riêng, tạo tại **Supabase Dashboard → Storage → S3
+Configuration → Access keys**. Đây là server-side credential có quyền rộng và
+không phải service-role key. Thêm vào `.env`, sau đó recreate Airflow scheduler
+và webserver:
+
+```dotenv
+SUPABASE_S3_ENDPOINT=https://<project-ref>.storage.supabase.co/storage/v1/s3
+SUPABASE_S3_REGION=<region hiển thị trong Supabase>
+SUPABASE_S3_ACCESS_KEY_ID=<server-side access key>
+SUPABASE_S3_SECRET_ACCESS_KEY=<server-side secret key>
+SUPABASE_S3_BUCKET=raw-api
+
+# Tuning ban đầu; chỉ tăng sau khi đo và kiểm tra rate limit.
+RCLONE_TRANSFERS=8
+RCLONE_CHECKERS=16
+LAKEHOUSE_DATA_USER=1000:1000
+```
+
+Không commit `.env` hoặc `rclone.conf`. Credential được truyền bằng private
+environment của DockerOperator; command và XCom không chứa access key/secret.
+`LAKEHOUSE_DATA_USER` nên khớp `id -u:id -g` của user sở hữu project để staging
+không sinh file root-owned.
 
 Tên environment hiện tại `AWS_CONNECTION_STRING`/`AWS_SECRET_KEY` đang được job
 Supabase sử dụng như JDBC/service credential và dễ gây nhầm. Khi triển khai DAG

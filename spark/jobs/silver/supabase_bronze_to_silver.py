@@ -289,6 +289,41 @@ def province_lookup(spark, locations):
     return resolved
 
 
+def latest_waqi_records(records):
+    """Keep the newest provider snapshot for one station observation clock.
+
+    WAQI can return the same ``time.iso`` in consecutive collection hours while
+    correcting pollutant or weather values. Bronze retains every raw response;
+    Silver is canonical at station + provider observation time, so the latest
+    ``collected_at_utc`` wins deterministically.
+    """
+    selected = {}
+    superseded = 0
+    for record in records:
+        hour, collection_run_id, entry, raw, meta = record
+        data = raw.get("data") if isinstance(raw, dict) else None
+        if not isinstance(raw, dict) or raw.get("status") != "ok" or not isinstance(data, dict):
+            raise DataQualityError("WAQI valid manifest points to invalid provider payload")
+        uid = str(entry["requested_source_uid"])
+        if str(data.get("idx")) != uid:
+            raise DataQualityError("WAQI returned station UID differs from requested UID")
+        observation_time = timestamp(data["time"]["iso"])
+        collected = timestamp(entry["collected_at_utc"])
+        key = (uid, observation_time)
+        # The remaining fields make equal collection timestamps deterministic
+        # without changing the primary latest-collected policy.
+        rank = (collected, hour, str(collection_run_id), meta.source_file)
+        previous = selected.get(key)
+        if previous is None:
+            selected[key] = (rank, record)
+            continue
+        superseded += 1
+        if rank > previous[0]:
+            selected[key] = (rank, record)
+    ordered = [value[1] for _, value in sorted(selected.items(), key=lambda item: item[0])]
+    return ordered, superseded
+
+
 def waqi(spark, records, run):
     now = utc_now()
     stations, sources, availability, observations, measurements = [], [], [], [], []
@@ -502,6 +537,19 @@ def main():
         if run.skipped:
             return
         records, issues, input_targets = source_records(spark, batch)
+        superseded = 0
+        if args.source == "waqi":
+            records, superseded = latest_waqi_records(records)
+            if superseded:
+                issues.append({
+                    "rule_id": "waqi_provider_correction_superseded",
+                    "severity": "warning",
+                    "issue_type": "provider_snapshot_correction",
+                    "description": (
+                        f"Selected latest collected_at_utc for {superseded} repeated "
+                        "station observation snapshot(s); all raw versions remain in Bronze"
+                    ),
+                })
         write_quality_issues(spark, run, issues)
         specs, output = waqi(spark, records, run) if args.source == "waqi" else ninjas(spark, records, run)
         if not output:
@@ -509,7 +557,7 @@ def main():
         variables = variable_rows(args.source)
         merge_checked(spark, "variable", variables, ["source_system", "source_variable", "measurement_kind"],
                       ["native_unit", "standard_unit"], run)
-        duplicates = 0
+        duplicates = superseded
         for table, rows, key, compare, update in specs:
             duplicates += merge_checked(spark, table, rows, key, compare, run, update=update)
         finish_run(spark, run, status="succeeded", input_rows=input_targets, output_rows=output,

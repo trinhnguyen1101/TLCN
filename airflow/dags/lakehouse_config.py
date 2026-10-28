@@ -156,6 +156,13 @@ def daily_window(data_interval_end: datetime) -> dict:
         "window_start_utc": start.isoformat().replace("+00:00", "Z"),
         "window_end_utc": end.isoformat().replace("+00:00", "Z"),
         "ingestion_date": ingestion_date,
+        # Supabase stores objects under UTC hour prefixes.  A Vietnam calendar
+        # day crosses two UTC dates, so rclone must receive the exact 24
+        # prefixes instead of copying either UTC date folder wholesale.
+        "rclone_hour_prefixes": ",".join(
+            (start + timedelta(hours=offset)).strftime("%Y/%m/%d/%H")
+            for offset in range(24)
+        ),
     }
     for source, dataset in (("waqi", "live"), ("api_ninjas", "province_air_quality")):
         batch_id = f"{source}_{stamp_start}_{stamp_end}"

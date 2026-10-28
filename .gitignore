@@ -10,7 +10,9 @@
 !*.env.example
 !*.env.sample
 !*.env.template
-data/
+/data/*
+!/data/landing/
+!/data/supabase-sync/
 
 # Python environments, bytecode and tooling caches
 .venv/
@@ -98,3 +100,5 @@ Desktop.ini
 # Ignore heavy landing data directory (allow keeping a placeholder)
 /data/landing/**
 !/data/landing/.gitkeep
+/data/supabase-sync/**
+!/data/supabase-sync/.gitkeep

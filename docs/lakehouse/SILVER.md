@@ -101,6 +101,9 @@ không tương đương số province observations.
   expected-variable metadata; không dùng chúng để tính lại VN_AQI như nồng độ.
 - **WAQI live:** giữ actual provider observation time, collection time và IAQI
   riêng theo measurement kind. Snapshot lấy theo giờ không chứng minh hourly mean.
+  Nếu provider giữ nguyên observation time nhưng sửa values ở lần collection
+  sau, Bronze giữ mọi raw version còn Silver canonical chọn
+  `collected_at_utc` mới nhất và ghi quality warning.
 - **API Ninjas:** một tọa độ city proxy, không phải spatial mean của cả tỉnh.
   Nguồn không cung cấp actual observation timestamp trong contract hiện có;
   `snapshot_hour_utc` dựa trên collection hour, không phải observation clock giả.
@@ -150,15 +153,15 @@ Gold còn pin input snapshots và kiểm tra source contract trước publish.
 
 ## 8. Trạng thái dữ liệu đã được kiểm chứng
 
-Theo evidence của đợt nghiệm thu28/10/2026:
+Theo evidence của đợt nghiệm thu 28/10/2026:
 
 | Nguồn | Bằng chứng và giới hạn |
 | --- | --- |
-| Hành chính | Có reporting snapshot34tỉnh; Hoàng Sa thuộc Đà Nẵng, Trường Sa thuộc Khánh Hòa |
-| CAMS | Có3standard cube rows thuộc `EAC4-validation-*`; chưa chứng minh EAC4 production/full archive |
+| Hành chính | Có reporting snapshot 34 tỉnh; Hoàng Sa thuộc Đà Nẵng, Trường Sa thuộc Khánh Hòa |
+| CAMS | Có 3 standard cube rows thuộc `EAC4-validation-*`; chưa chứng minh EAC4 production/full archive |
 | WAQI historical | Có dữ liệu Silver native phục vụ Gold provider-daily facts |
 | Climate TRACE | Có dữ liệu native; certified emission units/geographic allocation vẫn thiếu |
-| WAQI live/API Ninjas | Có code/schema và fixtures; chưa nghiệm thu succeeded production inputs để bật Gold adapters |
+| WAQI live/API Ninjas | Daily Supabase run ngày 28/10/2026 đã thành công qua Bronze, Silver và provider Gold; tiếp tục theo dõi coverage/QC cho các ngày kế tiếp |
 | Hourly means production | Chưa có nguồn thật đủ reviewed temporal/unit/QC contract; fixtures nằm riêng `gold_test*` |
 
 Đây là trạng thái evidence, không phải inventory tự cập nhật. Kiểm tra lại

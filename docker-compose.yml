@@ -16,10 +16,25 @@ x-airflow-common: &airflow-common
     AWS_SECRET_KEY: ${AWS_SECRET_KEY}
     MINIO_ROOT_USER: ${MINIO_ROOT_USER}
     MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    AWS_REGION: ${AWS_REGION:-us-east-1}
+    AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
     DOCKER_HOST: tcp://docker-proxy:2375
     AIRFLOW_SUPABASE_START_DATE: ${AIRFLOW_SUPABASE_START_DATE:-2026-10-27}
     AIRFLOW_SUPABASE_MAX_MISSING_HOURS: ${AIRFLOW_SUPABASE_MAX_MISSING_HOURS:-1}
+    SUPABASE_S3_ENDPOINT: ${SUPABASE_S3_ENDPOINT:-}
+    SUPABASE_S3_REGION: ${SUPABASE_S3_REGION:-}
+    SUPABASE_S3_ACCESS_KEY_ID: ${SUPABASE_S3_ACCESS_KEY_ID:-}
+    SUPABASE_S3_SECRET_ACCESS_KEY: ${SUPABASE_S3_SECRET_ACCESS_KEY:-}
+    SUPABASE_S3_BUCKET: ${SUPABASE_S3_BUCKET:-raw-api}
+    RCLONE_TRANSFERS: ${RCLONE_TRANSFERS:-8}
+    RCLONE_CHECKERS: ${RCLONE_CHECKERS:-16}
+    RCLONE_RETRIES: ${RCLONE_RETRIES:-5}
+    RCLONE_LOW_LEVEL_RETRIES: ${RCLONE_LOW_LEVEL_RETRIES:-10}
+    RCLONE_CONNECT_TIMEOUT: ${RCLONE_CONNECT_TIMEOUT:-15s}
+    RCLONE_IO_TIMEOUT: ${RCLONE_IO_TIMEOUT:-5m}
     LAKEHOUSE_SPARK_IMAGE: air-quality-spark:3.5.4-iceberg-1.7.1
+    LAKEHOUSE_RCLONE_IMAGE: rclone/rclone:1.75.2
+    LAKEHOUSE_DATA_USER: ${LAKEHOUSE_DATA_USER:-1000:1000}
     LAKEHOUSE_DOCKER_API_VERSION: "1.45"
   volumes:
     - ./airflow/dags:/opt/airflow/dags
@@ -32,6 +47,7 @@ x-airflow-common: &airflow-common
     - airflow-silver-definition:/opt/airflow/lakehouse-mounts/silver:ro
     - airflow-gold-definition:/opt/airflow/lakehouse-mounts/gold:ro
     - airflow-landing-data:/opt/airflow/lakehouse-mounts/landing:ro
+    - airflow-supabase-sync:/opt/airflow/lakehouse-mounts/supabase-sync:ro
   depends_on:
     postgres:
       condition: service_healthy
@@ -209,6 +225,7 @@ services:
       - ./lakehouse/silver:/opt/spark/work-dir/lakehouse/silver:ro
       - ./lakehouse/gold:/opt/spark/work-dir/lakehouse/gold:ro
       - ./data/landing:/opt/spark/work-dir/landing:ro
+      - ./data/supabase-sync:/opt/spark/work-dir/supabase-sync:ro
       - ./spark/config:/opt/spark/conf:ro
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:8080 || exit 1"]
@@ -239,6 +256,7 @@ services:
       - ./lakehouse/silver:/opt/spark/work-dir/lakehouse/silver:ro
       - ./lakehouse/gold:/opt/spark/work-dir/lakehouse/gold:ro
       - ./data/landing:/opt/spark/work-dir/landing:ro
+      - ./data/supabase-sync:/opt/spark/work-dir/supabase-sync:ro
       - ./spark/config:/opt/spark/conf:ro
     depends_on:
       spark-master:
@@ -324,3 +342,10 @@ volumes:
       type: none
       o: bind
       device: ${PWD}/data/landing
+  airflow-supabase-sync:
+    name: air-quality-airflow-supabase-sync
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${PWD}/data/supabase-sync
