@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 
 from app.api.dependencies import get_dashboard_service
 from app.schemas.dashboard import AdminDashboardData, DashboardData
@@ -10,8 +10,14 @@ from app.services.temporal import DashboardQuery, InvalidDashboardQuery, Resolut
 router = APIRouter(tags=["dashboard"])
 
 
-def dashboard_query(resolution: Resolution = "3h", start: str | None = None, end: str | None = None):
-    query = DashboardQuery(resolution, start, end)
+def dashboard_query(request: Request, resolution: Resolution | None = None, start: str | None = None, end: str | None = None,
+                    source: str | None = None,series_id: str | None = None,method_version: str | None = None,
+                    applicability_profile: str | None = None,compatibility_id: str | None = None):
+    selected = resolution or ("hourly" if request.app.state.dashboard_data_source == "gold" else "3h")
+    filters=dict(source=source,series_id=series_id,method_version=method_version,applicability_profile=applicability_profile,compatibility_id=compatibility_id)
+    if request.app.state.dashboard_data_source!='gold' and any(filters.values()):
+        raise HTTPException(422,'Source/semantic selection requires Gold mode')
+    query = DashboardQuery(selected, start, end,**filters)
     try:
         for value in (start, end):
             if value:
@@ -52,4 +58,22 @@ def get_admin_dashboard(
     try:
         return service.get_admin_dashboard(query)
     except (InvalidDashboardQuery, ValueError) as exc:
+        raise HTTPException(422, str(exc)) from exc
+
+
+@router.get('/dashboard/analytics')
+def get_analytics(
+    service: Annotated[DashboardService, Depends(get_dashboard_service)],
+    province_code: str = 'all', metric: str = 'pm25', year: int | None = None,
+    month: int | None = None, start_date: str | None = None, end_date: str | None = None,
+    provinceCode: str | None = None, startDate: str | None = None, endDate: str | None = None,
+):
+    from app.services.analytics import AnalyticsQuery
+    from pydantic import ValidationError
+    try:
+        query = AnalyticsQuery(province_code=provinceCode or province_code, metric=metric,
+                               year=year, month=month, start_date=startDate or start_date,
+                               end_date=endDate or end_date)
+        return service.get_analytics(query)
+    except (ValueError, ValidationError) as exc:
         raise HTTPException(422, str(exc)) from exc

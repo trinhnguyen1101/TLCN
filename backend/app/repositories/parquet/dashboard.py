@@ -44,6 +44,8 @@ class ParquetDashboardRepository:
         self._max_query_entries = 16
 
     def get_dashboard(self, query: DashboardQuery | None = None) -> DashboardData:
+        if query and query.resolution == "hourly":
+            raise InvalidDashboardQuery("Hourly Gold queries require DASHBOARD_DATA_SOURCE=gold")
         # Validate user bounds separately from data-source errors.
         if query and query.start and query.end:
             query.bounds(query.end)

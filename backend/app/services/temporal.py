@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
 from typing import Literal
 
-Resolution = Literal["3h", "daily", "monthly"]
+Resolution = Literal["hourly", "3h", "daily", "monthly"]
 
 
 class InvalidDashboardQuery(Exception):
@@ -25,16 +25,21 @@ class DashboardQuery:
     resolution: Resolution = "3h"
     start: str | None = None
     end: str | None = None
+    source: str | None = None
+    series_id: str | None = None
+    method_version: str | None = None
+    applicability_profile: str | None = None
+    compatibility_id: str | None = None
 
     def bounds(self, latest: str) -> tuple[datetime, datetime]:
         end = utc_bound(self.end, end=True) if self.end else utc_bound(latest)
         start = utc_bound(self.start) if self.start else (
             end.replace(hour=0, minute=0, second=0, microsecond=0)
-            - timedelta(days=6 if self.resolution == "3h" else 30)
+            - timedelta(days=6 if self.resolution in ("3h", "hourly") else 30)
         )
         if start > end:
             raise ValueError("start must be before or equal to end")
-        limit = 31 if self.resolution == "3h" else 366
+        limit = 31 if self.resolution in ("3h", "hourly") else 366
         if self.resolution != "monthly" and end - start >= timedelta(days=limit):
             raise ValueError(f"{self.resolution} queries support at most {limit} days")
         return start, end

@@ -134,3 +134,15 @@ async def test_response_supports_gzip(client):
     response = await client.get('/api/dashboard/analytics', headers={'Accept-Encoding': 'gzip'})
     assert response.status_code == 200
     assert response.headers['content-encoding'] == 'gzip'
+
+
+def test_hour_sample_weighted_gold_months():
+    data=sample()
+    for record in data.dashboard_trend_records:
+        record.metric_sample_counts={'pm25':1}
+    data.dashboard_trend_records[0].metric_sample_counts={'pm25':24}
+    result=build_analytics(data,AnalyticsQuery(province_code='a'))
+    rows=[r for r in data.dashboard_trend_records if r.province_code=='a' and r.pm25 is not None]
+    expected=sum(r.pm25*r.metric_sample_counts['pm25'] for r in rows)/sum(r.metric_sample_counts['pm25'] for r in rows)
+    assert result.summary.mean==expected
+    assert 'weighted' in result.aggregation_policy

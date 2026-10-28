@@ -8,20 +8,43 @@ from pydantic.alias_generators import to_camel
 
 # Province identifiers come from the selected source, not the demo seed.
 ProvinceCode = str
-AirQualityStatus = Literal["Tốt", "Trung bình", "Kém", "Xấu"]
+AirQualityStatus = Literal["Tốt", "Trung bình", "Kém", "Xấu", "Rất xấu", "Nguy hại"]
 
 
 class ApiModel(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True, allow_inf_nan=False)
 
 
+class MetricQuality(ApiModel):
+    quality_status: str | None = None
+    missing_reason: str | None = None
+    observation_time: datetime | None = None
+    coverage: float | None = None
+
+
 class ProvinceSnapshot(ApiModel):
+    metric_quality: dict[str,MetricQuality] = Field(default_factory=dict)
+    aqi_status: str | None = None
     province_code: ProvinceCode
     province_name: str
     aqi: int | None
     status: AirQualityStatus | None
     pm25: float | None
     pm10: float | None
+    source: str | None = None
+    series_id: str | None = None
+    location_id: str | None = None
+    observation_time: datetime | None = None
+    source_resolution_minutes: int | None = None
+    temporal_support: str | None = None
+    applicability_profile: str | None = None
+    quality_status: str | None = None
+    aqi_missing_reason: str | None = None
+    coverage: float | None = None
+    aqi_method_version: str | None = None
+    aqi_origin: str | None = None
+    dominant_pollutants: list[str] | None = None
+    published_release_id: str | None = None
     pm1: float | None = None
     o3: float | None = None
     no2: float | None = None
@@ -43,6 +66,8 @@ class EmissionRecord(ApiModel):
 
 
 class DashboardTrendRecord(ApiModel):
+    metric_sample_counts: dict[str, int] | None = None
+    aqi: int | None = None
     province_code: ProvinceCode
     date: date | datetime
     pm25: float | None
@@ -67,6 +92,10 @@ class DashboardTrendRecord(ApiModel):
 
 
 class ConcentrationScale(ApiModel):
+    version: str | None = None
+    statistic: str | None = None
+    reference_kind: str | None = None
+    note: str | None = None
     breakpoints: list[float]
     method: Literal["absolute_concentration"]
     sample_count: int
@@ -81,6 +110,11 @@ class MetricMetadata(ApiModel):
 
 
 class DashboardMetadata(ApiModel):
+    published_timeline_id: str | None = None
+    compatibility_id: str | None = None
+    published_release_ids: list[str] = Field(default_factory=list)
+    missing_scopes: list[dict] = Field(default_factory=list)
+    published_release_id: str | None = None
     source: str
     generation: str
     start: str
@@ -89,8 +123,8 @@ class DashboardMetadata(ApiModel):
     metrics: dict[str, MetricMetadata]
     temporal_aggregation: str
     timezone: str
-    minimum_spatial_coverage: float
-    minimum_monthly_coverage: float
+    minimum_spatial_coverage: float | None
+    minimum_monthly_coverage: float | None
     note: str
     query_start: datetime | None = None
     query_end: datetime | None = None

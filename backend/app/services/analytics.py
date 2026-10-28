@@ -7,7 +7,7 @@ from app.schemas.dashboard import ApiModel, DashboardData, DashboardTrendRecord,
 from pydantic import Field, model_validator
 
 METRICS = {field.alias or name: name for name, field in DashboardTrendRecord.model_fields.items()
-           if name not in {'province_code', 'date'}}
+           if name not in {'province_code', 'date', 'aqi', 'metric_sample_counts'}}
 POLLUTION_METRICS = {'pm1', 'pm25', 'pm10', 'o3', 'no2', 'so2', 'co', 'aod550',
                      'o3Column', 'no2Column', 'so2Column', 'coColumn'}
 
@@ -56,6 +56,7 @@ class MonthValues(ApiModel):
 
 
 class DashboardAnalytics(ApiModel):
+    aggregation_policy: str = "monthly observations; counts/median/range use province-month grain"
     scope: AnalyticsQuery
     summary: Statistics
     province_count: int
@@ -99,6 +100,7 @@ def build_analytics(data: DashboardData, query: AnalyticsQuery) -> DashboardAnal
     months = set(calendar)
     # Normalize to one value per province/month/metric before aggregating.
     grouped = defaultdict(lambda: defaultdict(list))
+    weighted=any(r.metric_sample_counts is not None for r in data.dashboard_trend_records)
     available = list(data.metadata.metrics) if data.metadata else list(METRICS)
     for record in data.dashboard_trend_records:
         month = record.date.isoformat()[:7]
@@ -107,9 +109,16 @@ def build_analytics(data: DashboardData, query: AnalyticsQuery) -> DashboardAnal
         for alias in available:
             value = getattr(record, METRICS[alias], None) if alias in METRICS else None
             if value is not None:
-                grouped[(record.province_code, alias)][month].append(value)
-    values = {key: {month: mean(samples) for month, samples in by_month.items()}
-              for key, by_month in grouped.items()}
+                grouped[(record.province_code, alias)][month].append((value,(record.metric_sample_counts or {}).get(alias,1)))
+    weights={key:{month:sum(w for _,w in samples) for month,samples in by_month.items()} for key,by_month in grouped.items()}
+    values={key:{month:sum(v*w for v,w in samples)/weights[key][month] for month,samples in by_month.items() if weights[key][month]>0}
+            for key,by_month in grouped.items()}
+    def scoped_statistics(codes,metric,expected):
+        samples=[v for code in codes for v in values.get((code,metric),{}).values()]
+        result=statistics(samples,expected)
+        pairs=[(v,weights[(code,metric)][month]) for code in codes for month,v in values.get((code,metric),{}).items()]
+        if pairs and weighted:result.mean=sum(v*w for v,w in pairs)/sum(w for _,w in pairs)
+        return result
     ranking_metrics = [m for m in available if m in POLLUTION_METRICS or m == query.metric]
     rankings = []
     for metric in ranking_metrics:
@@ -118,7 +127,7 @@ def build_analytics(data: DashboardData, query: AnalyticsQuery) -> DashboardAnal
             samples = list(values.get((code, metric), {}).values())
             if samples:
                 rows.append(dict(province_code=code, province_name=name,
-                                 **statistics(samples, len(calendar)).model_dump()))
+                                 **scoped_statistics([code],metric,len(calendar)).model_dump()))
         rows.sort(key=lambda row: (-row['mean'], row['province_code']))
         previous, rank = None, 0
         ranked = []
@@ -139,9 +148,10 @@ def build_analytics(data: DashboardData, query: AnalyticsQuery) -> DashboardAnal
         snapshot.update(aqi=None, status=None)
         for metric in ('pm1', 'pm25', 'pm10'):
             samples_for_province = list(values.get((province.province_code, metric), {}).values())
-            snapshot[metric] = mean(samples_for_province) if samples_for_province else None
+            snapshot[metric] = scoped_statistics([province.province_code],metric,len(calendar)).mean
         snapshots.append(ProvinceSnapshot(**snapshot))
-    return DashboardAnalytics(scope=query, summary=statistics(samples, len(calendar) * len(scope_codes)),
+    return DashboardAnalytics(scope=query, summary=scoped_statistics(scope_codes,query.metric,len(calendar)*len(scope_codes)),
+                              aggregation_policy=('mean weighted by valid hourly samples; median/range/count at province-month grain' if weighted else 'monthly observations; counts/median/range use province-month grain'),
                               province_count=sum(bool(values.get((code, query.metric))) for code in scope_codes),
                               months=calendar, rankings=rankings, timeline=timeline,
                               province_snapshots=snapshots,

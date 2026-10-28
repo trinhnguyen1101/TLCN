@@ -21,7 +21,15 @@ def create_app(
         else create_dashboard_repository(settings)
     )
     application = FastAPI(title="Air Quality API", version="0.1.0")
+    application.state.dashboard_data_source = settings.dashboard_data_source
     application.state.dashboard_service = DashboardService(repository)
+    from app.repositories.gold.client import TrinoClient
+    from app.repositories.gold.serving import GoldServingRepository
+    application.state.gold_schema = settings.gold_schema
+    application.state.gold_repository = GoldServingRepository(
+        TrinoClient(settings.gold_trino_uri, settings.gold_trino_user),
+        settings.gold_schema, settings.gold_channel,
+    )
     application.add_middleware(GZipMiddleware, minimum_size=1000)
     application.include_router(api_router)
 
