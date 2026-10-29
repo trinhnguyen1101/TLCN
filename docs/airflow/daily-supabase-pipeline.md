@@ -571,7 +571,36 @@ docker compose exec -T airflow-scheduler airflow pools list
 Kỳ vọng không có import error và có hai pool `bronze_sync=2`,
 `iceberg_writer=1`.
 
+Compose đặt biến sau cho toàn bộ service Airflow:
+
+```yaml
+AIRFLOW__WEBSERVER__SHOW_TRIGGER_FORM_IF_NO_PARAMS: "true"
+```
+
+Nhờ đó Webserver vẫn mở form JSON khi DAG không khai báo Airflow Params. Sau
+khi thêm hoặc đổi biến Webserver, phải recreate container để nhận environment
+mới; `restart` đơn thuần không cập nhật cấu hình Compose:
+
+```bash
+docker compose up -d --no-deps --force-recreate airflow-webserver
+```
+
 ### 8.2 Trigger Landing batch
+
+Trên GUI, chọn `landing_batch_to_gold` → **Trigger DAG** và nhập JSON vào form
+configuration. Không trigger với object rỗng `{}` vì `validate_run` yêu cầu
+`batch_id` và `ingestion_date`. DAG tự fan-out toàn bộ năm dataset, không cần
+trường `dataset`.
+
+JSON tối thiểu để chạy đến Silver:
+
+```json
+{
+  "batch_id": "landing-full-20261029",
+  "ingestion_date": "2026-10-29",
+  "publish_gold": false
+}
+```
 
 Ví dụ chỉ chạy đến Silver:
 
