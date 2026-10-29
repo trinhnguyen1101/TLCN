@@ -480,4 +480,29 @@ def metadata_rows(batch: BronzeBatch, extensions: Sequence[str] | None = None):
     query = batch.metadata
     if extensions:
         query = query.filter(F.lower(F.col("file_format")).isin([x.lower() for x in extensions]))
-    return query.collect()
+    return query.orderBy("source_file").collect()
+
+
+def report_file_progress(
+    stage: str,
+    meta,
+    *,
+    index: int | None = None,
+    total: int | None = None,
+    action: str = "READ",
+) -> None:
+    """Emit one stable, grep-friendly Airflow log line for a Bronze input file."""
+    position = f" [{index}/{total}]" if index is not None and total is not None else ""
+    size = getattr(meta, "file_size", None)
+    digest = getattr(meta, "file_sha256", None)
+    details = []
+    if size is not None:
+        details.append(f"bytes={size}")
+    if digest:
+        details.append(f"sha256={digest}")
+    suffix = f" ({', '.join(details)})" if details else ""
+    print(
+        f"FILE_PROGRESS {stage}{position} {action}: "
+        f"{meta.source_file} <- {meta.bronze_object}{suffix}",
+        flush=True,
+    )

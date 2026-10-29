@@ -49,6 +49,14 @@ LANDING_DATASETS = {
     ),
 }
 
+LANDING_FULL_RUN = {
+    "cams": "CAMS/EAC4",
+    "climate_trace": "climate_trace/climate_trace_vietnam",
+    "reference_admin": "reference/vietnam_administrative_divisions",
+    "reference_provinces": "reference/vietnamese-provinces-database",
+    "waqi": "waqi/historical",
+}
+
 
 def _date(value: object, field: str) -> date:
     try:
@@ -127,6 +135,57 @@ def validate_landing_conf(conf: dict | None) -> dict:
         gold_start_date=start.isoformat(),
         gold_end_date=end.isoformat(),
         gold_kind="cams_validation" if allow_validation else "cams",
+    )
+    return result
+
+
+def validate_landing_all_conf(conf: dict | None) -> dict:
+    """Validate one manual run that ingests every current Landing dataset."""
+    conf = conf or {}
+    batch_id = str(conf.get("batch_id", ""))
+    if not SAFE_COMPONENT.fullmatch(batch_id):
+        raise ValueError("batch_id must contain only letters, digits, _ or -")
+    ingestion_date = _date(conf.get("ingestion_date"), "ingestion_date").isoformat()
+    publish_gold = _boolean(conf.get("publish_gold", False), "publish_gold")
+
+    datasets = {}
+    for key, dataset in LANDING_FULL_RUN.items():
+        suffix = key.replace("_", "-")
+        child_batch_id = f"{batch_id}-{suffix}"
+        if not SAFE_COMPONENT.fullmatch(child_batch_id):
+            raise ValueError(
+                "batch_id is too long after adding per-dataset suffixes"
+            )
+        datasets[key] = validate_landing_conf({
+            "dataset": dataset,
+            "batch_id": child_batch_id,
+            "ingestion_date": ingestion_date,
+            "publish_gold": False,
+        })
+
+    result = {
+        "batch_id": batch_id,
+        "ingestion_date": ingestion_date,
+        "publish_gold": publish_gold,
+        "datasets": datasets,
+    }
+    if not publish_gold:
+        return result
+
+    # Native Gold publishes WAQI historical and Climate TRACE together. CAMS
+    # additionally needs the explicit scope required by its existing adapter.
+    cams = validate_landing_conf({
+        "dataset": "CAMS/EAC4",
+        "batch_id": datasets["cams"]["batch_id"],
+        "ingestion_date": ingestion_date,
+        "publish_gold": True,
+        "gold": conf.get("gold"),
+    })
+    result.update(
+        gold_dataset_id=cams["gold_dataset_id"],
+        gold_start_date=cams["gold_start_date"],
+        gold_end_date=cams["gold_end_date"],
+        gold_kind=cams["gold_kind"],
     )
     return result
 

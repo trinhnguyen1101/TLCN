@@ -20,6 +20,7 @@ from common import (
     merge_dataframe,
     metadata_rows,
     normalize_column_names,
+    report_file_progress,
     register_dataset,
     sha256_json,
     start_run,
@@ -50,7 +51,11 @@ def read_sources(spark, batch):
     aggregates = []
     point_sources = []
     input_rows = 0
-    for meta in metadata_rows(batch, ["csv"]):
+    source_files = metadata_rows(batch, ["csv"])
+    for index, meta in enumerate(source_files, start=1):
+        report_file_progress(
+            "Bronze -> Silver", meta, index=index, total=len(source_files), action="READ CSV"
+        )
         frame = spark.read.option("header", True).option("inferSchema", False).csv(meta.bronze_object)
         frame = trim_strings(normalize_column_names(frame))
         frame = (

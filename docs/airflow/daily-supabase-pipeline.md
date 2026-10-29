@@ -54,11 +54,16 @@ daily sync và không tự quét lại toàn bộ Landing mỗi đêm.
 
 ```mermaid
 flowchart TD
-  A[manual/API trigger với dataset, batch_id, ingestion_date] --> B[validate_landing_batch]
-  B --> C[landing_to_bronze]
-  C --> D[verify_bronze_manifest]
-  D --> E[bronze_to_silver theo dataset]
-  E --> F[verify_silver_run]
+  A[manual/API trigger với batch_id, ingestion_date] --> B[validate_landing_batch]
+  B --> C1[landing_to_bronze.cams]
+  B --> C2[landing_to_bronze.climate_trace]
+  B --> C3[landing_to_bronze.reference: 2 datasets]
+  B --> C4[landing_to_bronze.waqi]
+  C1 --> E1[bronze_to_silver.cams]
+  C2 --> E2[bronze_to_silver.climate_trace]
+  C3 --> E3[bronze_to_silver.reference]
+  C4 --> E4[bronze_to_silver.waqi]
+  E1 & E2 & E3 & E4 --> F[Silver run hoàn tất]
   F --> G{Dataset có Gold adapter/channel?}
   G -- Có --> H[silver_to_gold]
   G -- Chưa có --> I[silver_complete]
@@ -68,12 +73,13 @@ flowchart TD
 Tham số tối thiểu của một DAG run:
 
 ```text
-dataset
 batch_id
 ingestion_date
-bronze_path (được dựng deterministic từ ba giá trị trên)
-Gold scope/channel nếu dataset có bước Gold
+publish_gold
 ```
+
+Airflow tự sinh năm child batch ID và năm Bronze path deterministic từ batch ID
+chung. Không cần chọn `dataset` trên GUI.
 
 Không nên dùng một `batch_id` ngẫu nhiên mới khi retry. Airflow phải giữ nguyên
 tham số của logical run để Bronze có thể verify/reuse batch và Silver có thể bỏ
@@ -86,13 +92,44 @@ Thứ tự phụ thuộc hiện tại:
 - Gold không dùng một lệnh chung cho mọi dataset: chọn đúng adapter/channel đã
   được hỗ trợ. Dataset chưa có Gold contract kết thúc hợp lệ tại Silver, không
   được ép vào một fact không cùng grain/semantics.
-- Khi import trọn bộ năm dataset hiện có, orchestration có thể dùng một parent
-  DAG/TaskGroup, nhưng các Iceberg writer vẫn chạy tuần tự.
+- Cả năm dataset được fan-out trong cùng một DAG run. Bronze dùng pool hai slot;
+  các Iceberg writer vẫn chạy tuần tự qua pool `iceberg_writer=1`.
 
 `landing_batch_to_gold` nên là DAG manual có cấu hình run thay vì lịch hằng ngày.
 Nếu Web/API nhận file upload, hệ thống có thể trigger DAG bằng REST API sau khi
 file và manifest hoàn tất; Airflow không theo dõi thư mục bằng vòng lặp polling
 liên tục.
+
+### 2.1 Hiển thị bốn thư mục nguồn trên Airflow GUI
+
+DAG dùng hai `TaskGroup`. Khi mở rộng mỗi group trên Graph, Airflow hiển thị
+bốn task tương ứng với bốn thư mục cấp cao nhất trong `data/landing/`:
+
+```text
+landing_to_bronze                 bronze_to_silver
+├── cams                 ───────→ ├── cams
+├── climate_trace        ───────→ ├── climate_trace
+├── reference            ───────→ ├── reference
+└── waqi                 ───────→ └── waqi
+```
+
+Tất cả bốn nhánh đều chạy trong một lần trigger. `reference` là TaskGroup lồng
+nhau, gồm `administrative_divisions` và `vietnamese_provinces_database`. Mỗi
+dataset vẫn có batch ID và Bronze path riêng nên không trộn dữ liệu.
+
+Mỗi task nguồn vẫn ghi progress chi tiết theo file vào log. Mỗi file phát sinh dòng
+có tiền tố `FILE_PROGRESS`:
+
+```text
+FILE_PROGRESS Landing -> Bronze [3/17] COPY: waqi/historical/...csv -> s3a://.../files/...csv
+FILE_PROGRESS Landing -> Bronze [3/17] VERIFIED: waqi/historical/...csv (12345 bytes, sha256=...)
+FILE_PROGRESS Bronze -> Silver [3/17] READ CSV: ...csv <- s3a://.../files/...csv (bytes=12345, sha256=...)
+```
+
+Để xem copy/transform thực tế, mở Spark task tương ứng, chọn **Log** và tìm
+`FILE_PROGRESS` để biết file hiện tại, thứ tự `n/tổng`, đường dẫn nguồn/đích,
+kích thước và checksum. Khi retry, file Bronze đã tồn tại sẽ hiện
+`VERIFY EXISTING` thay vì `COPY`.
 
 ## 3. Luồng Supabase cloud hằng ngày
 
@@ -541,7 +578,7 @@ Ví dụ chỉ chạy đến Silver:
 ```bash
 docker compose exec -T airflow-scheduler airflow dags trigger \
   landing_batch_to_gold \
-  --conf '{"dataset":"waqi/historical","batch_id":"waqi-history-20261028","ingestion_date":"2026-10-28","publish_gold":false}'
+  --conf '{"batch_id":"landing-full-20261029","ingestion_date":"2026-10-29","publish_gold":false}'
 ```
 
 Ví dụ CAMS chạy tiếp Gold production:
@@ -549,14 +586,12 @@ Ví dụ CAMS chạy tiếp Gold production:
 ```bash
 docker compose exec -T airflow-scheduler airflow dags trigger \
   landing_batch_to_gold \
-  --conf '{"dataset":"CAMS/EAC4","batch_id":"cams-20261028","ingestion_date":"2026-10-28","publish_gold":true,"gold":{"dataset_id":"REPLACE_WITH_VERIFIED_SILVER_DATASET_ID","start_date":"2026-01-01","end_date":"2026-01-02","allow_validation":false}}'
+  --conf '{"batch_id":"landing-full-20261029","ingestion_date":"2026-10-29","publish_gold":true,"gold":{"dataset_id":"REPLACE_WITH_VERIFIED_SILVER_DATASET_ID","start_date":"2026-01-01","end_date":"2026-01-02","allow_validation":false}}'
 ```
 
-Không dùng dataset ID minh họa. Lấy ID từ successful Silver run đã kiểm tra.
-Với `waqi/historical` hoặc `climate_trace/climate_trace_vietnam`, đặt
-`publish_gold=true` sẽ gọi nhánh Gold `native_sources`. Job native hiện đọc cả
-WAQI historical và Climate TRACE; chỉ bật sau khi các bảng Silver của cả hai
-family đã tồn tại và có successful lineage.
+Không dùng dataset ID minh họa. Lấy CAMS dataset ID từ successful Silver run đã
+kiểm tra. Khi `publish_gold=true`, DAG chạy `native_sources` cho WAQI historical
+và Climate TRACE trước, sau đó chạy CAMS Gold theo scope đã cung cấp.
 
 ### 8.3 Bật daily Supabase
 
@@ -724,10 +759,12 @@ liệu provider thay thế.
 
 Điều kiện cho `landing_batch_to_gold`:
 
-- Trigger manual/API yêu cầu dataset, ingestion date và stable batch ID.
+- Trigger manual/API yêu cầu ingestion date và stable batch ID chung; không yêu
+  cầu chọn dataset.
+- Một run fan-out đủ năm dataset trong bốn folder Landing.
 - Retry cho kết quả Bronze verify, Silver skip và Gold replay nếu có Gold step.
-- Dataset chưa có Gold adapter kết thúc tại Silver với trạng thái rõ ràng.
-- Import nhiều dataset vẫn tôn trọng thứ tự dependency hành chính và writer pool.
+- Các dataset hành chính kết thúc tại Silver; native/CAMS dùng đúng Gold adapter.
+- Toàn bộ run vẫn tôn trọng pool Bronze và writer Iceberg.
 
 Điều kiện cho `supabase_daily_to_gold`:
 

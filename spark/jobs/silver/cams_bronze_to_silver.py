@@ -21,6 +21,7 @@ from common import (
     load_bronze_batch,
     merge_dataframe,
     metadata_rows,
+    report_file_progress,
     register_dataset,
     sha256_json,
     start_run,
@@ -342,6 +343,13 @@ def transform(spark, batch, run):
         files = {}
         first_messages = {}
         for index, meta in enumerate(grib_files):
+            report_file_progress(
+                "Bronze -> Silver",
+                meta,
+                index=index + 1,
+                total=len(grib_files),
+                action="DOWNLOAD/READ GRIB",
+            )
             if meta.bronze_object != f"{batch.bronze_path}/files/{meta.source_file}":
                 raise DataQualityError(f"{meta.source_file}: source object is outside its declared Bronze batch")
             local_path = os.path.join(temp_dir, f"input-{index}.grib")

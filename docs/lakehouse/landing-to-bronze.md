@@ -4,7 +4,8 @@
 
 Cập nhật 2026-10-28. Job có thể chạy độc lập hoặc qua DAG manual
 `landing_batch_to_gold`; DAG mặc định dừng tại Silver nếu không bật
-`publish_gold`. Cả năm dataset Landing hiện có đã được nạp lên MinIO và đối chiếu
+`publish_gold`. Một lần trigger DAG fan-out toàn bộ năm dataset trong bốn thư
+mục Landing; mỗi dataset có child batch ID và Bronze path riêng. Cả năm dataset Landing hiện có đã được nạp lên MinIO và đối chiếu
 SHA-256 thành công, gồm cả 20 file GRIB CAMS và 3.355 file GeoJSON.
 
 ## Landing và cấu hình hiện có
@@ -26,6 +27,11 @@ Landing hiện không có Parquet. Job vẫn nhận Parquet hay định dạng k
 ## Cấu trúc Bronze
 
 Job `spark/jobs/bronze/landing_to_bronze.py` dùng Hadoop S3A trong Spark JVM để chuyển từng file theo luồng, giữ nguyên bytes, tên và thư mục con. Spark ghi một dataset Parquet nhỏ chứa metadata của từng file. Không parse CSV/JSON/GRIB, không đổi schema và không làm sạch dữ liệu.
+
+Trong lúc chạy, job ghi hai dòng `FILE_PROGRESS` cho từng file: dòng đầu cho
+biết đang `COPY` hay `VERIFY EXISTING`, dòng sau xác nhận `VERIFIED` kèm kích
+thước và SHA-256. Vì vậy log task Airflow thể hiện chính xác file đang được xử
+lý dù manifest chỉ được commit một lần sau khi toàn batch hoàn tất.
 
 Ví dụ:
 

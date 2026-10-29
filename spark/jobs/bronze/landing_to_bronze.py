@@ -116,9 +116,22 @@ def remote_sha256(spark, fs, path):
 
 def copy_and_verify(spark, fs, specs, output):
     jvm = spark._jvm
-    for local, source_file, within_dataset, size, expected_sha256, _ in specs:
+    total = len(specs)
+    for index, (local, source_file, within_dataset, size, expected_sha256, _) in enumerate(
+        specs, start=1
+    ):
         target = hadoop_path(spark, f"{output}/files/{within_dataset}")
-        if not fs.exists(target):
+        exists = fs.exists(target)
+        action = "VERIFY EXISTING" if exists else "COPY"
+        LOG.info(
+            "FILE_PROGRESS Landing -> Bronze [%d/%d] %s: %s -> %s",
+            index,
+            total,
+            action,
+            source_file,
+            target,
+        )
+        if not exists:
             source = jvm.java.io.FileInputStream(local)
             try:
                 sink = fs.create(target, False)
@@ -128,6 +141,14 @@ def copy_and_verify(spark, fs, specs, output):
             jvm.org.apache.hadoop.io.IOUtils.copyBytes(source, sink, BUFFER_BYTES, True)
         if fs.getFileStatus(target).getLen() != size or remote_sha256(spark, fs, target) != expected_sha256:
             raise RuntimeError(f"Bronze object differs from Landing; batch stopped at {source_file}")
+        LOG.info(
+            "FILE_PROGRESS Landing -> Bronze [%d/%d] VERIFIED: %s (%d bytes, sha256=%s)",
+            index,
+            total,
+            source_file,
+            size,
+            expected_sha256,
+        )
     LOG.info("Verified %d original files and their SHA-256 hashes from MinIO", len(specs))
 
 

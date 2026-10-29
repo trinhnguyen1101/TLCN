@@ -23,7 +23,8 @@ common.TABLE_PREFIX = "nessie.silver"
 common.DataQualityError = type("DataQualityError", (RuntimeError,), {})
 for name in (
     "bootstrap_schema", "create_spark", "finish_run", "load_bronze_batch",
-    "merge_dataframe", "metadata_rows", "register_dataset", "start_run", "utc_now", "write_quality_issues",
+    "merge_dataframe", "metadata_rows", "report_file_progress", "register_dataset",
+    "start_run", "utc_now", "write_quality_issues",
 ):
     setattr(common, name, Mock())
 common.sha256_json = lambda namespace, *parts: ":".join((namespace, *map(str, parts)))

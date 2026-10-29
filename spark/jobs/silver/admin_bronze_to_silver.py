@@ -20,6 +20,7 @@ from common import (
     load_bronze_batch,
     merge_dataframe,
     metadata_rows,
+    report_file_progress,
     register_dataset,
     sha256_json,
     start_run,
@@ -31,6 +32,7 @@ from common import (
 PIPELINE = "admin-bronze-to-silver"
 OPEN_ADMIN_DATASET = "vietnam_administrative_divisions"
 PROVINCES_DATASET = "vietnamese-provinces-database"
+_REPORTED_INPUTS = set()
 
 
 def parse_args():
@@ -50,7 +52,11 @@ def one_metadata(batch, suffix: str):
     matches = [row for row in metadata_rows(batch) if row.source_file.endswith(suffix)]
     if len(matches) != 1:
         raise ValueError(f"Expected exactly one Bronze file ending {suffix!r}, found {len(matches)}")
-    return matches[0]
+    meta = matches[0]
+    if meta.source_file not in _REPORTED_INPUTS:
+        report_file_progress("Bronze -> Silver", meta, action="READ ADMIN SOURCE")
+        _REPORTED_INPUTS.add(meta.source_file)
+    return meta
 
 
 def source_contract(spark, batch, explicit_version):
@@ -218,7 +224,18 @@ def read_boundaries(spark, batch, run, dataset_id, snapshot_date, admin_units):
     geo_meta = batch.metadata.filter(F.lower("file_format") == "geojson").select(
         "source_file", "file_sha256", "bronze_object"
     )
-    paths = [row.bronze_object for row in geo_meta.select("bronze_object").collect()]
+    boundary_files = geo_meta.collect()
+    for index, meta in enumerate(boundary_files, start=1):
+        if meta.source_file not in _REPORTED_INPUTS:
+            report_file_progress(
+                "Bronze -> Silver",
+                meta,
+                index=index,
+                total=len(boundary_files),
+                action="READ GEOJSON",
+            )
+            _REPORTED_INPUTS.add(meta.source_file)
+    paths = [row.bronze_object for row in boundary_files]
     if not paths:
         return None
     # Pass wholetext to text() itself. Calling option("wholetext", True)

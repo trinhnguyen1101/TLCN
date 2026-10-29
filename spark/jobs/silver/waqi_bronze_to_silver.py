@@ -23,6 +23,7 @@ from common import (
     merge_dataframe,
     metadata_rows,
     normalize_column_names,
+    report_file_progress,
     register_dataset,
     SILVER_TIMEZONE,
     sha256_json,
@@ -113,7 +114,10 @@ def transform(spark, batch, run):
     station_specs = []
     seen_station_keys = set()
     input_rows = 0
-    for meta in csv_files:
+    for index, meta in enumerate(csv_files, start=1):
+        report_file_progress(
+            "Bronze -> Silver", meta, index=index, total=len(csv_files), action="READ CSV"
+        )
         source = spark.read.option("header", True).option("inferSchema", False).csv(meta.bronze_object)
         source = trim_strings(normalize_column_names(source))
         assert_required_columns(source, ["date"], meta.source_file)

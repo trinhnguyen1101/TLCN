@@ -5,6 +5,7 @@ import unittest
 
 from lakehouse_config import (
     daily_window,
+    validate_landing_all_conf,
     validate_landing_conf,
     validate_missing_hour_limit,
 )
@@ -25,6 +26,33 @@ class DailyWindowTests(unittest.TestCase):
 
 
 class LandingConfigTests(unittest.TestCase):
+    def test_full_landing_run_builds_five_isolated_batches(self):
+        result = validate_landing_all_conf({
+            "batch_id": "landing-full-20261029",
+            "ingestion_date": "2026-10-29",
+            "publish_gold": False,
+        })
+        self.assertEqual(len(result["datasets"]), 5)
+        self.assertEqual(
+            result["datasets"]["cams"]["batch_id"],
+            "landing-full-20261029-cams",
+        )
+        self.assertEqual(
+            result["datasets"]["reference_admin"]["dataset"],
+            "reference/vietnam_administrative_divisions",
+        )
+        self.assertEqual(len({
+            item["bronze_path"] for item in result["datasets"].values()
+        }), 5)
+
+    def test_full_landing_gold_requires_cams_scope(self):
+        with self.assertRaisesRegex(ValueError, "requires a gold object"):
+            validate_landing_all_conf({
+                "batch_id": "landing-full-20261029",
+                "ingestion_date": "2026-10-29",
+                "publish_gold": True,
+            })
+
     def test_historical_waqi_defaults_to_silver_only(self):
         result = validate_landing_conf(
             {
