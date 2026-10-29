@@ -17,6 +17,8 @@ SAFE_COMPONENT = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
 SHA256 = re.compile(r"^[0-9a-f]{64}$")
 DATASET_ID = re.compile(r"^[A-Za-z0-9_-]{1,128}$")
 UTC = timezone.utc
+MAX_AIRFLOW_MAP_LENGTH = 1024
+DEFAULT_GOLD_CHUNK_DAYS = 14
 
 
 @dataclass(frozen=True)
@@ -72,6 +74,12 @@ def _boolean(value: object, field: str) -> bool:
     if isinstance(value, bool):
         return value
     raise ValueError(f"{field} must be a JSON boolean")
+
+
+def _integer(value: object, field: str) -> int:
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise ValueError(f"{field} must be a JSON integer")
+    return value
 
 
 def bronze_path(dataset: str, ingestion_date: str, batch_id: str) -> str:
@@ -187,6 +195,30 @@ def validate_landing_all_conf(conf: dict | None) -> dict:
         gold_end_date=cams["gold_end_date"],
         gold_kind=cams["gold_kind"],
     )
+    gold = conf["gold"]
+    chunk_days = _integer(
+        gold.get("chunk_days", DEFAULT_GOLD_CHUNK_DAYS), "gold.chunk_days"
+    )
+    if not 1 <= chunk_days <= 31:
+        raise ValueError("gold.chunk_days must be between 1 and 31")
+
+    start = date.fromisoformat(cams["gold_start_date"])
+    end = date.fromisoformat(cams["gold_end_date"])
+    chunks = []
+    cursor = start
+    while cursor < end:
+        stop = min(cursor + timedelta(days=chunk_days), end)
+        chunks.append({
+            "start_date": cursor.isoformat(),
+            "end_date": stop.isoformat(),
+        })
+        cursor = stop
+    if len(chunks) > MAX_AIRFLOW_MAP_LENGTH:
+        raise ValueError(
+            f"Gold scope creates {len(chunks)} mapped tasks; increase "
+            f"gold.chunk_days so it creates at most {MAX_AIRFLOW_MAP_LENGTH}"
+        )
+    result.update(gold_chunk_days=chunk_days, gold_chunks=chunks)
     return result
 
 

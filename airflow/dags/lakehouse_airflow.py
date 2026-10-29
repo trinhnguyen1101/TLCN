@@ -72,6 +72,26 @@ def spark_task(
     py_files: str | None = None,
     retries: int = 1,
 ) -> DockerOperator:
+    command = spark_command(
+        application=application,
+        application_args=application_args,
+        driver_memory=driver_memory,
+        py_files=py_files,
+    )
+    return DockerOperator(
+        task_id=task_id,
+        command=command,
+        **_spark_operator_kwargs(pool=pool, retries=retries),
+    )
+
+
+def spark_command(
+    *,
+    application: str,
+    application_args: list[str],
+    driver_memory: str,
+    py_files: str | None = None,
+) -> list[str]:
     command = [
         "/opt/spark/bin/spark-submit",
         "--master",
@@ -84,27 +104,37 @@ def spark_task(
     if py_files:
         command.extend(["--py-files", py_files])
     command.extend([application, *application_args])
-    return DockerOperator(
-        task_id=task_id,
-        image=SPARK_IMAGE,
-        command=command,
-        docker_url=DOCKER_URL,
+    return command
+
+
+def _spark_operator_kwargs(*, pool: str, retries: int) -> dict:
+    return {
+        "image": SPARK_IMAGE,
+        "docker_url": DOCKER_URL,
         # Pin the API so Docker SDK does not depend on proxy /version
         # negotiation. v1.45 is sufficient for these container operations and
         # is accepted by current Docker daemons and proxy v0.5.0.
-        api_version=os.getenv("LAKEHOUSE_DOCKER_API_VERSION", "1.45"),
-        network_mode=NETWORK,
-        mounts=SPARK_MOUNTS,
-        mount_tmp_dir=False,
-        auto_remove="success",
-        force_pull=False,
-        private_environment=_private_environment(),
-        pool=pool,
-        retries=retries,
-        retry_delay=timedelta(minutes=10),
-        execution_timeout=timedelta(hours=8),
-        do_xcom_push=False,
-    )
+        "api_version": os.getenv("LAKEHOUSE_DOCKER_API_VERSION", "1.45"),
+        "network_mode": NETWORK,
+        "mounts": SPARK_MOUNTS,
+        "mount_tmp_dir": False,
+        "auto_remove": "success",
+        "force_pull": False,
+        "private_environment": _private_environment(),
+        "pool": pool,
+        "retries": retries,
+        "retry_delay": timedelta(minutes=10),
+        "execution_timeout": timedelta(hours=8),
+        "do_xcom_push": False,
+    }
+
+
+def mapped_spark_task(*, task_id: str, commands, pool: str, retries: int = 1):
+    """Map one DockerOperator per complete spark-submit command."""
+    return DockerOperator.partial(
+        task_id=task_id,
+        **_spark_operator_kwargs(pool=pool, retries=retries),
+    ).expand(command=commands)
 
 
 def check_supabase_s3_config() -> None:

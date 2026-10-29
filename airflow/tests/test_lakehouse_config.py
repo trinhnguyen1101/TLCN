@@ -1,6 +1,6 @@
 """Unit tests for Airflow configuration without requiring Airflow itself."""
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 import unittest
 
 from lakehouse_config import (
@@ -51,6 +51,60 @@ class LandingConfigTests(unittest.TestCase):
                 "batch_id": "landing-full-20261029",
                 "ingestion_date": "2026-10-29",
                 "publish_gold": True,
+            })
+
+    def test_full_landing_gold_splits_the_entire_scope_for_airflow_mapping(self):
+        result = validate_landing_all_conf({
+            "batch_id": "landing-full-20261029",
+            "ingestion_date": "2026-10-29",
+            "publish_gold": True,
+            "gold": {
+                "dataset_id": "abc123",
+                "start_date": "2003-01-01",
+                "end_date": "2026-01-01",
+                "chunk_days": 14,
+                "allow_validation": False,
+            },
+        })
+        chunks = result["gold_chunks"]
+        self.assertEqual(chunks[0], {
+            "start_date": "2003-01-01", "end_date": "2003-01-15"
+        })
+        self.assertEqual(chunks[-1]["end_date"], "2026-01-01")
+        self.assertLessEqual(len(chunks), 1024)
+        for chunk in chunks:
+            start = date.fromisoformat(chunk["start_date"])
+            end = date.fromisoformat(chunk["end_date"])
+            self.assertLessEqual((end - start).days, 14)
+
+    def test_full_landing_gold_rejects_too_many_mapped_tasks(self):
+        with self.assertRaisesRegex(ValueError, "increase gold.chunk_days"):
+            validate_landing_all_conf({
+                "batch_id": "landing-full-20261029",
+                "ingestion_date": "2026-10-29",
+                "publish_gold": True,
+                "gold": {
+                    "dataset_id": "abc123",
+                    "start_date": "2003-01-01",
+                    "end_date": "2026-01-01",
+                    "chunk_days": 1,
+                    "allow_validation": False,
+                },
+            })
+
+    def test_full_landing_gold_rejects_invalid_chunk_days(self):
+        with self.assertRaisesRegex(ValueError, "between 1 and 31"):
+            validate_landing_all_conf({
+                "batch_id": "landing-full-20261029",
+                "ingestion_date": "2026-10-29",
+                "publish_gold": True,
+                "gold": {
+                    "dataset_id": "abc123",
+                    "start_date": "2026-01-01",
+                    "end_date": "2026-01-02",
+                    "chunk_days": 32,
+                    "allow_validation": False,
+                },
             })
 
     def test_historical_waqi_defaults_to_silver_only(self):

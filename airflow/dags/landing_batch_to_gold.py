@@ -11,7 +11,12 @@ from airflow.operators.python import BranchPythonOperator, PythonOperator
 from airflow.utils.task_group import TaskGroup
 from airflow.utils.trigger_rule import TriggerRule
 
-from lakehouse_airflow import check_services, spark_task
+from lakehouse_airflow import (
+    check_services,
+    mapped_spark_task,
+    spark_command,
+    spark_task,
+)
 from lakehouse_config import validate_landing_all_conf
 
 
@@ -22,7 +27,14 @@ Trigger this DAG once to process every dataset currently stored under Landing:
 {
   "batch_id": "landing-full-20261029",
   "ingestion_date": "2026-10-29",
-  "publish_gold": false
+  "publish_gold": true,
+  "gold": {
+    "dataset_id": "5e556517c0a8c99f37b3e30eca7e9a7de962637af0779b357dca7590e836e12c",
+    "start_date": "2003-01-01",
+    "end_date": "2026-01-02",
+    "chunk_days": 14,
+    "allow_validation": false
+  }
 }
 ```
 
@@ -32,7 +44,10 @@ folder expands once more because it contains two independent datasets.
 
 `publish_gold` defaults to false. When true, Native Gold is published after all
 five Silver jobs succeed and CAMS Gold additionally requires `gold.dataset_id`,
-`gold.start_date`, `gold.end_date`, and optionally `gold.allow_validation`.
+`gold.start_date`, `gold.end_date`, and optionally `gold.chunk_days` (default
+14, allowed 1..31) and `gold.allow_validation`. The full CAMS date range is
+automatically split into mapped Gold tasks; no external backfill script is
+required.
 
 The `landing_to_bronze` and `bronze_to_silver` task logs emit one
 `FILE_PROGRESS` line per file. Search the task log for `FILE_PROGRESS` to see
@@ -50,11 +65,32 @@ def _gold_branch(config: dict) -> str:
     return "publish_native_gold" if config["publish_gold"] else "no_gold"
 
 
-def _cams_gold_branch(config: dict) -> str:
-    return {
-        "cams": "publish_cams_gold",
-        "cams_validation": "publish_cams_validation_gold",
-    }[config["gold_kind"]]
+def _cams_gold_commands(config: dict) -> list[list[str]]:
+    validation_args = (
+        ["--allow-validation"] if config["gold_kind"] == "cams_validation" else []
+    )
+    return [
+        spark_command(
+            application="/opt/spark/work-dir/jobs/gold/run.py",
+            application_args=[
+                "--schema",
+                "gold",
+                "--silver-schema",
+                "silver",
+                "--adapter",
+                "cams",
+                "--dataset-id",
+                config["gold_dataset_id"],
+                "--start-date",
+                chunk["start_date"],
+                "--end-date",
+                chunk["end_date"],
+                *validation_args,
+            ],
+            driver_memory="2g",
+        )
+        for chunk in config["gold_chunks"]
+    ]
 
 
 def _dataset_value(key: str, field: str) -> str:
@@ -180,50 +216,14 @@ with DAG(
         driver_memory="2g",
         pool="iceberg_writer",
     )
-    choose_cams_gold = BranchPythonOperator(
-        task_id="choose_cams_gold_path",
-        python_callable=_cams_gold_branch,
+    build_cams_gold_commands = PythonOperator(
+        task_id="build_cams_gold_commands",
+        python_callable=_cams_gold_commands,
         op_kwargs={"config": CONFIG},
     )
-    publish_cams_gold = spark_task(
-        task_id="publish_cams_gold",
-        application="/opt/spark/work-dir/jobs/gold/run.py",
-        application_args=[
-            "--schema",
-            "gold",
-            "--silver-schema",
-            "silver",
-            "--adapter",
-            "cams",
-            "--dataset-id",
-            "{{ ti.xcom_pull(task_ids='validate_run')['gold_dataset_id'] }}",
-            "--start-date",
-            "{{ ti.xcom_pull(task_ids='validate_run')['gold_start_date'] }}",
-            "--end-date",
-            "{{ ti.xcom_pull(task_ids='validate_run')['gold_end_date'] }}",
-        ],
-        driver_memory="2g",
-        pool="iceberg_writer",
-    )
-    publish_cams_validation_gold = spark_task(
-        task_id="publish_cams_validation_gold",
-        application="/opt/spark/work-dir/jobs/gold/run.py",
-        application_args=[
-            "--schema",
-            "gold",
-            "--silver-schema",
-            "silver",
-            "--adapter",
-            "cams",
-            "--dataset-id",
-            "{{ ti.xcom_pull(task_ids='validate_run')['gold_dataset_id'] }}",
-            "--start-date",
-            "{{ ti.xcom_pull(task_ids='validate_run')['gold_start_date'] }}",
-            "--end-date",
-            "{{ ti.xcom_pull(task_ids='validate_run')['gold_end_date'] }}",
-            "--allow-validation",
-        ],
-        driver_memory="2g",
+    publish_cams_gold_chunks = mapped_spark_task(
+        task_id="publish_cams_gold_chunks",
+        commands=build_cams_gold_commands.output,
         pool="iceberg_writer",
     )
     complete = EmptyOperator(
@@ -237,6 +237,5 @@ with DAG(
     all_silver_complete >> choose_gold
     choose_gold >> [no_gold, publish_native_gold]
     no_gold >> complete
-    publish_native_gold >> choose_cams_gold
-    choose_cams_gold >> [publish_cams_gold, publish_cams_validation_gold]
-    [publish_cams_gold, publish_cams_validation_gold] >> complete
+    publish_native_gold >> build_cams_gold_commands >> publish_cams_gold_chunks
+    publish_cams_gold_chunks >> complete

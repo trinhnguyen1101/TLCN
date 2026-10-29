@@ -198,13 +198,13 @@ cho lịch sử dài hơn thay vì đưa cả archive vào browser.
 
 ## 8. Vận hành và kiểm chứng
 
-Host runner `scripts/run_gold.py` hỗ trợ manual/incremental/backfill theo chunks,
-default7ngày, CLI ceiling31ngày. Adapter collect guard100.000rows gồm11hhalo;
-đây là bounded driver processing, chưa phải distributed normalization toàn archive.
-Spark/host runners có advisory locks cho một Compose writer; không phải distributed
-lock multi-host. Hai Airflow DAG đã được thêm với DockerOperator và pool một
-Iceberg writer, nhưng chưa được người vận hành build/trigger nghiệm thu nên lịch
-production vẫn paused; giữ host runner là đường chạy fallback hiện có.
+Host runner `scripts/run_gold.py` vẫn hỗ trợ manual/incremental/backfill fallback
+theo chunks, default7ngày, CLI ceiling31ngày. `landing_batch_to_gold` nhận một
+scope dài, mặc định chia14ngày và dùng dynamic task mapping để toàn bộ backfill
+nằm trong một DAG run. Adapter collect guard100.000rows gồm11hhalo; đây là
+bounded driver processing, chưa phải distributed normalization toàn archive.
+Mapped tasks dùng pool `iceberg_writer=1`; Spark/host runners còn có advisory
+locks cho một Compose writer, không phải distributed lock multi-host.
 
 Retention chỉ dry-run: bảo vệ registered releases, rollback timelines, current
 heads, named refs và referenced source snapshots. Không chạy automatic expiry,

@@ -610,17 +610,21 @@ docker compose exec -T airflow-scheduler airflow dags trigger \
   --conf '{"batch_id":"landing-full-20261029","ingestion_date":"2026-10-29","publish_gold":false}'
 ```
 
-Ví dụ CAMS chạy tiếp Gold production:
+Ví dụ một lần trigger toàn bộ Landing → Bronze → Silver → Gold production:
 
 ```bash
 docker compose exec -T airflow-scheduler airflow dags trigger \
   landing_batch_to_gold \
-  --conf '{"batch_id":"landing-full-20261029","ingestion_date":"2026-10-29","publish_gold":true,"gold":{"dataset_id":"REPLACE_WITH_VERIFIED_SILVER_DATASET_ID","start_date":"2026-01-01","end_date":"2026-01-02","allow_validation":false}}'
+  --conf '{"batch_id":"landing-full-20261029","ingestion_date":"2026-10-29","publish_gold":true,"gold":{"dataset_id":"5e556517c0a8c99f37b3e30eca7e9a7de962637af0779b357dca7590e836e12c","start_date":"2003-01-01","end_date":"2026-01-02","chunk_days":14,"allow_validation":false}}'
 ```
 
-Không dùng dataset ID minh họa. Lấy CAMS dataset ID từ successful Silver run đã
-kiểm tra. Khi `publish_gold=true`, DAG chạy `native_sources` cho WAQI historical
-và Climate TRACE trước, sau đó chạy CAMS Gold theo scope đã cung cấp.
+Với CAMS/EAC4 production, dataset ID ở trên là định danh xác định được sinh từ
+`cams/eac4/EAC4`; Silver tạo đúng ID này trong cùng cold-start run. Khi
+`publish_gold=true`, DAG chạy `native_sources` cho WAQI historical và Climate
+TRACE trước, sau đó tự chia toàn bộ CAMS scope thành mapped tasks tối đa
+`chunk_days` ngày. Các task dùng pool `iceberg_writer=1`, nên không cần chạy
+`scripts/run_gold.py` bên ngoài Airflow. Giữ tổng số chunk không quá 1.024;
+scope 2003-01-01 đến 2026-01-02 với chunk 14 ngày tạo 601 task.
 
 ### 8.3 Bật daily Supabase
 
