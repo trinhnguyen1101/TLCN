@@ -11,9 +11,11 @@ from app.schemas.dashboard import (
 )
 
 
-def _mean(values):
-    values = [value for value in values if value is not None]
-    return sum(values) / len(values) if values else None
+def _pm25_mean(records):
+    pairs = [(row.pm25, (row.metric_sample_counts or {}).get("pm25", 1)) for row in records
+             if row.pm25 is not None and (row.metric_sample_counts or {}).get("pm25", 1) > 0]
+    count = sum(weight for _, weight in pairs)
+    return sum(value * weight for value, weight in pairs) / count if count else None
 
 
 def project_admin_dashboard(data: DashboardData) -> AdminDashboardData:
@@ -28,7 +30,7 @@ def project_admin_dashboard(data: DashboardData) -> AdminDashboardData:
             province_code=code,
             province_name=provinces.get(code, code),
             year=year,
-            pm25_average=_mean([record.pm25 for record in records]),
+            pm25_average=_pm25_mean(records),
             aqi_average=None,
             year_over_year_percent=None,
             exceedance_days=None,
@@ -60,7 +62,8 @@ def project_admin_dashboard(data: DashboardData) -> AdminDashboardData:
         priority_areas=areas,
         # A bounded observation window is not an annual average.
         annual_province_summaries=[item for item in annual if len(grouped[(item.province_code, item.year)]) == (
-            (366 if calendar.isleap(item.year) else 365) * 8 if data.metadata and data.metadata.temporal_aggregation == "3_hourly"
+            (366 if calendar.isleap(item.year) else 365) * 24 if data.metadata and data.metadata.temporal_aggregation == "hourly"
+            else (366 if calendar.isleap(item.year) else 365) * 8 if data.metadata and data.metadata.temporal_aggregation == "3_hourly"
             else (366 if calendar.isleap(item.year) else 365) if data.metadata and data.metadata.temporal_aggregation == "daily_mean"
             else 12
         )],

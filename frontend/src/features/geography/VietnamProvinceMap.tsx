@@ -150,14 +150,13 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
 
       <DataState className="flex-1" loading={!geoJson && !error} error={error}>
         {geoJson && (
-          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} zoomControl={false} className={`${mapClasses} ${variant === 'user' ? 'h-[550px] min-[1440px]:h-[600px] max-[767px]:h-[450px]' : 'h-[400px] max-[767px]:h-[350px]'}`}>
+          <MapContainer center={VIETNAM_MAP_CENTER} zoom={5.35} minZoom={MIN_MAP_ZOOM} maxZoom={19} scrollWheelZoom="center" attributionControl={false} zoomControl={false} className={`${mapClasses} ${variant === 'user' ? 'h-[550px] min-[1440px]:h-[600px] max-[767px]:h-[450px]' : 'min-h-[420px] flex-1 lg:h-auto max-[1023px]:h-[400px] max-[767px]:min-h-[340px] max-[767px]:h-[340px]'}`}>
             <ZoomControl zoomInTitle="Phóng to" zoomOutTitle="Thu nhỏ" />
             <MapSizeSync />
             <MinZoomWheelGuard />
             <WorldBasemap />
             <Pane name="province-selection" className="pointer-events-none z-[450]" />
-            <ProvinceBoundaryLayer
-              key={selectedProvinceCode}
+            <ProvinceBoundaryLayer periodLabel={periodLabel}
               data={geoJson}
               selectedProvinceCode={selectedProvinceCode}
               metric={metric}
@@ -171,12 +170,12 @@ export const VietnamProvinceMap = memo(function VietnamProvinceMap({
         )}
       </DataState>
 
-      <div className="flex shrink-0 flex-wrap gap-x-4 gap-y-2 border-t border-border px-4 py-3 text-[.7rem]" aria-label="Chú giải màu">
+      <div className="flex shrink-0 flex-wrap gap-x-3 gap-y-1.5 border-t border-border px-4 py-2.5 text-[.7rem]" aria-label="Chú giải màu">
         <p className="basis-full font-medium text-secondary">{MAP_METRIC_LABELS[metric]} {unit && `(${unit})`}</p>
-        {colorScale?.labels.map((label, index) => <span key={label} className="inline-flex items-center gap-1.5 text-secondary"><i className="size-3.5 shrink-0 rounded-sm" style={{ backgroundColor: colorScale.colors[index] }} />{label} · {colorScale.ranges[index]}</span>)}
+        {colorScale?.labels.map((label, index) => <span key={label} className="inline-flex items-center gap-1.5 text-secondary"><i className="size-3.5 shrink-0 rounded-sm" style={{ backgroundColor: colorScale.colors[index] }} />{colorScale.ranges[index]}</span>)}
         {!colorScale && <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 rounded-sm bg-map-unclassified" />Có giá trị · chưa có thang nồng độ</span>}
         <span className="inline-flex items-center gap-1.5 text-muted"><i className="size-2.5 shrink-0 rounded-sm border border-map-province-border bg-map-province-fill" />Chưa có dữ liệu</span>
-        {metric === 'aqi' ? <p className="basis-full text-muted">Sáu mức màu VN_AQI theo Quyết định 1459/QĐ-TCMT.</p> : <p className="basis-full text-muted">{colorScale ? `${concentrationScale?.note ?? 'Thang nồng độ phân tích; không phải mức AQI.'} Bản đồ dùng trung bình mẫu hợp lệ trong bộ lọc; một mốc giữ giá trị gốc. ${concentrationScale?.version ?? ''} · basis đầu vào: ${aggregationLabel(concentrationScale?.statistic ?? '')}` : 'Nguồn chưa cung cấp thang nồng độ hợp lệ. Xem giá trị khi trỏ hoặc chọn tỉnh.'}</p>}
+        <details className="basis-full text-muted"><summary className="cursor-pointer text-[.65rem]">{metric === 'aqi' ? 'Thang AQI ⓘ' : 'Thang nồng độ ⓘ'}</summary><p className="mt-1">{metric === 'aqi' ? 'Sáu mức VN_AQI 1459.' : `${concentrationScale?.note ?? 'Màu nồng độ, không phải mức AQI.'} ${aggregationLabel(concentrationScale?.statistic ?? '')}`}</p></details>
       </div>
     </section>
   )

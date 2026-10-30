@@ -46,11 +46,12 @@ class GoldTests(unittest.TestCase):
             self.assertEqual(client.get('/api/gold/map?pollutant=pm1').status_code,422)
             self.assertEqual(client.get('/api/gold/air-quality?limit=999999').status_code,422)
 
-    def test_hourly_never_silently_uses_legacy_parquet(self):
+    def test_missing_hourly_parquet_never_falls_back_to_gold(self):
         from pathlib import Path
         from app.repositories.parquet.dashboard import ParquetDashboardRepository
-        from app.services.temporal import DashboardQuery, InvalidDashboardQuery
-        with self.assertRaises(InvalidDashboardQuery):
+        from app.services.temporal import DashboardQuery
+        from app.repositories.base import DataSourceUnavailable
+        with self.assertRaises(DataSourceUnavailable):
             ParquetDashboardRepository(Path('/tmp/no-gold-fallback')).get_dashboard(DashboardQuery('hourly'))
 
     def test_compatibility_dashboard_rejects_mixed_time_semantics(self):

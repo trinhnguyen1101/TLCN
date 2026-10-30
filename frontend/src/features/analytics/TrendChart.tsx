@@ -37,10 +37,10 @@ export function TrendChart({ compact = false, dataReady = true, loading = false,
     const values = points.map((point) => point.value)
     const rawMin = Math.min(...values)
     const rawMax = Math.max(...values)
-    const range = Math.max(rawMax - rawMin, unit === '1' ? .01 : 1)
+    const range = Math.max(rawMax - rawMin, unit === '1' ? .01 : unit === 'mg/m³' ? .001 : 1)
     const min = rawMin < 0 ? rawMin - range * .15 : Math.max(0, rawMin - range * .15)
     const max = rawMax + range * .15
-    const ticks = [0, .25, .5, .75, 1].map((ratio) => ({ ratio, label: (max - ratio * (max - min)).toFixed(unit === '1' ? 3 : 1) }))
+    const ticks = [0, .25, .5, .75, 1].map((ratio) => ({ ratio, label: (max - ratio * (max - min)).toFixed(unit === '1' || unit === 'mg/m³' ? 3 : 1) }))
     const padding = { top: headingHeight + 22, right: 12, bottom: 36, left: Math.max(...ticks.map((tick) => chartTextWidth(tick.label, 11))) + 16 }
     const plotWidth = Math.max(1, WIDTH - padding.left - padding.right)
     const plotHeight = HEIGHT - padding.top - padding.bottom

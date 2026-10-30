@@ -2,12 +2,11 @@
 
 This repository contains a local Docker Compose foundation for an air-quality
 Lakehouse, a React dashboard, and a FastAPI backend using Python 3.12.
-The backend serves the current temporary CAMS EAC4 sample from
-`backend/data/samples/`. It has not passed the official processing/validation
-pipeline and is not Gold data. The dashboard uses the Parquet source directly.
-The dashboard now reads native 3-hour UTC observations by default, with daily
-and monthly views for longer periods. The portable sample includes native
-2024–2025 rows; the local dataset retains full 2003–2025 native history.
+The standalone dashboard reads Parquet generated from hourly CAMS EAC4 GRIB.
+It defaults to hourly views, with daily/monthly aggregation. Hourly values carry
+temporal-interpolation provenance; gas concentrations use matching model-level
+density before province aggregation. This flow is independent of the Lakehouse.
+Full generated observation partitions are local assets; fresh checkouts need ETL.
 
 ## Documentation
 
@@ -17,8 +16,10 @@ Manual pipeline commands are in [RUN.md](docs/operations/RUN.md).
 
 ## Run the dashboard
 
-See [Hướng dẫn thiết lập web dashboard](docs/dashboard/setup-web-dashboard.md) for prerequisites,
-ETL, backend/frontend startup, time filters, checks, and deployment.
+Start with [Chạy dashboard FE–BE](docs/dashboard/run-dashboard.md) for installation,
+backend/frontend startup, API proxy checks and troubleshooting.
+The [dashboard documentation index](docs/dashboard/README.md) links data processing
+and scientific validation separately.
 The dashboard does not require the Docker Compose lakehouse services below.
 
 ## Architecture

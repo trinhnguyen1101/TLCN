@@ -1,3 +1,4 @@
+import { metricCategory } from '../model/dashboardSelectors'
 import { RESOLUTION_OPTIONS } from '../model/resolution'
 import { useEffect, useId, useRef, useState } from 'react'
 import type { DashboardFiltersValue, DashboardMetadata, Pollutant, ProvinceSnapshot } from '../types'
@@ -6,6 +7,8 @@ import { Button, SegmentedControl } from '../../../components/ui/Button'
 import { SearchSelect } from '../../../components/ui/SearchSelect'
 import { PeriodPicker } from './PeriodPicker'
 import { shiftPeriod, shortPeriod } from '../model/filterPeriods'
+import { vietnamInput, utcInput, formatDateTime } from '../../../utils/dates'
+import { presetPeriod } from '../model/filterPeriods'
 import { sectorLabel } from '../model/presentation'
 
 interface DashboardFiltersProps {
@@ -65,7 +68,12 @@ export function DashboardFilters({ variant = 'admin', years, pollutantOptions, d
       </div>
       <div className="filter-province min-w-0"><SearchSelect label="Khu vực" value={value.provinceCode} disabled={!dataReady && !provinces.length}
         options={[{ value: 'all', label: 'Toàn quốc' }, ...provinces.map((province) => ({ value: province.provinceCode, label: province.provinceName }))]} onChange={(provinceCode) => onChange({ ...value, provinceCode })} /></div>
-      <div className="filter-pollutant min-w-0"><SearchSelect label="Chỉ số" value={value.pollutant} disabled={!pollutantOptions.length} options={pollutantOptions} onChange={(pollutant) => onChange({ ...value, pollutant: pollutant as Pollutant })} /></div>
+      <div className="filter-pollutant flex min-w-0 items-center gap-1">
+        {variant === 'admin' && <select aria-label="Nhóm dữ liệu" title="Tách chất ô nhiễm bề mặt, khí tổng cột và khí tượng" className="h-10 max-w-25 shrink-0 rounded-lg border border-border bg-surface px-1 text-[.7rem] text-muted" value={metricCategory(value.pollutant)} onChange={event => {
+          const option = pollutantOptions.find(option => metricCategory(option.value) === event.target.value)
+          if (option) onChange({ ...value, pollutant: option.value })
+        }}><option value="pollutants">Ô nhiễm</option><option value="columns">Tổng cột / AOD</option><option value="weather">Khí tượng</option></select>}
+        <div className="min-w-0 flex-1"><SearchSelect label="Chỉ số" value={value.pollutant} disabled={!pollutantOptions.length} options={pollutantOptions.filter(option => variant === 'user' || metricCategory(option.value) === metricCategory(value.pollutant))} onChange={(pollutant) => onChange({ ...value, pollutant: pollutant as Pollutant })} /></div></div>
       <div className="filter-period flex min-w-0 items-center gap-1">
         <Button variant="icon" className="filter-period-arrow max-sm:hidden" aria-label="Khoảng thời gian trước" title="Xem khoảng thời gian trước" disabled={!previous || loading} onClick={() => previous && onChange(previous)}><DashboardIcon name="chevronLeft" /></Button>
         <div className="min-w-0 flex-1"><PeriodPicker value={value} years={years} metadata={metadata} onChange={onChange} /></div>
@@ -76,6 +84,23 @@ export function DashboardFilters({ variant = 'admin', years, pollutantOptions, d
         <Button aria-label="Đặt lại bộ lọc" title="Đặt lại bộ lọc" className="min-h-10! min-w-10!" onClick={onReset}><DashboardIcon name="reset" size="small" /></Button>
       </div>
     </div>
+    {value.resolution === 'hourly' && <div className="hourly-workbench flex flex-wrap items-center gap-2 border-t border-border bg-accent-soft/40 px-3 py-2.5">
+      <label className="flex min-w-0 items-center gap-2 text-xs font-medium text-heading">Mốc giờ <input aria-label="Mốc giờ Việt Nam" type="datetime-local" step="3600" className="min-w-0 rounded-lg border border-border bg-surface px-2 py-1.5 text-xs" value={vietnamInput(value.endDate)} min={vietnamInput(metadata?.observationStart ?? '')} max={vietnamInput(metadata?.observationEnd ?? '')} onChange={(event) => {
+        if (!event.target.value) return
+        const date = utcInput(event.target.value)
+        onChange({ ...value, year: 'all', month: 'all', startDate: date, endDate: date })
+      }} /></label>
+      <Button aria-label="Giờ trước" disabled={loading || !value.endDate || Boolean(metadata?.observationStart && Date.parse(`${value.endDate}Z`) <= Date.parse(metadata.observationStart))} onClick={() => {
+        const date = new Date(Date.parse(`${value.endDate}Z`) - 3600000).toISOString().slice(0, 16)
+        onChange({ ...value, startDate: date, endDate: date })
+      }}>← 1 giờ</Button>
+      <Button aria-label="Giờ sau" disabled={loading || !value.endDate || Boolean(metadata?.observationEnd && Date.parse(`${value.endDate}Z`) >= Date.parse(metadata.observationEnd))} onClick={() => {
+        const date = new Date(Date.parse(`${value.endDate}Z`) + 3600000).toISOString().slice(0, 16)
+        onChange({ ...value, startDate: date, endDate: date })
+      }}>1 giờ →</Button>
+      {(['24h', '48h', '7d'] as const).map((preset) => <Button key={preset} onClick={() => onChange(presetPeriod(value, preset, metadata))}>{preset === '7d' ? '7 ngày' : preset === '24h' ? '24 giờ' : '48 giờ'}</Button>)}
+      <span className="ml-auto text-[.7rem] text-muted">{value.startDate === value.endDate ? 'Một mốc giờ' : 'Trung bình trong kỳ'} · {formatDateTime(value.endDate)} UTC+7</span>
+    </div>}
     {variant === 'admin' && sectors.length > 0 && <div className="flex flex-wrap items-center gap-2 border-t border-border px-3 py-2"><span className="text-xs text-muted">Ngành phát thải</span><div className="min-w-0 max-w-full sm:w-64"><SearchSelect label="Ngành" value={value.sector} options={[{ value: 'all', label: 'Tất cả các ngành' }, ...sectors.map((sector) => ({ value: sector, label: sectorLabel(sector) }))]} onChange={(sector) => onChange({ ...value, sector })} /></div></div>}
     </div>
   </section></>

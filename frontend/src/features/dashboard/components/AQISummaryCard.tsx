@@ -19,7 +19,7 @@ export function AQISummaryCard({ aqi, scopeLabel, period, snapshotDate, calendar
       <strong className={aqi === null ? 'text-xl text-muted' : 'text-5xl font-semibold tabular-nums'} style={{ color: level?.textColor }}>{loading ? 'Đang tải…' : aqi === null ? 'Chưa có dữ liệu AQI' : Math.round(aqi)}</strong>
       {level && <span className="rounded-full border px-3 py-1 text-xs font-semibold" style={{ color: level.textColor, borderColor: `${level.color}60`, backgroundColor: `${level.color}15` }}>{level.label}</span>}
     </div>
-    <p className="text-xs leading-relaxed text-muted">{aqi === null ? 'Chọn một tỉnh và một mốc giờ/ngày đủ dữ liệu để xem AQI.' : 'AQI tại tỉnh và mốc thời gian đang chọn.'}</p>
-    <p className="mt-2 text-xs text-muted">{snapshotDate ? `Kỳ dữ liệu: ${formatDate(snapshotDate)} (${calendarTimezone})` : 'Thời điểm cập nhật: nguồn chưa cung cấp'}</p>
+    <p className="text-xs leading-relaxed text-muted">{aqi === null ? 'Nguồn hiện tại không cung cấp AQI hợp lệ cho lựa chọn này. Xem nồng độ các chất bên dưới.' : 'AQI tại tỉnh và mốc thời gian đang chọn.'}</p>
+    <p className="mt-2 text-xs text-muted">{snapshotDate ? `Kỳ dữ liệu: ${formatDate(snapshotDate)} (${calendarTimezone})` : 'Thời gian và phạm vi áp dụng hiển thị ở trên'}</p>
   </section>
 }

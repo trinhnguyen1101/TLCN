@@ -1,4 +1,4 @@
-"""Split reporting regions using the supplied special-region boundaries."""
+"""Administrative provinces, optionally split into map display geometries."""
 import json
 from pathlib import Path
 
@@ -12,7 +12,7 @@ ARCHIPELAGO_NAMES = {
 }
 
 
-def region_features(path: Path):
+def region_features(path: Path, *, split_archipelagos=False):
     files = sorted(path.glob("*/*.geojson")) if path.is_dir() else [path]
     if not files:
         raise ValueError(f"No province GeoJSON files in {path}")
@@ -21,7 +21,7 @@ def region_features(path: Path):
             props = feature["properties"]
             code = str(props["code"]).zfill(2)
             # A single file is an explicit, already prepared boundary collection.
-            if not path.is_dir() or code not in ISLAND_REGIONS:
+            if not split_archipelagos or not path.is_dir() or code not in ISLAND_REGIONS:
                 yield feature
                 continue
             ward = file.parent / "wards" / f"{ISLAND_REGIONS[code]}.geojson"

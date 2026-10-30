@@ -19,17 +19,18 @@ interface ObservationTableProps {
 }
 
 const PAGE_SIZE = 50
+const rowsUseInstants = (records: DashboardTrendRecord[]) => records.some(row => row.date.includes('T'))
 
 export function ObservationTable({ records, provinces, provinceCode, pollutant, metricLabel, unit, dataReady, loading, timezone = 'UTC' }: ObservationTableProps) {
-  const zone = timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : timezone
+  const zone = rowsUseInstants(records) ? 'UTC+7' : timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : timezone
   const [selection, setPage] = useState(0)
   const names = useMemo(() => new Map(provinces.map((province) => [province.provinceCode, province.provinceName])), [provinces])
   const rows = useMemo(() => records.filter((record) => provinceCode === 'all' || record.provinceCode === provinceCode), [records, provinceCode])
   const page = Math.min(selection, Math.max(0, Math.ceil(rows.length / PAGE_SIZE) - 1))
-  const csvRows = useMemo(() => dataReady ? rows.map((row) => ({ [zone === 'UTC' ? 'Thoi_gian_UTC' : 'Thoi_gian_dia_phuong']: row.date, Mui_gio: timezone, Ma_vung: row.provinceCode,
-    Ten_vung: names.get(row.provinceCode) ?? row.provinceCode, [metricLabel]: row[pollutant] ?? null, Don_vi: unit })) : [], [dataReady, rows, names, metricLabel, pollutant, unit])
+  const csvRows = useMemo(() => dataReady ? rows.map((row) => ({ [rowsUseInstants(rows) || timezone === 'UTC' ? 'Thoi_gian_UTC' : 'Thoi_gian_dia_phuong']: row.date, Mui_gio: rowsUseInstants(rows) ? 'UTC' : timezone, Ma_vung: row.provinceCode,
+    Ten_vung: names.get(row.provinceCode) ?? row.provinceCode, [metricLabel]: row[pollutant] ?? null, Don_vi: unit })) : [], [dataReady, rows, names, metricLabel, pollutant, unit, timezone])
   return (
-    <section className="observation-panel mx-auto mt-6 w-full min-w-0 max-w-[960px] overflow-hidden rounded-card border border-border bg-surface shadow-card" aria-label="Bảng dữ liệu theo thời gian">
+    <section className="observation-panel mx-auto mt-6 w-full min-w-0 max-w-full overflow-hidden rounded-card border border-border bg-surface shadow-card" aria-label="Bảng dữ liệu theo thời gian">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border px-5 py-4 max-sm:px-4">
         <div className="min-w-0"><h2 className="font-semibold text-heading">Chi tiết dữ liệu · {metricLabel}</h2><p className="mt-1.5 max-w-[600px] text-xs leading-relaxed text-muted">Mỗi dòng là số liệu của một tỉnh, thành phố tại một thời điểm. Xuất CSV để tải toàn bộ dữ liệu đang xem.</p></div>
         <ExportActions fileName={`quan-sat-${pollutant}-${provinceCode}`} csvRows={csvRows} />

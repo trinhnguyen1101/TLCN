@@ -22,7 +22,7 @@ def utc_bound(value: str, end=False) -> datetime:
 
 @dataclass(frozen=True)
 class DashboardQuery:
-    resolution: Resolution = "3h"
+    resolution: Resolution = "hourly"
     start: str | None = None
     end: str | None = None
     source: str | None = None

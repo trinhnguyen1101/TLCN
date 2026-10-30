@@ -1,3 +1,3 @@
-export const formatDecimal = (value: number | null, unit = '') => value === null
+export const formatDecimal = (value: number | null, unit = '', showUnit = true) => value === null
   ? 'Chưa có dữ liệu'
-  : `${value.toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}${unit ? ` ${unit}` : ''}`
+  : `${value.toLocaleString('vi-VN', { minimumFractionDigits: unit === 'mg/m³' ? 3 : 1, maximumFractionDigits: unit === 'mg/m³' ? 3 : 1 })}${unit && showUnit ? ` ${unit}` : ''}`

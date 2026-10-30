@@ -1,0 +1,19 @@
+aod550: 6855148 rows, 34 provinces
+co_column: 6855148 rows, 34 provinces
+d2m: 6855148 rows, 34 provinces
+mslp: 6855148 rows, 34 provinces
+no2_column: 6855148 rows, 34 provinces
+o3_column: 6855148 rows, 34 provinces
+pm10: 6855148 rows, 34 provinces
+pm1: 6855148 rows, 34 provinces
+pm25: 6855148 rows, 34 provinces
+so2_column: 6855148 rows, 34 provinces
+sp: 6855148 rows, 34 provinces
+t2m: 6855148 rows, 34 provinces
+u10: 6855148 rows, 34 provinces
+v10: 6855148 rows, 34 provinces
+co: 6855148 rows, 34 provinces
+no2: 6855148 rows, 34 provinces
+o3: 6855148 rows, 34 provinces
+so2: 6855148 rows, 34 provinces
+{"generation": "e07dd55ba65b4362a8fb5f3b554bf09f"}

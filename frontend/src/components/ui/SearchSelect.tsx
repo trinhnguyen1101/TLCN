@@ -54,7 +54,7 @@ export function SearchSelect({ label, value, options, onChange, disabled }: Prop
         </button>)}
         {!matches.length && <p role="status" className="p-4 text-sm text-muted">Không có kết quả phù hợp.</p>}
       </div>
-      <p className="border-t border-border px-3 py-2 text-xs text-muted">{matches.length} lựa chọn · ↑ ↓ để chọn · ↵ để áp dụng</p>
+
     </FilterPopover>}
   </div>
 }

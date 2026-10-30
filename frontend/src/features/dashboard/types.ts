@@ -109,12 +109,33 @@ export interface ConcentrationScale {
 }
 
 export interface MetricMetadata {
+  metricId?: string | null
+  displayName?: string | null
+  quantityType?: string | null
+  sourceUnit?: string | null
+  displayUnit?: string | null
+  sourceParamId?: number | null
+  sourceLevel?: number | null
+  sourceLevelType?: string | null
+  conversionMethod?: string | null
+  qualityStatus?: string | null
+  sourceResolution?: string | null
+  displayResolution?: string | null
+  mmrMassBasis?: string | null
+  densityAssumption?: string | null
+  modelLevelPressure?: string | null
   unit: string
   quantity: string
   mapScale?: ConcentrationScale | null
 }
 
 export interface DashboardMetadata {
+  processingVersion?: string | null
+  samplingNote?: string | null
+  supportSources?: Array<Record<string, unknown>>
+  cadenceHours?: number
+  temporalOrigin?: string
+  sourceProvenance?: Array<{ name: string; interpolation_method?: string; original_cadence_hours?: number }>
   publishedTimelineId?: string | null
   compatibilityId?: string | null
   publishedReleaseIds?: string[]

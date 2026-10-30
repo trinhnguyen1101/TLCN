@@ -11,9 +11,10 @@ import { HorizontalBarChart } from '../../features/analytics/HorizontalBarChart'
 import { isFullYearPeriod } from '../../features/dashboard/model/dashboardSelectors'
 import { loadAdminDashboardData } from '../../features/dashboard/api/adminDashboardApi'
 import { trendDescription } from '../../features/dashboard/model/temporal'
-import { sourceNote } from '../../features/dashboard/model/presentation'
+import { isNumber } from '../../features/dashboard/model/dashboardSelectors'
+import { formatDecimal } from '../../utils/formatters'
 
-const TABS = [{ id: 'overview', label: 'Tổng quan' }, { id: 'pollutants', label: 'Chất ô nhiễm' }, { id: 'provinces', label: 'Tỉnh, thành phố' }, { id: 'emissions', label: 'Phát thải' }, { id: 'qcvn', label: 'Ngưỡng chất lượng không khí' }, { id: 'quality', label: 'Chất lượng dữ liệu' }]
+const TABS = [{ id: 'overview', label: 'Tổng quan' }, { id: 'pollutants', label: 'Chất ô nhiễm' }, { id: 'provinces', label: 'Tỉnh, thành phố' }, { id: 'emissions', label: 'Phát thải' }, { id: 'qcvn', label: 'Ngưỡng chất lượng không khí' }, { id: 'quality', label: 'Chất lượng dữ liệu' }, { id: 'history', label: 'Lịch sử' }]
 interface Props {
   data: AdminDashboardData | null
   filters: DashboardFiltersValue
@@ -30,8 +31,16 @@ export function AdminAnalytics({ data, filters, view, loading, tab, onTabChange,
   const trend = <TrendChart dataReady={Boolean(data)} loading={loading} compact title={`${view.metric.label} · ${view.scopeLabel}`} description={trendDescription(filters.resolution)} points={view.chartPoints} resolution={filters.resolution} observationContext={view.monitoring.observationContext} onExpandPeriod={onExpandPeriod} metricLabel={view.metric.label} unit={view.metric.unit} fileName={`phan-tich-${view.selectedPollutant}-${filters.provinceCode}`} />
   const fullYear = isFullYearPeriod(filters)
   const thresholdRows = fullYear ? (data?.annualProvinceSummaries ?? []).filter((row) => row.year === filters.year && row.exceedanceDays !== null && (filters.provinceCode === 'all' || row.provinceCode === filters.provinceCode)) : []
-  return <AnalyticsTabs tabs={TABS} value={tab} onChange={onTabChange}>
-    {tab === 'overview' && <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1"><DashboardComparison data={data} filters={filters} years={view.years} unit={view.metric.unit} loading={loading} load={loadAdminDashboardData} /><section className="rounded-card border border-border bg-surface p-5"><h2 className="text-sm font-semibold text-heading">Tóm tắt dữ liệu đang xem</h2><dl className="mt-4 grid grid-cols-2 gap-4 text-xs text-muted"><div><dt>Số bản ghi</dt><dd className="mt-1 text-xl text-heading">{data ? view.monitoring.records.length : '—'}</dd></div><div><dt>Tỉnh có dữ liệu {view.metric.label}</dt><dd className="mt-1 text-xl text-heading">{data ? view.monitoring.reportingProvinces : '—'}</dd></div><div><dt>Tổng phát thải</dt><dd className="mt-1 text-lg text-heading">{view.totalEmissions === null ? '—' : `${Math.round(view.totalEmissions).toLocaleString('vi-VN')} tấn`}</dd></div><div><dt>Ngành phát thải lớn nhất</dt><dd className="mt-1 text-lg text-heading">{view.topSector?.label ?? '—'}</dd></div></dl><p className="mt-4 text-xs leading-relaxed text-muted">{sourceNote(data?.metadata?.note) ?? 'Chỉ số được tổng hợp từ dữ liệu nguồn trong phạm vi bộ lọc.'}</p></section></div>}
+  const tabs=TABS.filter(item => item.id !== 'emissions' || Boolean(data?.emissionRecords.length)).filter(item => item.id !== 'qcvn' || thresholdRows.length > 0)
+  const values=view.monitoring.records.map(row=>row[filters.pollutant]).filter(isNumber)
+  return <AnalyticsTabs tabs={tabs} value={tab} onChange={onTabChange}>
+    {tab === 'overview' && <section className="grid grid-cols-4 gap-3 rounded-card border border-border bg-surface p-4 max-sm:grid-cols-2" aria-label="Thống kê trong kỳ">{[
+      ['Thấp nhất',formatDecimal(values.length?Math.min(...values):null,view.metric.unit)],
+      ['Cao nhất',formatDecimal(values.length?Math.max(...values):null,view.metric.unit)],
+      ['Slot có giá trị',values.length.toLocaleString('vi-VN')],
+      ['Vùng báo cáo',view.monitoring.reportingProvinces.toString()],
+    ].map(([label,value])=><div key={label}><p className="text-xs text-muted">{label}</p><strong className="mt-2 block text-lg font-semibold text-heading">{data?value:'—'}</strong></div>)}</section>}
+    {tab === 'history' && <DashboardComparison data={data} filters={filters} years={view.years} unit={view.metric.unit} loading={loading} load={loadAdminDashboardData} />}
     {tab === 'pollutants' && <div className="grid grid-cols-[minmax(240px,1fr)_minmax(0,2fr)] gap-4 max-md:grid-cols-1"><div className="max-h-[330px] overflow-y-auto"><PollutantMetrics metrics={view.monitoring.metrics} metadata={data?.metadata?.metrics} pollutants={view.availableMetrics} selected={view.selectedPollutant} onSelect={onPollutantSelect} /></div>{trend}</div>}
     {tab === 'provinces' && <PriorityAreasTable areas={view.priorityAreaRows} selectedProvinceCode={filters.provinceCode} onProvinceSelect={onProvinceSelect} />}
     {tab === 'emissions' && <div className="grid grid-cols-2 gap-4 max-md:grid-cols-1"><HorizontalBarChart eyebrow="Cơ cấu nguồn thải" title="Ngành phát thải" description="Tổng lượng phát thải trong phạm vi bộ lọc." points={view.sectorRanking} unit="tấn" fileName="nganh-phat-thai" selectedId={filters.sector} onSelect={(point) => onSectorSelect(point.id)} /><EmissionTable data={data} filters={filters} loading={loading} /></div>}

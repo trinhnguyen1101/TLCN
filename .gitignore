@@ -88,13 +88,10 @@ Desktop.ini
 !**/.gitkeep
 /frontend/dist/app/
 
-# Large local sample intermediates; keep the compact monthly serving sample.
+# Generated dashboard observations stay local; manifests and monthly summaries remain reviewable.
 /backend/data/samples/cams/eac4_provinces/.staging-*/
 /backend/data/samples/cams/eac4_provinces/.CURRENT-*
 /backend/data/samples/cams/eac4_provinces/runs/*/observations/**
-!/backend/data/samples/cams/eac4_provinces/runs/ab9a62e6f6bd4177abf3ff7abb764c11/observations/**
-/backend/data/samples/cams/eac4_provinces/runs/ab9a62e6f6bd4177abf3ff7abb764c11/observations/*/20[01][0-9]/**
-/backend/data/samples/cams/eac4_provinces/runs/ab9a62e6f6bd4177abf3ff7abb764c11/observations/*/202[0-3]/**
 /backend/data/samples/cams/eac4_provinces/runs/*/weights/
 
 # Ignore heavy landing data directory (allow keeping a placeholder)

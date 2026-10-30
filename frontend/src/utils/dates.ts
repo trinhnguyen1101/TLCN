@@ -8,13 +8,13 @@ export function formatDate(value: string | null | undefined): string {
 export function formatDateTime(value: string | null | undefined, seconds = false, timezone = false): string {
   if (!value) return ''
   let utc = value
-  if (/[+-]\d{2}:\d{2}$/.test(value) && !value.endsWith('+00:00')) {
-    const date = new Date(value)
-    if (Number.isFinite(date.getTime())) utc = date.toISOString()
+  if (value.includes('T')) {
+    const date = new Date(/[Zz]|[+-]\d{2}:\d{2}$/.test(value) ? value : `${value}Z`)
+    if (Number.isFinite(date.getTime())) utc = new Date(date.getTime() + 7 * 3600000).toISOString()
   }
   const time = /[T ](\d{2}:\d{2})(:\d{2}(?:\.\d+)?)?/.exec(utc)
   const label = /^\d{4}-\d{2}$/.test(utc) ? `${utc.slice(5, 7)}/${utc.slice(0, 4)}` : formatDate(utc).slice(0, 10)
-  return `${label}${time ? ` ${time[1]}${seconds ? time[2] ?? ':00' : ''}` : ''}${timezone ? ' UTC' : ''}`
+  return `${label}${time ? ` ${time[1]}${seconds ? time[2] ?? ':00' : ''}` : ''}${timezone ? ' UTC+7' : ''}`
 }
 
 export function formatObservationTime(value: string, resolution: 'hourly' | '3h' | 'daily' | 'monthly') {
@@ -56,4 +56,14 @@ export function shiftDateYear(value: string, offset: number) {
   const month = Number(value.slice(5, 7))
   const day = Math.min(Number(value.slice(8, 10)), new Date(Date.UTC(year, month, 0)).getUTCDate())
   return `${String(year).padStart(4, '0')}-${value.slice(5, 7)}-${String(day).padStart(2, '0')}${value.slice(10)}`
+}
+
+/** Vietnam has a fixed UTC+7 offset and no daylight saving transitions. */
+export function vietnamInput(value: string) {
+  if (!value || !value.includes('T')) return value
+  const date = new Date(/[Zz]|[+-]\d{2}:\d{2}$/.test(value) ? value : `${value}Z`)
+  return new Date(date.getTime() + 7 * 3600000).toISOString().slice(0, 16)
+}
+export function utcInput(value: string) {
+  return value?.includes('T') ? new Date(`${value}:00+07:00`).toISOString().slice(0, 16) : value
 }

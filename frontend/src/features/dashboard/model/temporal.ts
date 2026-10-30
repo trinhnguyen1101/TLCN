@@ -40,7 +40,7 @@ export function calendarPeriod(filters: DashboardFiltersValue, years: number[], 
 }
 
 export function trendDescription(resolution: DashboardFiltersValue['resolution']) {
-  if (resolution === 'hourly') return 'Slot một giờ; nồng độ chỉ có tại timestamp thực của nguồn. AQI hiển thị cho một tỉnh và một mốc giờ đủ dữ liệu.'
+  if (resolution === 'hourly') return 'Ước tính mô hình · UTC+7 · khoảng trống là slot thiếu'
   return resolution === '3h' ? 'Số liệu mỗi 3 giờ theo giờ quốc tế (UTC). Giá trị toàn quốc là trung bình các tỉnh, thành phố có dữ liệu tại cùng thời điểm.'
     : `Giá trị trung bình theo ${resolution === 'daily' ? 'ngày' : 'tháng'} trong phạm vi đang chọn.`
 }

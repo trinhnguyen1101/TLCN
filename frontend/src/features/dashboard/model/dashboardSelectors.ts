@@ -16,9 +16,9 @@ export const METRIC_META: Record<Pollutant, { label: string; unit: string }> = {
   sp: { label: 'Áp suất bề mặt', unit: 'hPa' }, mslp: { label: 'Áp suất mực biển', unit: 'hPa' },
   u10: { label: 'Gió 10 m hướng đông', unit: 'm/s' }, v10: { label: 'Gió 10 m hướng bắc', unit: 'm/s' },
 }
-export const BASIC_POLLUTANTS: Pollutant[] = ['pm25', 'pm10', 'no2', 'so2', 'co', 'o3']
-const COLUMN_POLLUTANTS: Partial<Record<Pollutant, Pollutant>> = {
-  no2: 'no2Column', so2: 'so2Column', co: 'coColumn', o3: 'o3Column',
+export const BASIC_POLLUTANTS: Pollutant[] = ['pm25', 'pm10', 'pm1', 'no2', 'so2', 'co', 'o3']
+export function metricCategory(key: Pollutant): 'pollutants' | 'columns' | 'weather' {
+  return ['t2m','d2m','sp','mslp','u10','v10'].includes(key) ? 'weather' : key.endsWith('Column') || key === 'aod550' ? 'columns' : 'pollutants'
 }
 export const DEFAULT_FILTERS: DashboardFiltersValue = {
   resolution: DEFAULT_RESOLUTION, provinceCode: 'all', pollutant: 'pm25', year: 'all', month: 'all', startDate: '', endDate: '', sector: 'all',
@@ -95,21 +95,15 @@ function hasMetric(data: DashboardData | null, key: Pollutant) {
   return Boolean(data?.metadata?.metrics[key] || data?.dashboardTrendRecords.some((row) => isNumber(row[key])) || data?.provinceSnapshots.some((row) => isNumber(row[key])))
 }
 
-/** Keep the source's gas quantity distinct from surface concentration. */
+/** Primary pollutants never fall back to quantities integrated over the atmosphere. */
 export function basicPollutants(data: DashboardData | null): Pollutant[] {
-  return BASIC_POLLUTANTS.map((key) => {
-    const column = COLUMN_POLLUTANTS[key]
-    return !hasMetric(data, key) && column && hasMetric(data, column) ? column : key
-  })
+  return BASIC_POLLUTANTS.filter(key => hasMetric(data,key) && data?.metadata?.metrics[key]?.qualityStatus !== 'unavailable')
 }
 
 export function metricOptions(data: DashboardData | null, basic = false) {
-  const keys: Pollutant[] = basic ? ['aqi', ...BASIC_POLLUTANTS.flatMap((key) => {
-    const column = COLUMN_POLLUTANTS[key]
-    return column ? [key, column] : [key]
-  })] : Object.keys(METRIC_META) as Pollutant[]
-  return keys.filter((key) => hasMetric(data, key))
-    .map((value) => ({ value, label: value === 'aqi' && (data?.metadata?.publishedTimelineId || data?.metadata?.publishedReleaseId) && !data.dashboardTrendRecords.some(row => isNumber(row.aqi)) && !data.provinceSnapshots.some(row => isNumber(row.aqi)) ? (data.metadata?.temporalAggregation?.startsWith('monthly_') ? 'AQI · không định nghĩa theo tháng' : 'AQI · chưa đủ dữ liệu hợp lệ') : METRIC_META[value].label }))
+  const keys: Pollutant[] = basic ? ['aqi', ...BASIC_POLLUTANTS] : ['aqi', ...BASIC_POLLUTANTS, ...(Object.keys(METRIC_META) as Pollutant[]).filter(key => key !== 'aqi' && !BASIC_POLLUTANTS.includes(key))]
+  return keys.filter(key => hasMetric(data,key) && data?.metadata?.metrics[key]?.qualityStatus !== 'unavailable')
+    .map(value => ({value,label:value === 'aqi' && (data?.metadata?.publishedTimelineId || data?.metadata?.publishedReleaseId) && !data.dashboardTrendRecords.some(row=>isNumber(row.aqi)) && !data.provinceSnapshots.some(row=>isNumber(row.aqi)) ? (data.metadata?.temporalAggregation?.startsWith('monthly_') ? 'AQI · không định nghĩa theo tháng' : 'AQI · chưa đủ dữ liệu hợp lệ') : METRIC_META[value].label,group:metricCategory(value)}))
 }
 
 /** Geography keeps all provinces; a province selection scopes the adjoining panels. */
@@ -161,7 +155,7 @@ export function buildMonitoringView(data: DashboardData | null, filters: Dashboa
     snapshots, records, metric, ranking,
     scopeLabel: filters.provinceCode === 'all' ? 'Toàn quốc' : data?.provinceSnapshots.find((province) => province.provinceCode === filters.provinceCode)?.provinceName ?? filters.provinceCode,
     aqi: scoped.length === 1 ? scoped[0].aqi : null,
-    metrics: Object.fromEntries(Object.keys(METRIC_META).map((key) => [key, key === 'aqi' ? (scoped.length === 1 ? scoped[0].aqi : null) : data?.metadata?.publishedReleaseId ? weightedMetricMean(records, key as Pollutant) : mean(scoped.map((province) => province[key as Pollutant]))])) as Record<Pollutant, number | null>,
+    metrics: Object.fromEntries(Object.keys(METRIC_META).map((key) => [key, key === 'aqi' ? (scoped.length === 1 ? scoped[0].aqi : null) : data?.metadata?.publishedReleaseId || data?.metadata?.cadenceHours ? weightedMetricMean(records, key as Pollutant) : mean(scoped.map((province) => province[key as Pollutant]))])) as Record<Pollutant, number | null>,
     reportingProvinces: ranking.length,
     chartPoints,
     observationContext: instant ? observationContext(periodSnapshots(data, { ...filters, year: 'all', month: 'all', startDate: bound, endDate: bound }), filters.pollutant, filters.provinceCode) : undefined,
@@ -169,7 +163,7 @@ export function buildMonitoringView(data: DashboardData | null, filters: Dashboa
 }
 
 export function periodLabel(filters: DashboardFiltersValue, timezone = 'UTC') {
-  const zone = filters.resolution === 'hourly' || filters.resolution === '3h' ? 'UTC' : timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : timezone
+  const zone = filters.resolution === 'hourly' || filters.resolution === '3h' ? 'UTC+7' : timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : timezone
   if (filters.startDate || filters.endDate) return `${formatDateTime(filters.startDate) || 'Đầu chuỗi'}${filters.startDate === filters.endDate ? '' : ` → ${formatDateTime(filters.endDate) || 'Cuối chuỗi'}`} ${zone}`
   return [filters.month === 'all' ? null : `Tháng ${filters.month}`, filters.year === 'all' ? 'Toàn bộ thời gian' : `Năm ${filters.year}`].filter(Boolean).join(' · ')
 }

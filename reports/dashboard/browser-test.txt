@@ -1,0 +1,292 @@
+[
+  {
+    "route": "/user",
+    "width": 1440,
+    "generation": "b52d8b7368414758b151fed3f3b2531a",
+    "overflow": {
+      "body": 1425,
+      "viewport": 1440
+    },
+    "infoOverflow": false,
+    "errors": [],
+    "mapGap": null,
+    "mapHeight": null,
+    "verified": [
+      "pm25",
+      "pm10",
+      "pm1",
+      "no2",
+      "so2",
+      "co",
+      "o3"
+    ],
+    "tableRows": 1,
+    "responses": [
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?resolution=hourly",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-30T01%3A00&resolution=hourly&start=2025-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-30T00%3A00&resolution=hourly&start=2025-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-31T21%3A00&resolution=hourly&start=2025-12-30T22%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?resolution=daily",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?resolution=monthly",
+        "status": 200
+      }
+    ]
+  },
+  {
+    "route": "/admin",
+    "width": 1440,
+    "generation": "b52d8b7368414758b151fed3f3b2531a",
+    "overflow": {
+      "body": 1425,
+      "viewport": 1440
+    },
+    "infoOverflow": false,
+    "errors": [],
+    "mapGap": 1,
+    "mapHeight": 601,
+    "verified": [
+      "pm25",
+      "pm10",
+      "pm1",
+      "no2",
+      "so2",
+      "co",
+      "o3"
+    ],
+    "tableRows": 1,
+    "responses": [
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?resolution=hourly",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=hourly&start=2024-12-25T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-30T01%3A00&resolution=hourly&start=2025-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-30T01%3A00&resolution=hourly&start=2024-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-30T00%3A00&resolution=hourly&start=2025-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-30T00%3A00&resolution=hourly&start=2024-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-31T21%3A00&resolution=hourly&start=2025-12-30T22%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=hourly&start=2024-12-30T22%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?resolution=daily",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=daily&start=2024-12-01T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?resolution=hourly",
+        "status": 200
+      }
+    ]
+  },
+  {
+    "route": "/user",
+    "width": 768,
+    "generation": "b52d8b7368414758b151fed3f3b2531a",
+    "overflow": {
+      "body": 753,
+      "viewport": 768
+    },
+    "infoOverflow": false,
+    "errors": [],
+    "mapGap": null,
+    "mapHeight": null,
+    "verified": [
+      "co"
+    ],
+    "tableRows": 1,
+    "responses": [
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?resolution=hourly",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-30T01%3A00&resolution=hourly&start=2025-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-30T00%3A00&resolution=hourly&start=2025-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-31T21%3A00&resolution=hourly&start=2025-12-30T22%3A00",
+        "status": 200
+      }
+    ]
+  },
+  {
+    "route": "/admin",
+    "width": 768,
+    "generation": "b52d8b7368414758b151fed3f3b2531a",
+    "overflow": {
+      "body": 753,
+      "viewport": 768
+    },
+    "infoOverflow": false,
+    "errors": [],
+    "mapGap": 1,
+    "mapHeight": 420,
+    "verified": [
+      "co"
+    ],
+    "tableRows": 1,
+    "responses": [
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?resolution=hourly",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=hourly&start=2024-12-25T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-30T01%3A00&resolution=hourly&start=2025-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-30T01%3A00&resolution=hourly&start=2024-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-30T00%3A00&resolution=hourly&start=2025-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-30T00%3A00&resolution=hourly&start=2024-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-31T21%3A00&resolution=hourly&start=2025-12-30T22%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=hourly&start=2024-12-30T22%3A00",
+        "status": 200
+      }
+    ]
+  },
+  {
+    "route": "/user",
+    "width": 390,
+    "generation": "b52d8b7368414758b151fed3f3b2531a",
+    "overflow": {
+      "body": 375,
+      "viewport": 390
+    },
+    "infoOverflow": false,
+    "errors": [],
+    "mapGap": null,
+    "mapHeight": null,
+    "verified": [
+      "co"
+    ],
+    "tableRows": 1,
+    "responses": [
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?resolution=hourly",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-30T01%3A00&resolution=hourly&start=2025-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-30T00%3A00&resolution=hourly&start=2025-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/dashboard?end=2025-12-31T21%3A00&resolution=hourly&start=2025-12-30T22%3A00",
+        "status": 200
+      }
+    ]
+  },
+  {
+    "route": "/admin",
+    "width": 390,
+    "generation": "b52d8b7368414758b151fed3f3b2531a",
+    "overflow": {
+      "body": 375,
+      "viewport": 390
+    },
+    "infoOverflow": false,
+    "errors": [],
+    "mapGap": 1,
+    "mapHeight": 340,
+    "verified": [
+      "co"
+    ],
+    "tableRows": 1,
+    "responses": [
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?resolution=hourly",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=hourly&start=2024-12-25T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-30T01%3A00&resolution=hourly&start=2025-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-30T01%3A00&resolution=hourly&start=2024-12-30T01%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-30T00%3A00&resolution=hourly&start=2025-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-30T00%3A00&resolution=hourly&start=2024-12-30T00%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2025-12-31T21%3A00&resolution=hourly&start=2025-12-30T22%3A00",
+        "status": 200
+      },
+      {
+        "url": "http://127.0.0.1:5181/api/admin/dashboard?end=2024-12-31T21%3A00&resolution=hourly&start=2024-12-30T22%3A00",
+        "status": 200
+      }
+    ]
+  }
+]

@@ -14,8 +14,8 @@ import pyarrow.compute as pc
 from pyarrow import ArrowException
 
 from app.repositories.base import DataSourceUnavailable
-from app.services.map_scale import monthly_concentration_scale
-from app.schemas.dashboard import DashboardData, DashboardTrendRecord, ProvinceSnapshot
+from app.services.map_scale import monthly_concentration_scale, dashboard_concentration_scale
+from app.schemas.dashboard import DashboardData, DashboardTrendRecord, ProvinceSnapshot, MetricMetadata, MetricQuality
 from app.services.temporal import DashboardQuery, InvalidDashboardQuery, utc_bound
 
 SNAPSHOT_METRICS = (
@@ -27,6 +27,12 @@ SNAPSHOT_METRICS = (
 def latest_observation(trends):
     return max((row.date for row in trends
                 if any(getattr(row, metric) is not None for metric in SNAPSHOT_METRICS)), default=None)
+
+
+def dataset_note(manifest):
+    origin = "Nội suy từ phân tích 3 giờ; slot giờ không phải quan sát độc lập. " if manifest.get('temporal_origin')=='interpolated' else "Theo bước thời gian của nguồn. "
+    gases = "Khí tầng mô hình 60 được quy đổi bằng mật độ từ T/q và áp suất hybrid cùng thời điểm. " if any(source['name'] in ('co','no2','so2','o3') for source in manifest['sources']) else ""
+    return "CAMS EAC4, ước tính theo vùng báo cáo; không phải số đo trạm. " + origin + gases + "Khí tổng cột tách riêng nồng độ bề mặt. AQI không được suy từ nội suy giờ."
 
 
 class ParquetDashboardRepository:
@@ -44,8 +50,6 @@ class ParquetDashboardRepository:
         self._max_query_entries = 16
 
     def get_dashboard(self, query: DashboardQuery | None = None) -> DashboardData:
-        if query and query.resolution == "hourly":
-            raise InvalidDashboardQuery("Hourly Gold queries require DASHBOARD_DATA_SOURCE=gold")
         # Validate user bounds separately from data-source errors.
         if query and query.start and query.end:
             query.bounds(query.end)
@@ -75,14 +79,25 @@ class ParquetDashboardRepository:
             raise DataSourceUnavailable("Cannot read EAC4 Parquet generation") from exc
 
     @staticmethod
+    def _isolated_row(row):
+        updates={}
+        for field in ('metric_sample_counts','metric_quality_reasons'):
+            values=getattr(row,field,None)
+            if values is not None:
+                updates[field]=dict(values)
+        if hasattr(row,'metric_quality'):
+            updates['metric_quality']={key:value.model_copy() for key,value in row.metric_quality.items()}
+        return row.model_copy(update=updates)
+
+    @staticmethod
     def _copy_response(data):
         # Record fields are immutable scalars, dates and strings. A shallow model
         # copy isolates field assignments without recursively copying every value.
         return data.model_copy(update={
-            "province_snapshots": [row.model_copy() for row in data.province_snapshots],
+            "province_snapshots": [ParquetDashboardRepository._isolated_row(row) for row in data.province_snapshots],
             "emission_records": [row.model_copy() for row in data.emission_records],
             "emission_sectors": list(data.emission_sectors),
-            "dashboard_trend_records": [row.model_copy() for row in data.dashboard_trend_records],
+            "dashboard_trend_records": [ParquetDashboardRepository._isolated_row(row) for row in data.dashboard_trend_records],
             "metadata": data.metadata.model_copy(deep=True),
         })
 
@@ -134,14 +149,9 @@ class ParquetDashboardRepository:
             else:
                 data.dashboard_trend_records = self._observations(folder, manifest, start, end, query.resolution, data.metadata.observation_start)
             self._snapshot(data)
-            data.metadata.temporal_aggregation = {"3h": "3_hourly", "daily": "daily_mean", "monthly": "monthly_mean"}[query.resolution]
+            data.metadata.temporal_aggregation = {"hourly": "hourly", "3h": "3_hourly", "daily": "daily_mean", "monthly": "monthly_mean"}[query.resolution]
             data.metadata.query_start, data.metadata.query_end = start, end
-            data.metadata.note = (
-                "Dữ liệu mẫu tạm thời, chưa qua quy trình xử lý và kiểm định chính thức. "
-                "CAMS EAC4 theo diện tích từng vùng báo cáo; quan sát gốc cách nhau 3 giờ UTC. "
-                "Đất liền và quần đảo tính riêng. Các chỉ số *_column là tổng cột (mg/m²). "
-                "Không suy AQI hay ngày vượt ngưỡng từ dữ liệu này."
-            )
+            data.metadata.note = dataset_note(manifest)
             with self._lock:
                 count = len(data.dashboard_trend_records)
                 if generation == self._generation and count <= self._max_query_rows:
@@ -169,10 +179,14 @@ class ParquetDashboardRepository:
             row = rows.get(province.province_code)
             for metric in SNAPSHOT_METRICS:
                 setattr(province, metric, getattr(row, metric) if row else None)
+            province.metric_quality = {metric:MetricQuality(quality_status='ok' if row and getattr(row,metric) is not None else 'unavailable',
+                missing_reason=(row.metric_quality_reasons or {}).get(metric) if row else 'missing_timestamp',
+                observation_time=latest if isinstance(latest,datetime) else None)
+                for metric in ('co','no2','so2','o3') if metric in data.metadata.metrics}
         data.metadata.snapshot_date = latest
-        for metric in ("pm1", "pm25", "pm10"):
+        for metric in ("pm1", "pm25", "pm10", "no2", "so2", "co", "o3"):
             if metric in data.metadata.metrics:
-                data.metadata.metrics[metric].map_scale = monthly_concentration_scale(
+                data.metadata.metrics[metric].map_scale = dashboard_concentration_scale(metric,
                     [(r.date, getattr(r, metric)) for r in trends])
 
     @staticmethod
@@ -195,10 +209,12 @@ class ParquetDashboardRepository:
                 if not files:
                     raise ValueError("Empty observation partition")
                 for file in files:
-                    table = pq.read_table(file, columns=["timestamp", "province_code", "metric", "value", "unit", "valid_area_fraction", "quality_flag"],
+                    columns=["timestamp", "province_code", "metric", "value", "unit", "valid_area_fraction", "quality_flag"]
+                    has_reasons='quality_reason' in pq.ParquetFile(file).schema_arrow.names
+                    table = pq.read_table(file, columns=columns+(['quality_reason'] if has_reasons else []),
                                           filters=[("timestamp", ">=", start), ("timestamp", "<=", end)])
                     if table.num_rows:
-                        ParquetDashboardRepository._validate_observations(table, metric, source["unit"], codes)
+                        ParquetDashboardRepository._validate_observations(table, metric, source["unit"], codes, source.get("cadence_hours", manifest.get("cadence_hours", 3)))
                         tables.append(table)
             if not tables:
                 continue
@@ -219,27 +235,37 @@ class ParquetDashboardRepository:
                 for row in grouped.to_pylist():
                     key = (row["province_code"], row["date"])
                     record = records.setdefault(key, dict(province_code=key[0], date=key[1], pm25=None, pm10=None, o3=None, no2=None, so2=None, co=None))
-                    record[metric] = row["value_sum"] / row["value_count"] if row["value_count"] >= 6 else None
+                    record.setdefault("metric_sample_counts", {})[DashboardTrendRecord.model_fields[metric].alias or metric] = row["value_count"]
+                    record[metric] = row["value_sum"] / row["value_count"] if row["value_count"] >= 0.75 * (24 / source.get("cadence_hours", manifest.get("cadence_hours", 3))) else None
+                    if record[metric] is None:
+                        record.setdefault('metric_quality_reasons',{})[DashboardTrendRecord.model_fields[metric].alias or metric]='insufficient_temporal_coverage'
             else:
-                selected = pa.table({"province_code": table["province_code"], "date": table["timestamp"], "value": values})
+                selected = pa.table({"province_code": table["province_code"], "date": table["timestamp"], "value": values,
+                    "reason": table['quality_reason'] if 'quality_reason' in table.column_names else pa.array(['']*table.num_rows)})
+                if resolution == "3h":
+                    selected = selected.filter(pc.equal(pc.cast(selected["date"], pa.timestamp("us")), pc.floor_temporal(pc.cast(selected["date"], pa.timestamp("us")), multiple=3, unit="hour")))
                 for row in selected.to_pylist():
                     key = (row["province_code"], row["date"])
                     record = records.setdefault(key, dict(province_code=key[0], date=key[1], pm25=None, pm10=None, o3=None, no2=None, so2=None, co=None))
                     record[metric] = row["value"]
+                    if row['reason']:
+                        record.setdefault('metric_quality_reasons',{})[DashboardTrendRecord.model_fields[metric].alias or metric]=row['reason']
         return [DashboardTrendRecord(**row) for _, row in sorted(records.items(), key=lambda item: (item[0][1], item[0][0]))]
 
     @staticmethod
-    def _validate_observations(table, metric, unit, codes):
+    def _validate_observations(table, metric, unit, codes, cadence_hours=3):
+        if cadence_hours not in (1, 3):
+            raise ValueError("Unsupported observation cadence")
         """Validate columns in Arrow without constructing a Python object per sample."""
         timestamp, coverage, values = table["timestamp"], table["valid_area_fraction"], table["value"]
         if not pa.types.is_timestamp(timestamp.type) or timestamp.type.tz != "UTC":
-            raise ValueError("Invalid 3-hour UTC timestamp")
+            raise ValueError("Invalid UTC timestamp")
         utc_timestamp = pc.cast(timestamp, pa.timestamp(timestamp.type.unit))
         for column in (coverage, values):
             if not (pa.types.is_floating(column.type) or pa.types.is_integer(column.type)):
                 raise ValueError("Invalid observation numeric type")
         checks = [
-            pc.equal(utc_timestamp, pc.floor_temporal(utc_timestamp, multiple=3, unit="hour")),
+            pc.equal(utc_timestamp, pc.floor_temporal(utc_timestamp, multiple=cadence_hours, unit="hour")),
             pc.is_in(table["province_code"], value_set=codes),
             pc.equal(table["metric"], metric),
             pc.equal(table["unit"], unit),
@@ -276,7 +302,8 @@ class ParquetDashboardRepository:
             alias = DashboardTrendRecord.model_fields[metric].alias
             if alias in metric_metadata:
                 raise ValueError("Invalid or duplicated metric")
-            metric_metadata[alias] = {"unit": source["unit"], "quantity": source["quantity"]}
+            metric_metadata[alias] = {key:source[key] for key in MetricMetadata.model_fields if key in source}
+            metric_metadata[alias].update(unit=source['unit'],quantity=source['quantity'])
             if not include_monthly:
                 # Native requests only need source metadata, not every value in
                 # 23 years of monthly history. Read one compact Arrow column to
@@ -301,12 +328,13 @@ class ParquetDashboardRepository:
                 seen.add(identity)
                 record = records.setdefault(key, dict(province_code=key[0], date=key[1],
                                                       pm25=None, pm10=None, o3=None, no2=None, so2=None, co=None))
-                # Months with less than 75% valid 3-hourly samples remain unavailable.
+                # Months with less than 75% valid source samples remain unavailable.
                 record[metric] = row["value"] if coverage >= 0.75 else None
-        trends = [DashboardTrendRecord(**row) for _, row in sorted(records.items())]
-        for metric in ("pm1", "pm25", "pm10"):
+                record.setdefault("metric_sample_counts", {})[DashboardTrendRecord.model_fields[metric].alias or metric] = row["sample_count"]
+        trends = [DashboardTrendRecord(**row) for _, row in sorted(records.items(), key=lambda item: (item[0][1], item[0][0]))]
+        for metric in ("pm1", "pm25", "pm10", "no2", "so2", "co", "o3"):
             if metric in metric_metadata:
-                metric_metadata[metric]["map_scale"] = monthly_concentration_scale(
+                metric_metadata[metric]["map_scale"] = dashboard_concentration_scale(metric,
                     [(record.date, getattr(record, metric)) for record in trends]
                 )
         latest = latest_observation(trends)
@@ -323,7 +351,13 @@ class ParquetDashboardRepository:
             province_snapshots=snapshots, emission_records=[], emission_sectors=[],
             dashboard_trend_records=trends,
             metadata={
-                "source": "CAMS EAC4 sample", "generation": manifest["generation"],
+                "source": "CAMS EAC4 hourly" if manifest.get("cadence_hours") == 1 else "CAMS EAC4 sample",
+                "cadence_hours": manifest.get("cadence_hours", 3),
+                "temporal_origin": manifest.get("temporal_origin", "unknown"),
+                "processing_version": manifest.get("processing_version"),
+                "sampling_note": manifest.get("sampling_note"),
+                "support_sources": manifest.get("support_sources", []),
+                "source_provenance": [{k: s.get(k) for k in ("name", "interpolation_method", "original_cadence_hours", "messages", "duplicate_messages_skipped", "quality_reason_counts")} for s in manifest["sources"]], "generation": manifest["generation"],
                 "start": min(s["start"] for s in manifest["sources"]),
                 "end": max(s["end"] for s in manifest["sources"]),
                 "snapshot_date": latest, "metrics": metric_metadata,
@@ -333,9 +367,6 @@ class ParquetDashboardRepository:
                 "available_years": sorted({r.date.year for r in trends} if include_monthly else available_years, reverse=True),
                 "observation_start": native_start,
                 "observation_end": manifest.get("observation_end", max(s["end"] for s in manifest["sources"])),
-                "note": "Dữ liệu mẫu tạm thời, chưa qua quy trình xử lý và kiểm định chính thức. "
-                        f"Tái phân tích CAMS EAC4, trung bình tháng theo diện tích trên ranh giới {manifest['province_count']} vùng báo cáo; đất liền và quần đảo được tính riêng. "
-                        "Các chỉ số *_column là tổng cột khí quyển (mg/m²). "
-                        "Không có dữ liệu phát thải theo ngành; không suy AQI từ trung bình tháng.",
+                "note": dataset_note(manifest),
             },
         )

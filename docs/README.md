@@ -11,7 +11,7 @@ dẫn vận hành vẫn chạy từ **thư mục gốc repository**, nơi có `d
 | Hiểu hai luồng Landing batch và Supabase daily | [Airflow orchestration cho Lakehouse](airflow/daily-supabase-pipeline.md) |
 | Hiểu dữ liệu được chuẩn hóa ở Silver | [Mô tả lớp Silver](lakehouse/SILVER.md) |
 | Hiểu hourly facts, AQI, marts và historical serving | [Mô tả lớp Gold](lakehouse/GOLD.md) |
-| Chạy FastAPI và User/Admin dashboard | [Thiết lập web dashboard](dashboard/setup-web-dashboard.md) |
+| Chạy FastAPI và User/Admin dashboard | [Chạy dashboard FE–BE](dashboard/run-dashboard.md) |
 | Tìm hiểu thu thập dữ liệu qua Supabase | [Cloud ingestion](supabase/TLCN_Supabase_Cloud_Ingestion_Full_Documentation.md) |
 | Tra dữ liệu nguồn, fields và units | [Từ điển dữ liệu nguồn](data/data-dictionary.md) |
 
@@ -33,7 +33,11 @@ docs/
 │   ├── supabase-to-lakehouse-plan.md
 │   └── TLCN_Supabase_Cloud_Ingestion_Full_Documentation.md
 ├── dashboard/                        # Backend/frontend và dashboard setup
-│   └── setup-web-dashboard.md
+│   ├── README.md                    # Bắt đầu từ đây
+│   ├── run-dashboard.md             # Chạy đầy đủ backend/frontend
+│   ├── data-processing.md           # Tạo Parquet, API và kiểm thử
+│   ├── scientific-hourly-validation.md # Phương pháp và bằng chứng
+│   └── archive/                     # Hồ sơ các lần chuyển đổi
 └── data/                             # Danh mục và semantics dữ liệu nguồn
     └── data-dictionary.md
 ```
@@ -65,8 +69,12 @@ docs/
 - [Cloud ingestion documentation](supabase/TLCN_Supabase_Cloud_Ingestion_Full_Documentation.md):
   tài liệu triển khai tổng hợp, SQL, Edge Functions, Cron và phụ lục; đọc cùng
   trạng thái xác nhận được ghi trong từng phần.
-- [Dashboard setup](dashboard/setup-web-dashboard.md): cài môi trường và chạy
-  backend/frontend. Cấu hình Gold mode cụ thể có trong [RUN](operations/RUN.md).
+- [Tài liệu dashboard](dashboard/README.md): chọn hướng dẫn theo công việc.
+- [Chạy dashboard FE–BE](dashboard/run-dashboard.md): cài môi trường, chạy hai server,
+  cấu hình proxy, kiểm tra kết nối và xử lý lỗi.
+- [Xử lý dữ liệu dashboard](dashboard/data-processing.md): ETL, Parquet, API và kiểm thử.
+- [Phương pháp và kiểm chứng](dashboard/scientific-hourly-validation.md): đơn vị,
+  áp suất tầng, mật độ khí và bằng chứng. Cấu hình Gold mode riêng có trong [RUN](operations/RUN.md).
 
 ## Schema, vận hành và bằng chứng kiểm thử
 

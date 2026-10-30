@@ -7,7 +7,9 @@ from shapely.geometry import shape
 
 
 def export():
-    features = list(region_features(DEFAULT_BOUNDARIES))
+    # Separate paths improve island tooltips; their parent is the administrative
+    # province used by the ETL, API, selectors and province counts.
+    features = list(region_features(DEFAULT_BOUNDARIES, split_archipelagos=True))
     for feature in features:
         feature["id"] = str(feature["properties"]["code"]).zfill(2)
         feature["properties"]["areaKm2"] = equal_area(shape(feature["geometry"])).area / 1e6

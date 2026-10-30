@@ -2,7 +2,7 @@ import type { DashboardFiltersValue, DashboardMetadata } from '../types'
 import { formatDate, formatDateTime } from '../../../utils/dates'
 
 type Resolution = DashboardFiltersValue['resolution']
-export type PeriodPreset = 'latest' | '7d' | '30d' | 'month' | 'year' | 'history'
+export type PeriodPreset = 'latest' | '24h' | '48h' | '7d' | '30d' | 'month' | 'year' | 'history'
 const DAY = 86_400_000
 const instant = (value: string) => Date.parse(`${value.slice(0, 19)}${value.length === 10 ? 'T00:00:00' : ''}Z`)
 const dateString = (date: Date) => date.toISOString().slice(0, 10)
@@ -25,6 +25,11 @@ export function presetPeriod(filters: DashboardFiltersValue, preset: PeriodPrese
   const end = new Date(instant(bounds.end || filters.endDate))
   if (!Number.isFinite(end.getTime())) return base
   const start = new Date(end)
+  if (filters.resolution === 'hourly' && ['24h', '48h', '7d'].includes(preset)) {
+    const slots = preset === '24h' ? 24 : preset === '48h' ? 48 : 168
+    start.setTime(Math.max(end.getTime() - (slots - 1) * 3600000, bounds.start ? instant(bounds.start) : -Infinity))
+    return { ...base, startDate: start.toISOString().slice(0, 16), endDate: end.toISOString().slice(0, 16) }
+  }
   if (preset === 'month') start.setUTCDate(1)
   else if (preset === 'year') { start.setUTCMonth(0, 1); base.year = end.getUTCFullYear() }
   else if (preset === 'history') return { ...base, startDate: bounds.start.slice(0, 10), endDate: bounds.end.slice(0, 10) }
@@ -62,9 +67,10 @@ export function shiftPeriod(filters: DashboardFiltersValue, direction: -1 | 1, m
     start.setUTCMonth(start.getUTCMonth() + direction * count)
     end.setUTCMonth(end.getUTCMonth() + direction * count + 1, 0)
   } else {
-    const days = Math.floor((end.getTime() - start.getTime()) / DAY) + 1
-    start.setTime(start.getTime() + direction * days * DAY)
-    end.setTime(end.getTime() + direction * days * DAY)
+    const step = filters.resolution === 'hourly' ? 3600000 : filters.resolution === '3h' ? 10800000 : DAY
+    const shift = direction * (end.getTime() - start.getTime() + step)
+    start.setTime(start.getTime() + shift)
+    end.setTime(end.getTime() + shift)
   }
   const size = (filters.resolution === '3h' || filters.resolution === 'hourly') ? 16 : 10
   const next = { ...filters, year: 'all' as const, month: 'all' as const, startDate: start.toISOString().slice(0, size), endDate: end.toISOString().slice(0, size) }
@@ -74,7 +80,8 @@ export function shiftPeriod(filters: DashboardFiltersValue, direction: -1 | 1, m
 export function shortPeriod(filters: DashboardFiltersValue) {
   if (!filters.startDate && !filters.endDate) return filters.resolution === 'monthly' ? 'Toàn bộ thời gian' : 'Dữ liệu gần nhất'
   const start = filters.startDate, end = filters.endDate
-  if ((filters.resolution === '3h' || filters.resolution === 'hourly') && start === end && end.includes('T')) return `${formatDateTime(end)} UTC`
+  if ((filters.resolution === '3h' || filters.resolution === 'hourly') && start === end && end.includes('T')) return `${formatDateTime(end)} UTC+7`
+  if (filters.resolution === 'hourly') return `${formatDateTime(start)} – ${formatDateTime(end)}`
   if (start.slice(0, 10) === end.slice(0, 10)) return formatDate(end)
   return `${formatDate(start)} – ${formatDate(end)}`
 }

@@ -23,7 +23,10 @@ class DashboardService:
             return admin_reader(query) if query else admin_reader()
         return project_admin_dashboard(self.get_dashboard(query))
 
-    def get_analytics(self, query: AnalyticsQuery) -> DashboardAnalytics:
+    def get_analytics(self, query: AnalyticsQuery, temporal_query: DashboardQuery | None = None) -> DashboardAnalytics:
+        if temporal_query is not None:
+            data = self._repository.get_dashboard(temporal_query)
+            return build_analytics(data, query, temporal_query.resolution)
         reader = getattr(self._repository, 'get_analytics', None)
         if callable(reader):
             return reader(query)

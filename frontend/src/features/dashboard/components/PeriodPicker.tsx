@@ -1,4 +1,4 @@
-import { GOLD_DASHBOARD, RESOLUTION_OPTIONS } from '../model/resolution'
+import { RESOLUTION_OPTIONS } from '../model/resolution'
 import { useCallback, useId, useRef, useState } from 'react'
 import type { DashboardFiltersValue, DashboardMetadata } from '../types'
 import { FilterPopover } from '../../../components/ui/FilterPopover'
@@ -7,7 +7,7 @@ import { DateInput, Select } from '../../../components/ui/FormControls'
 import { DashboardIcon } from '../../../components/ui/DashboardIcon'
 import { calendarPeriod, periodYears } from '../model/temporal'
 import { presetPeriod, shiftPeriod, shortPeriod, sourceBounds, validatePeriod, type PeriodPreset } from '../model/filterPeriods'
-import { formatDate, formatDateTime } from '../../../utils/dates'
+import { formatDate, formatDateTime, vietnamInput, utcInput } from '../../../utils/dates'
 
 interface Props {
   value: DashboardFiltersValue
@@ -65,6 +65,7 @@ function PeriodEditor({ value, years, metadata, onApply, onClose }: Props & { on
   const previous = shiftPeriod(draft, -1, metadata)
   const next = shiftPeriod(draft, 1, metadata)
   const presets: Array<{ id: PeriodPreset; label: string }> = [
+    ...(draft.resolution === 'hourly' ? [{ id: '24h' as const, label: '24 giờ gần nhất' }, { id: '48h' as const, label: '48 giờ gần nhất' }] : []),
     { id: '7d', label: '7 ngày gần nhất' }, { id: '30d', label: '30 ngày gần nhất' },
     { id: 'month', label: 'Tháng gần nhất' }, ...((draft.resolution !== '3h' && draft.resolution !== 'hourly') ? [{ id: 'year' as const, label: 'Năm gần nhất' }] : []),
     ...(draft.resolution === 'monthly' ? [{ id: 'history' as const, label: 'Toàn bộ thời gian' }] : []),
@@ -98,14 +99,11 @@ function PeriodEditor({ value, years, metadata, onApply, onClose }: Props & { on
     if (bounds.end) setVisibleMonth(bounds.end.slice(0, 7))
   }
   return <form className="period-editor" onSubmit={(event) => { event.preventDefault(); if (!error) onApply(draft) }}>
-    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3"><div><h2 className="text-sm font-semibold text-heading">Chọn thời gian</h2><p className="mt-1 text-xs text-muted">{GOLD_DASHBOARD && (draft.resolution === 'daily' || draft.resolution === 'monthly') ? 'Lịch Việt Nam (UTC+7)' : 'Giờ quốc tế (UTC)'} · {(draft.resolution === '3h' || draft.resolution === 'hourly') ? 'Tối đa 31 ngày' : draft.resolution === 'daily' ? 'Tối đa 366 ngày' : 'Lịch sử theo tháng'}</p></div><Button onClick={onClose} aria-label="Đóng lịch">✕</Button></div>
+    <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3"><div><h2 className="text-sm font-semibold text-heading">Chọn thời gian</h2><p className="mt-1 text-xs text-muted">{draft.resolution === 'hourly' ? 'Giờ Việt Nam (UTC+7)' : 'Ngày tổng hợp theo lịch nguồn'} · {(draft.resolution === '3h' || draft.resolution === 'hourly') ? 'Tối đa 31 ngày' : draft.resolution === 'daily' ? 'Tối đa 366 ngày' : 'Lịch sử theo tháng'}</p></div><Button onClick={onClose} aria-label="Đóng lịch">✕</Button></div>
     <div className="period-editor-body">
       <div className="period-mode-controls"><SegmentedControl aria-label="Xem dữ liệu theo">
         {RESOLUTION_OPTIONS.map((option) => <Button key={option.value} variant="segment" aria-pressed={draft.resolution === option.value} onClick={() => {
-          setDraft({ ...draft, resolution: option.value, year: 'all', month: 'all', startDate: '', endDate: '' }); setSingle(false); setEditingTime(null)
-          const end = sourceBounds(metadata, option.value).end
-          if (end) setVisibleMonth(end.slice(0, 7))
-          setPickingEnd(false)
+          onApply({ ...draft, resolution: option.value, year: 'all', month: 'all', startDate: '', endDate: '' })
         }}>{option.label}</Button>)}
       </SegmentedControl>
       {(draft.resolution === '3h' || draft.resolution === 'hourly') && <SegmentedControl aria-label="Cách chọn thời gian">
@@ -132,9 +130,9 @@ function PeriodEditor({ value, years, metadata, onApply, onClose }: Props & { on
           <label htmlFor={`${dateId}-${key}`} className="period-endpoint-label">{!single && <span className="period-endpoint-number" aria-hidden="true">{key === 'startDate' ? '1' : '2'}</span>}{single ? 'Thời điểm quan sát' : key === 'startDate' ? 'Bắt đầu' : 'Kết thúc'}</label>
           <div className="period-date-control">
             <DateInput id={`${dateId}-${key}`} aria-label={single ? 'Ngày quan sát' : key === 'startDate' ? 'Từ ngày' : 'Đến ngày'} value={draft[key].split('T')[0]} onValueChange={(date) => updateDate(key, date)} aria-describedby={error ? 'period-error' : undefined} />
-            {(draft.resolution === '3h' || draft.resolution === 'hourly') && <button type="button" className="period-time-toggle" ref={(button) => { timeButtons.current[key] = button }} aria-label={`Chọn ${single ? 'giờ quan sát' : key === 'startDate' ? 'giờ bắt đầu' : 'giờ kết thúc'} UTC`} aria-expanded={editingTime === key} aria-controls={editingTime === key ? `${dateId}-${key}-hours` : undefined} disabled={!/^\d{4}-\d{2}-\d{2}/.test(draft[key])} onClick={() => setEditingTime(editingTime === key ? null : key)}><DashboardIcon name="clock" size="tiny" />{draft[key].split('T')[1] || (key === 'startDate' ? '00:00' : draft.resolution === 'hourly' ? '23:00' : '21:00')}<DashboardIcon name={editingTime === key ? 'chevronUp' : 'chevronDown'} size="tiny" /></button>}
+            {(draft.resolution === '3h' || draft.resolution === 'hourly') && <button type="button" className="period-time-toggle" ref={(button) => { timeButtons.current[key] = button }} aria-label={`Chọn ${single ? 'giờ quan sát' : key === 'startDate' ? 'giờ bắt đầu' : 'giờ kết thúc'} UTC+7`} aria-expanded={editingTime === key} aria-controls={editingTime === key ? `${dateId}-${key}-hours` : undefined} disabled={!/^\d{4}-\d{2}-\d{2}/.test(draft[key])} onClick={() => setEditingTime(editingTime === key ? null : key)}><DashboardIcon name="clock" size="tiny" />{draft[key].split('T')[1] || (key === 'startDate' ? '00:00' : draft.resolution === 'hourly' ? '23:00' : '21:00')}<DashboardIcon name={editingTime === key ? 'chevronUp' : 'chevronDown'} size="tiny" /></button>}
           </div>
-          {(draft.resolution === '3h' || draft.resolution === 'hourly') && editingTime === key && <div id={`${dateId}-${key}-hours`} className={`mt-2 grid ${single ? 'grid-cols-4 sm:grid-cols-8' : 'grid-cols-4'} gap-1`} role="group" aria-label={`${single ? 'Giờ quan sát' : key === 'startDate' ? 'Giờ bắt đầu' : 'Giờ kết thúc'} UTC`}>{(draft.resolution === 'hourly' ? Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`) : HOURS).map((hour) => <button key={hour} type="button" className="period-hour" aria-pressed={draft[key].split('T')[1] === hour} disabled={!/^\d{4}-\d{2}-\d{2}/.test(draft[key])} onClick={() => {
+          {(draft.resolution === '3h' || draft.resolution === 'hourly') && editingTime === key && <div id={`${dateId}-${key}-hours`} className={`mt-2 grid ${single ? 'grid-cols-4 sm:grid-cols-8' : 'grid-cols-4'} gap-1`} role="group" aria-label={`${single ? 'Giờ quan sát' : key === 'startDate' ? 'Giờ bắt đầu' : 'Giờ kết thúc'} UTC+7`}>{(draft.resolution === 'hourly' ? Array.from({ length: 24 }, (_, i) => `${String(i).padStart(2, '0')}:00`) : HOURS).map((hour) => <button key={hour} type="button" className="period-hour" aria-pressed={draft[key].split('T')[1] === hour} disabled={!/^\d{4}-\d{2}-\d{2}/.test(draft[key])} onClick={() => {
             const instant = `${draft[key].split('T')[0]}T${hour}`
             setDraft({ ...draft, ...(single ? { startDate: instant, endDate: instant } : { [key]: instant }) })
             setEditingTime(null)
@@ -172,11 +170,13 @@ export function PeriodPicker(props: Props) {
   const anchor = useRef<HTMLButtonElement>(null)
   const [open, setOpen] = useState(false)
   const close = useCallback(() => setOpen(false), [])
-  const zone = props.value.resolution === 'hourly' || props.value.resolution === '3h' ? 'UTC' : props.metadata?.timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : props.metadata?.timezone ?? 'UTC'
+  const zone = props.value.resolution === 'hourly' || props.value.resolution === '3h' ? 'UTC+7' : props.metadata?.timezone === 'Asia/Ho_Chi_Minh' ? 'UTC+7' : props.metadata?.timezone ?? 'UTC'
   return <div className="min-w-0">
     <button type="button" ref={anchor} disabled={!props.value.endDate && !sourceBounds(props.metadata, props.value.resolution).end} className="filter-select" title={`${formatDateTime(props.value.startDate)} → ${formatDateTime(props.value.endDate)} ${zone}`} aria-label="Chọn khoảng thời gian" aria-haspopup="dialog" aria-expanded={open} aria-controls={open ? id : undefined} onClick={() => setOpen(!open)}>
-      <DashboardIcon name="calendar" size="small" /><span className="min-w-0"><span className="hidden truncate sm:block">{shortPeriod(props.value)}</span><span className="grid text-left text-xs leading-tight sm:hidden">{props.value.startDate ? <><span>{formatDate(props.value.startDate)}</span>{(props.value.resolution === '3h' || props.value.resolution === 'hourly') && props.value.startDate === props.value.endDate && <span>{props.value.endDate.slice(11, 16)}</span>}{props.value.startDate.slice(0, 10) !== props.value.endDate.slice(0, 10) && <span>{formatDate(props.value.endDate)}</span>}</> : shortPeriod(props.value)}</span></span><span className="shrink-0 text-[.65rem] text-muted"><span className="sm:hidden">{props.value.resolution === 'hourly' ? '1 giờ' : props.value.resolution === '3h' ? '3 giờ' : props.value.resolution === 'daily' ? 'Ngày' : 'Tháng'} · </span>{zone}</span>
+      <DashboardIcon name="calendar" size="small" /><span className="min-w-0"><span className="hidden truncate sm:block">{shortPeriod(props.value)}</span><span className="grid text-left text-xs leading-tight sm:hidden">{props.value.startDate ? <><span>{formatDate(props.value.resolution === 'hourly' ? vietnamInput(props.value.startDate) : props.value.startDate)}</span>{(props.value.resolution === '3h' || props.value.resolution === 'hourly') && props.value.startDate === props.value.endDate && <span>{vietnamInput(props.value.endDate).slice(11, 16)}</span>}{props.value.startDate.slice(0, 10) !== props.value.endDate.slice(0, 10) && <span>{formatDate(props.value.resolution === 'hourly' ? vietnamInput(props.value.endDate) : props.value.endDate)}</span>}</> : shortPeriod(props.value)}</span></span><span className="shrink-0 text-[.65rem] text-muted"><span className="sm:hidden">{props.value.resolution === 'hourly' ? '1 giờ' : props.value.resolution === '3h' ? '3 giờ' : props.value.resolution === 'daily' ? 'Ngày' : 'Tháng'} · </span>{zone}</span>
     </button>
-    {open && <FilterPopover id={id} label="Chọn khoảng thời gian" anchor={anchor} onClose={close} centered><PeriodEditor {...props} onClose={close} onApply={(next) => { props.onChange(next); close() }} /></FilterPopover>}
+    {open && <FilterPopover id={id} label="Chọn khoảng thời gian" anchor={anchor} onClose={close} centered><PeriodEditor {...props} value={props.value.resolution === 'hourly' ? { ...props.value, startDate: vietnamInput(props.value.startDate), endDate: vietnamInput(props.value.endDate) } : props.value}
+      metadata={props.value.resolution === 'hourly' && props.metadata ? { ...props.metadata, start: vietnamInput(props.metadata.start), end: vietnamInput(props.metadata.end), observationStart: vietnamInput(props.metadata.observationStart ?? props.metadata.start), observationEnd: vietnamInput(props.metadata.observationEnd ?? props.metadata.end) } : props.metadata}
+      onClose={close} onApply={(next) => { props.onChange(next.resolution === 'hourly' ? { ...next, startDate: utcInput(next.startDate), endDate: utcInput(next.endDate) } : next); close() }} /></FilterPopover>}
   </div>
 }

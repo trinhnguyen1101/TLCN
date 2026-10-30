@@ -12,11 +12,18 @@ class Metric:
     offset: float = 0.0
 
     def metadata(self):
-        return asdict(self)
+        return dict(asdict(self), display_name=DISPLAY_NAMES.get(self.name,self.name))
 
 
 # ECMWF parameter IDs, validated against every GRIB message, not filenames.
+GAS_PARAM_IDS = {210123, 210121, 210122, 210203}
+SUPPORT_PARAMETERS = {130: ("t_model", "K"), 133: ("q_model", "kg kg**-1")}
+
 METRICS = {
+    210123: Metric("co", "kg kg**-1", "mg/m³", "near_surface_model_mass_concentration", 1e6),
+    210121: Metric("no2", "kg kg**-1", "µg/m³", "near_surface_model_mass_concentration", 1e9),
+    210122: Metric("so2", "kg kg**-1", "µg/m³", "near_surface_model_mass_concentration", 1e9),
+    210203: Metric("o3", "kg kg**-1", "µg/m³", "near_surface_model_mass_concentration", 1e9),
     210072: Metric("pm1", "kg m**-3", "µg/m³", "surface_mass_concentration", 1e9),
     210073: Metric("pm25", "kg m**-3", "µg/m³", "surface_mass_concentration", 1e9),
     210074: Metric("pm10", "kg m**-3", "µg/m³", "surface_mass_concentration", 1e9),
@@ -41,3 +48,19 @@ def resolve_metric(param_id: int, unit: str) -> Metric:
     if unit != metric.source_unit:
         raise ValueError(f"Unexpected unit for {metric.name}: {unit!r}, expected {metric.source_unit!r}")
     return metric
+
+
+def convert_direct(metric, values):
+    """Only dimensional linear conversions; MMR requires a density-aware path."""
+    if metric.source_unit == "kg kg**-1":
+        raise ValueError("Mixing ratios require aligned model-level density")
+    return values * metric.scale + metric.offset
+
+
+DISPLAY_NAMES = {
+    'pm1':'PM1', 'pm25':'PM2.5', 'pm10':'PM10', 'co':'CO', 'no2':'NO₂', 'so2':'SO₂', 'o3':'O₃',
+    'aod550':'AOD 550 nm', 'co_column':'CO total column','no2_column':'NO₂ total column',
+    'so2_column':'SO₂ total column','o3_column':'O₃ total column', 't2m':'2 m temperature',
+    'd2m':'2 m dewpoint','sp':'Surface pressure','mslp':'Mean sea-level pressure',
+    'u10':'10 m eastward wind','v10':'10 m northward wind',
+}

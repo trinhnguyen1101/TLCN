@@ -1,0 +1,142 @@
+[
+  {
+    "file": "aod550_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 4.4821585080158234e-08
+  },
+  {
+    "file": "co_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 2.9525623735397143e-08
+  },
+  {
+    "file": "co_column_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.1215345917642295e-08
+  },
+  {
+    "file": "d2m_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 2.1306357824705182e-09
+  },
+  {
+    "file": "mslp_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.9622424993161234e-10
+  },
+  {
+    "file": "no2_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 5.5142384675448724e-08
+  },
+  {
+    "file": "no2_column_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.6281049518681914e-08
+  },
+  {
+    "file": "o3_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.269935153559565e-08
+  },
+  {
+    "file": "o3_column_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 1.3855756034106178e-09
+  },
+  {
+    "file": "pm10_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 4.291986058512899e-08
+  },
+  {
+    "file": "pm1_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.518373783891665e-08
+  },
+  {
+    "file": "pm2p5_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.020442449260222e-08
+  },
+  {
+    "file": "q_model_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 4.187598114145658e-06
+  },
+  {
+    "file": "so2_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.836089884721218e-08
+  },
+  {
+    "file": "so2_column_2003_2025_vietnam.grib",
+    "method": "pchip",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 3.626826853348465e-08
+  },
+  {
+    "file": "sp_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 6.333638273421975e-09
+  },
+  {
+    "file": "t2m_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 2.109099277042808e-09
+  },
+  {
+    "file": "t_model_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 6.099542707117343e-07
+  },
+  {
+    "file": "u10_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 2.8202151267501834e-08
+  },
+  {
+    "file": "v10_2003_2025_vietnam.grib",
+    "method": "linear",
+    "original_00_bytes_preserved": true,
+    "original_03_bytes_preserved": true,
+    "intermediate_01_relative_error": 2.953803464618412e-08
+  }
+]

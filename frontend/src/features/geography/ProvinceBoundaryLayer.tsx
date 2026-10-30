@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { GeoJSON, Tooltip } from 'react-leaflet'
 import type { Path, PolylineOptions } from 'leaflet'
 import type { ProvinceSnapshot } from '../dashboard/types'
@@ -7,6 +6,7 @@ import { METRIC_META } from '../dashboard/model/dashboardSelectors'
 import { aqiLevel, concentrationColor, type MapColorScale, type MapMetric } from './mapColorScale'
 
 interface ProvinceBoundaryLayerProps {
+  periodLabel?: string
   data: ProvinceFeatureCollection
   selectedProvinceCode: string
   metricUnit: string
@@ -30,20 +30,19 @@ function getProvinceStyle(metrics: ProvinceSnapshot | undefined, metric: MapMetr
   return { color: 'var(--color-surface-subtle)', fillColor, fillOpacity: 1, weight: 1.2, smoothFactor: 0, className: 'focus:outline-none focus-visible:stroke-map-selection focus-visible:stroke-3' }
 }
 
-// The parent keys this layer by the dashboard selection so filters reset local selection.
-export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, metric, colorScale, layerVisible, metricsByProvince, onProvinceSelect }: ProvinceBoundaryLayerProps) {
-  const [highlightedCode, setHighlightedCode] = useState(selectedProvinceCode)
-  const highlightedFeature = data.features.find((feature) => feature.id === highlightedCode)
+// Selection is controlled by the dashboard; province paths stay mounted during selection changes.
+export function ProvinceBoundaryLayer({ periodLabel, data, selectedProvinceCode, metricUnit, metric, colorScale, layerVisible, metricsByProvince, onProvinceSelect }: ProvinceBoundaryLayerProps) {
+  const highlightedFeatures = data.features.filter((feature) =>
+    (feature.properties.parentProvinceCode ?? feature.id) === selectedProvinceCode)
 
   return (
     <>
       {data.features.map((feature) => {
-        const metrics = metricsByProvince.get(feature.id) ?? metricsByProvince.get(feature.properties.parentProvinceCode ?? '')
+        const metrics = metricsByProvince.get(feature.properties.parentProvinceCode ?? feature.id)
         const quality=metrics?.metricQuality?.[metric]
         const observed=quality ? quality.observationTime : metrics?.observationTime
         const qc=metric==='aqi' ? metrics?.aqiStatus : quality?.qualityStatus ?? metrics?.qualityStatus
         const selectProvince = () => {
-          setHighlightedCode(feature.properties.parentProvinceCode ?? feature.id)
           if (metrics) onProvinceSelect?.(metrics)
         }
 
@@ -62,6 +61,8 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, 
             }}
             eventHandlers={{
               click: selectProvince,
+              mouseover: (event) => event.target.setStyle({ weight: 2.5, color: 'var(--color-map-selection)' }),
+              mouseout: (event) => event.target.setStyle(getProvinceStyle(metrics, metric, layerVisible, colorScale)),
               keydown: (event) => {
                 if (event.originalEvent.key === 'Enter' || event.originalEvent.key === ' ') {
                   event.originalEvent.preventDefault()
@@ -73,15 +74,17 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, 
           >
             <Tooltip sticky className="rounded-lg border-border bg-surface px-3.5 py-[11px] font-sans text-[.75rem] leading-[1.9] text-secondary shadow-card [&.leaflet-tooltip-left]:before:border-l-surface [&.leaflet-tooltip-right]:before:border-r-surface [&.leaflet-tooltip-top]:before:border-t-surface [&.leaflet-tooltip-bottom]:before:border-b-surface">
               <strong className="font-semibold text-heading">{feature.properties.fullName}</strong><br />
+              {feature.properties.regionKind === 'archipelago' && <><span>Số liệu toàn tỉnh/thành: {metrics?.provinceName ?? feature.properties.parentProvinceName}</span><br /></>}
+              {periodLabel && <><span>{periodLabel}</span><br /></>}
               {metrics ? <>
-                <span style={{ color: aqiLevel(metrics.aqi)?.textColor }}>AQI: {metrics.aqi == null ? 'Chưa có dữ liệu' : Math.round(metrics.aqi)} {aqiLevel(metrics.aqi)?.label}</span><br />
+                {(metric === 'aqi' || metrics.aqi != null) && <><span style={{ color: aqiLevel(metrics.aqi)?.textColor }}>AQI: {metrics.aqi == null ? 'Chưa có dữ liệu' : Math.round(metrics.aqi)} {aqiLevel(metrics.aqi)?.label}</span><br /></>}
                 {metrics.applicabilityProfile && <><span>{metrics.applicabilityProfile === 'station_reference' ? 'Chuỗi trạm' : 'Ước tính mô hình / vùng / proxy'}</span><br /></>}{observed && <><span>Quan sát gần nhất trong snapshot nguồn: {observed}</span><br /></>}{metrics.source && <><span>Nguồn: {metrics.source}</span><br /></>}{qc && <><span>QC tại snapshot nguồn: {qc}</span><br /></>}{quality?.missingReason && <><span>{quality.missingReason}</span><br /></>}{metrics.temporalSupport && <><span>{metrics.temporalSupport} · {metrics.sourceResolutionMinutes} phút</span><br /></>}{metric !== 'aqi' && <>{METRIC_META[metric].label}: {metrics[metric]?.toLocaleString('vi-VN', { maximumFractionDigits: 3 }) ?? 'Chưa có dữ liệu'} {metricUnit}</>}
               </> : 'Chưa có dữ liệu'}
             </Tooltip>
           </GeoJSON>
         )
       })}
-      {highlightedFeature && (
+      {highlightedFeatures.map((highlightedFeature) => (
         <GeoJSON
           key={highlightedFeature.id}
           data={highlightedFeature}
@@ -89,7 +92,7 @@ export function ProvinceBoundaryLayer({ data, selectedProvinceCode, metricUnit, 
           interactive={false}
           style={selectedProvinceStyle}
         />
-      )}
+      ))}
     </>
   )
 }

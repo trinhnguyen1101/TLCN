@@ -254,11 +254,11 @@ test('daily YoY does not reuse February 28 as the baseline for February 29', () 
   assert.equal(buildAdminDashboardView(paired,{...DEFAULT_FILTERS,resolution:'daily',year:2024,month:2}).yoy,100)
 })
 
-test('period labels retain UTC hour slots and use the VN calendar for Gold daily/monthly', () => {
+test('period labels display Vietnam hour slots and use the VN calendar for Gold daily/monthly', () => {
   const range={...DEFAULT_FILTERS,startDate:'2026-01-01',endDate:'2026-01-02'}
   assert.match(periodLabel({...range,resolution:'daily'},'Asia/Ho_Chi_Minh'),/UTC\+7$/)
   assert.match(periodLabel(range,'Asia/Ho_Chi_Minh'),/UTC\+7$/)
-  assert.match(periodLabel({...range,resolution:'hourly'},'Asia/Ho_Chi_Minh'),/ UTC$/)
+  assert.match(periodLabel({...range,resolution:'hourly'},'Asia/Ho_Chi_Minh'),/ UTC\+7$/)
 })
 
 test('Gold metric contract excludes stale unsupported values and keeps unavailable AQI neutral', async () => {

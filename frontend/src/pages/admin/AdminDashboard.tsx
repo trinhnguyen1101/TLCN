@@ -1,3 +1,4 @@
+import { SourceDetails } from '../../features/dashboard/components/SourceDetails'
 import { useCallback, useMemo, useState } from 'react'
 import { Button } from '../../components/ui/Button'
 import { DashboardBreadcrumb } from '../../features/dashboard/components/DashboardBreadcrumb'
@@ -7,6 +8,7 @@ import { ObservationTable } from '../../features/dashboard/components/Observatio
 import { HorizontalBarChart } from '../../features/analytics/HorizontalBarChart'
 import { TrendChart } from '../../features/analytics/TrendChart'
 import { VietnamProvinceMap } from '../../features/geography/VietnamProvinceMap'
+import { dataQuality } from '../../features/dashboard/model/dataQuality'
 import { aqiLevel } from '../../features/geography/mapColorScale'
 import { useAdminDashboardData } from '../../features/dashboard/hooks/useAdminDashboardData'
 import { buildAdminDashboardView } from '../../features/dashboard/model/adminDashboardModel'
@@ -15,7 +17,6 @@ import { periodDefaults, periodYears, temporalQuery, trendDescription } from '..
 import { expandTrendPeriod, mergeFilterSelection } from '../../features/dashboard/model/filterPeriods'
 import type { DashboardFiltersValue, Pollutant, ProvinceSnapshot } from '../../features/dashboard/types'
 import { formatDecimal } from '../../utils/formatters'
-import { sourceLabel } from '../../utils/labels'
 import { AdminAnalytics } from './AdminAnalytics'
 import { GoldAnalyticsPanel } from '../../features/dashboard/components/GoldAnalyticsPanel'
 
@@ -46,13 +47,15 @@ export function AdminDashboard() {
   const selectSector = useCallback((sector: string) => setFilters((current) => ({ ...current, sector: current.sector === sector ? 'all' : sector })), [])
   const period = periodLabel(filters, data?.metadata?.timezone)
   const expandedPeriod = view.chartPoints.length === 1 ? expandTrendPeriod(filters, view.chartPoints[0].timestamp, data?.metadata) : null
+  const quality = useMemo(() => dataQuality(visibleData, filters), [visibleData, filters])
   const aqi = aqiLevel(view.currentAqi)
 
   return <main className="mx-auto w-full max-w-[1800px] px-8 pt-6 pb-8 wrap-anywhere max-md:px-4 max-md:pt-4">
     <header className="mb-3 flex flex-wrap items-center justify-between gap-3">
-      <div><p className="text-[.7rem] font-semibold tracking-wider text-accent">PHÂN TÍCH CHẤT LƯỢNG KHÔNG KHÍ · QUẢN TRỊ</p><h1 className="mt-1 text-2xl font-semibold tracking-tight text-heading">Tổng quan điều hành</h1></div>
-      <span className="rounded-full border border-accent-border bg-accent-soft px-3 py-1.5 text-xs text-accent">{data?.metadata?.source ? sourceLabel(data.metadata.source) : 'Giám sát & phân tích'}</span>
+      <div><p className="text-[.7rem] font-semibold tracking-wider text-accent">PHÂN TÍCH CHẤT LƯỢNG KHÔNG KHÍ · QUẢN TRỊ</p><h1 className="mt-1 text-xl font-semibold tracking-tight text-heading">Tổng quan điều hành</h1></div>
+      <SourceDetails metadata={data?.metadata} metric={selectedPollutant} />
     </header>
+
     <DashboardBreadcrumb items={[{ id: 'country', label: 'Việt Nam', onSelect: filters.provinceCode === 'all' ? undefined : () => selectProvinceCode('all') }, ...(filters.provinceCode === 'all' ? [] : [{ id: 'province', label: scopeLabel }]), { id: 'period', label: period }]} />
     {error && <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-card border border-danger/25 bg-danger-soft p-4 text-sm text-danger" role="alert"><span>{error}</span><Button onClick={retry}>Thử lại</Button></div>}
     {loading && <p role="status" className="mb-3 text-xs text-muted">Đang tải dữ liệu quản lý…</p>}
@@ -60,7 +63,7 @@ export function AdminDashboard() {
     {comparisonError && <div role="alert" className="mb-3 flex flex-wrap items-center justify-between gap-2 text-xs text-danger"><span>Đã tải dữ liệu đang xem. Chưa tải được dữ liệu so sánh: {comparisonError}</span><Button onClick={retry}>Thử lại</Button></div>}
     <section className="mb-4 grid grid-cols-5 gap-3 max-[1199px]:grid-cols-3 max-md:grid-cols-2" aria-label="Các chỉ số tổng quan" aria-busy={loading}>
       <KpiCard icon="chart" label={`${metric.label} trung bình`} value={formatDecimal(monitoring.metrics[selectedPollutant], metric.unit)} detail={data?.metadata?.publishedTimelineId ? `${scopeLabel} · trọng số số mẫu hợp lệ` : scopeLabel} tone="yellow" loading={loading} />
-      <KpiCard icon="air" label="AQI tại mốc đã chọn" value={formatDecimal(view.currentAqi)} detail={aqi?.label ?? 'Chọn một tỉnh và một mốc giờ/ngày'} valueColor={aqi?.textColor} loading={loading} />
+      {data?.metadata?.cadenceHours && view.currentAqi === null ? <KpiCard icon="layers" label="Độ phủ dữ liệu" value={quality.coverage === null ? '—' : `${(quality.coverage * 100).toFixed(1)}%`} detail={`${quality.valid.toLocaleString('vi-VN')} / ${quality.expected.toLocaleString('vi-VN')} mẫu hợp lệ`} loading={loading} /> : <KpiCard icon="air" label="AQI tại mốc đã chọn" value={formatDecimal(view.currentAqi)} detail={aqi?.label ?? 'Chọn một tỉnh và một mốc giờ/ngày'} valueColor={aqi?.textColor} loading={loading} />}
       <KpiCard icon="location" label={`Tỉnh có ${metric.label} cao nhất`} value={monitoring.ranking[0]?.label ?? 'Chưa có dữ liệu'} detail={monitoring.ranking[0] ? formatDecimal(monitoring.ranking[0].value, metric.unit) : period} loading={loading} />
       <KpiCard icon="layers" label={`Tỉnh có dữ liệu ${metric.label}`} value={dataReady ? `${monitoring.reportingProvinces}` : 'Chưa có dữ liệu'} detail="Trong phạm vi bộ lọc" loading={loading} />
       <KpiCard icon="chart" label="PM2.5 so với cùng kỳ năm trước" value={view.yoy === null ? 'Chưa có dữ liệu' : `${view.yoy > 0 ? '+' : ''}${view.yoy.toFixed(1)}%`} detail={comparisonLoading ? 'Đang tải dữ liệu so sánh…' : view.comparisonYear === null ? 'Chọn năm hoặc khoảng ngày để so sánh' : filters.startDate || filters.endDate ? 'So với cùng khoảng ngày năm trước' : `So với cùng kỳ ${view.comparisonYear - 1}`} trend={view.yoy === null ? 'neutral' : view.yoy > 0 ? 'up' : 'down'} loading={loading || comparisonLoading} />
@@ -69,7 +72,7 @@ export function AdminDashboard() {
       <VietnamProvinceMap variant="admin" provinceSnapshots={monitoring.snapshots} metricMetadata={data?.metadata?.metrics} selectedProvinceCode={filters.provinceCode} metric={selectedPollutant} periodLabel={period} layerVisible={mapLayerVisible} onLayerVisibilityChange={setMapLayerVisible} onProvinceSelect={selectProvince} />
       <div className="grid min-w-0 content-start gap-4 max-lg:grid-cols-2 max-md:grid-cols-1">
         <TrendChart compact dataReady={dataReady} loading={loading} title={`${metric.label} · ${scopeLabel}`} description={trendDescription(filters.resolution)} points={view.chartPoints} resolution={filters.resolution} observationContext={monitoring.observationContext} onExpandPeriod={expandedPeriod ? () => selectFilters(expandedPeriod) : undefined} metricLabel={metric.label} unit={metric.unit} fileName={`xu-huong-${selectedPollutant}-${filters.provinceCode}`} />
-        <HorizontalBarChart compact dataReady={dataReady} loading={loading} eyebrow="So sánh khu vực" title={`Các tỉnh có giá trị cao nhất theo ${metric.label}`} description="Nồng độ trung bình theo kỳ đang chọn. Chọn một thanh để lọc tỉnh." points={monitoring.ranking.slice(0, 5)} unit={metric.unit} fileName={`xep-hang-tinh-${selectedPollutant}`} selectedId={filters.provinceCode} onSelect={(point) => selectProvinceCode(point.id)} />
+        <HorizontalBarChart compact dataReady={dataReady} loading={loading} eyebrow="So sánh khu vực" title={`Các tỉnh có giá trị cao nhất theo ${metric.label}`} description="Trung bình kỳ chọn" points={monitoring.ranking.slice(0, 5)} unit={metric.unit} fileName={`xep-hang-tinh-${selectedPollutant}`} selectedId={filters.provinceCode} onSelect={(point) => selectProvinceCode(point.id)} />
       </div>
     </section>
     <GoldAnalyticsPanel metadata={visibleData?.metadata} pollutant={selectedPollutant} provinceCode={filters.provinceCode} />

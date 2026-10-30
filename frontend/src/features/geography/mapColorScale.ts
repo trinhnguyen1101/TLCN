@@ -19,7 +19,7 @@ export function aqiLevel(value: number | null | undefined) {
   const index = found < 0 ? AQI_SCALE.breakpoints.length : found
   return { color: AQI_SCALE.colors[index], textColor: AQI_TEXT_COLORS[index], label: AQI_SCALE.labels[index] }
 }
-const format = (value: number) => value.toLocaleString('vi-VN', { maximumFractionDigits: 1 })
+const format = (value: number, metric: MapMetric) => value.toLocaleString('vi-VN', { maximumFractionDigits: metric === 'co' ? 3 : 1 })
 export function getMapColorScale(metric: MapMetric, scale?: ConcentrationScale | null): MapColorScale | null {
   if (metric === 'aqi') return AQI_SCALE
   if (!scale || scale.method !== 'absolute_concentration') return null
@@ -30,7 +30,7 @@ export function getMapColorScale(metric: MapMetric, scale?: ConcentrationScale |
     // Sequential blue display domains are separate from AQI health categories.
     colors: ['#dbeafe', '#93c5fd', '#3b82f6', '#1e3a8a'],
     labels: ['Mức 1', 'Mức 2', 'Mức 3', 'Mức 4'],
-    ranges: [`≤ ${format(cuts[0])}`, ...cuts.slice(1).map((cut, index) => `> ${format(cuts[index])}–${format(cut)}`), `> ${format(cuts[cuts.length - 1])}`],
+    ranges: [`≤ ${format(cuts[0], metric)}`, ...cuts.slice(1).map((cut, index) => `> ${format(cuts[index], metric)}–${format(cut, metric)}`), `> ${format(cuts[cuts.length - 1], metric)}`],
   }
 }
 export function concentrationColor(value: number | null | undefined, scale: MapColorScale | null): string | null {

@@ -66,6 +66,7 @@ class EmissionRecord(ApiModel):
 
 
 class DashboardTrendRecord(ApiModel):
+    metric_quality_reasons: dict[str,str] | None = None
     metric_sample_counts: dict[str, int] | None = None
     aqi: int | None = None
     province_code: ProvinceCode
@@ -104,12 +105,33 @@ class ConcentrationScale(ApiModel):
 
 
 class MetricMetadata(ApiModel):
+    metric_id: str | None = None
+    display_name: str | None = None
+    quantity_type: str | None = None
+    source_unit: str | None = None
+    display_unit: str | None = None
+    source_param_id: int | None = None
+    source_level: int | None = None
+    source_level_type: str | None = None
+    conversion_method: str | None = None
+    quality_status: str | None = None
+    source_resolution: str | None = None
+    display_resolution: str | None = None
+    mmr_mass_basis: str | None = None
+    density_assumption: str | None = None
+    model_level_pressure: str | None = None
     unit: str
     quantity: str
     map_scale: ConcentrationScale | None = None
 
 
 class DashboardMetadata(ApiModel):
+    processing_version: str | None = None
+    sampling_note: str | None = None
+    support_sources: list[dict] = Field(default_factory=list)
+    cadence_hours: int | None = None
+    temporal_origin: str | None = None
+    source_provenance: list[dict] = Field(default_factory=list)
     published_timeline_id: str | None = None
     compatibility_id: str | None = None
     published_release_ids: list[str] = Field(default_factory=list)
