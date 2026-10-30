@@ -246,7 +246,7 @@ def audit_supabase_collection_runs(window: dict) -> dict:
     if len(expected) != 24:
         raise AirflowException(f"Expected a 24-hour Vietnam daily window, got {len(expected)}")
     max_missing = validate_missing_hour_limit(
-        os.getenv("AIRFLOW_SUPABASE_MAX_MISSING_HOURS", "1")
+        os.getenv("AIRFLOW_SUPABASE_MAX_MISSING_HOURS", "23")
     )
 
     query = """

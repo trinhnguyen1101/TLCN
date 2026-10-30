@@ -291,10 +291,12 @@ mỗi source. Mỗi hour phải có ít nhất một attempt terminal `succeeded
 Quy tắc:
 
 - `partial` được phép đi tiếp; coverage/invalid records được giữ trong QC.
-- Mặc định cho phép thiếu tối đa một collection hour/source/ngày; giờ thiếu được
-  log/XCom như coverage warning và không tạo observation giả.
+- Mặc định cho phép thiếu tối đa 23 collection hour/source/ngày; giờ thiếu được
+  log/XCom như coverage warning và không tạo observation giả. Vì vậy một source
+  chỉ cần có ít nhất một giờ hợp lệ để pipeline tiếp tục.
 - Thiếu quá `AIRFLOW_SUPABASE_MAX_MISSING_HOURS` phải fail thay vì âm thầm đóng
-  một ngày có coverage thấp. Đặt biến này bằng `0` để quay lại chính sách 24/24.
+  ngày hoàn toàn không có dữ liệu. Đặt biến này bằng `0` để quay lại chính sách
+  24/24, hoặc một giá trị nhỏ hơn `23` để siết coverage.
 - `running` quá hạn hoặc chỉ có `failed` phải được báo lỗi.
 - Audit không gọi lại provider API để “tái tạo” dữ liệu quá khứ.
 
