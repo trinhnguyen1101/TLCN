@@ -1,0 +1,148 @@
+CAMS/EAC4 20
+ERA5/single_levels 0
+climate_trace/climate_trace_vietnam 3
+reference/vietnam_administrative_divisions 11
+reference/vietnamese-provinces-database 3363
+waqi/historical 17
+[
+  {
+    "dataset": "CAMS/EAC4",
+    "pilot": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 30.356,
+      "log": "reports/medallion_migration/runner/CAMS_EAC4-pilot-20261030T190419515536.log"
+    },
+    "status": "passed",
+    "pilot_evidence": {
+      "batch_id": "cams-validation-20085d3125d5",
+      "bronze_path": "s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-20085d3125d5",
+      "dataset_id": "da2bfe5e7aa386c57c5ec49ed9e2550588015d880913eef3f7353e1fe2e083f1",
+      "timesteps": 3,
+      "grid_points": 575,
+      "input_grib_messages": 60,
+      "input_scalar_values": 34500,
+      "output_cube_rows": 3,
+      "output_arrays": 60,
+      "output_scalar_values": 34500,
+      "valid_values": 34500,
+      "null_values": 0,
+      "source_files": 20,
+      "duplicates": 0,
+      "invalid_values": 0,
+      "filtered_values": 0,
+      "valid_pm_zero_values": 3,
+      "legacy_snapshots_unchanged": true,
+      "bronze_sha256_unchanged": true,
+      "merge_retry_identical": true,
+      "successful_run_skipped": true,
+      "max_float32_relative_error": 5.955228465914786e-08
+    },
+    "gold": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 40.258,
+      "log": "reports/medallion_migration/runner/CAMS_EAC4-gold-20261030T190449872129.log"
+    }
+  },
+  {
+    "dataset": "ERA5/single_levels",
+    "status": "blocked_missing_source"
+  },
+  {
+    "dataset": "climate_trace/climate_trace_vietnam",
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "source_version": "provider_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 5.914,
+      "log": "reports/medallion_migration/runner/climate_trace_climate_trace_vietnam-bronze-20261030T190530129988.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 11.757,
+      "log": "reports/medallion_migration/runner/climate_trace_climate_trace_vietnam-silver-20261030T190536044539.log"
+    },
+    "status": "normalized",
+    "gold": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 17.006,
+      "log": "reports/medallion_migration/runner/native-gold-20261030T190547801331.log"
+    }
+  },
+  {
+    "dataset": "reference/vietnam_administrative_divisions",
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "source_version": "source_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 5.977,
+      "log": "reports/medallion_migration/runner/reference_vietnam_administrative_divisions-bronze-20261030T190604807516.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 12.188,
+      "log": "reports/medallion_migration/runner/reference_vietnam_administrative_divisions-silver-20261030T190610784899.log"
+    },
+    "status": "normalized",
+    "gold": {
+      "status": "not_applicable",
+      "reason": "Consumed by bounded CAMS Gold geography dimensions"
+    }
+  },
+  {
+    "dataset": "reference/vietnamese-provinces-database",
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "source_version": "source_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 35.48,
+      "log": "reports/medallion_migration/runner/reference_vietnamese-provinces-database-bronze-20261030T190622974853.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 12.393,
+      "log": "reports/medallion_migration/runner/reference_vietnamese-provinces-database-silver-20261030T190658455019.log"
+    },
+    "status": "normalized",
+    "gold": {
+      "status": "not_applicable",
+      "reason": "Consumed by bounded CAMS Gold geography dimensions"
+    }
+  },
+  {
+    "dataset": "waqi/historical",
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "source_version": "provider_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 5.999,
+      "log": "reports/medallion_migration/runner/waqi_historical-bronze-20261030T190710848421.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 11.581,
+      "log": "reports/medallion_migration/runner/waqi_historical-silver-20261030T190716848085.log"
+    },
+    "status": "normalized",
+    "gold": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 17.006,
+      "log": "reports/medallion_migration/runner/native-gold-20261030T190547801331.log"
+    }
+  }
+]

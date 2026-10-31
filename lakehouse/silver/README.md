@@ -1,5 +1,8 @@
 # Silver layer
 
+> Migration update (2026-10-31): see [dataset-aware operations](../../docs/lakehouse/medallion-modernization.md). CAMS Silver 4.1 accepts hourly instantaneous analyses under `EAC4-hourly-v1`; historical three-hour contracts remain separate. Current validation is recorded in `reports/medallion_migration/VALIDATION.md`. Older run counts and cadence descriptions below refer to retained historical evidence.
+
+
 `silver.sql` defines the cleaned, standardized layer as Apache Iceberg tables
 in the `nessie.silver` namespace. It is Spark SQL, not PostgreSQL SQL.
 

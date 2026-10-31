@@ -1,0 +1,176 @@
+{
+  "release_id": "9c7b0dbfec3c9b5ce8e421fbf504fecb2ebe6e60f16905c2716102e7737ad07a",
+  "compared_values": 2040,
+  "metrics": 20,
+  "max_relative_error": 5.0950107255482535e-08,
+  "examples": [
+    {
+      "metric": "co",
+      "native_point_0": 7.290144097282791e-07,
+      "gold": 639.5119277831936,
+      "independent_area_mean": 639.5119194454304,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.3037697938206781e-08
+    },
+    {
+      "metric": "no2",
+      "native_point_0": 1.0255597371333636e-08,
+      "gold": 7.449234106700513,
+      "independent_area_mean": 7.449234113695026,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 9.389573889276273e-10
+    },
+    {
+      "metric": "o3",
+      "native_point_0": 2.5959423499699597e-09,
+      "gold": 45.94132301159176,
+      "independent_area_mean": 45.941322721456096,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 6.315352920116542e-09
+    },
+    {
+      "metric": "pm10",
+      "native_point_0": 5.4841166274854913e-08,
+      "gold": 81.23905360610742,
+      "independent_area_mean": 81.23905332327624,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 3.4814681994442263e-09
+    },
+    {
+      "metric": "pm2p5",
+      "native_point_0": 3.9238443605427165e-08,
+      "gold": 57.63697376474308,
+      "independent_area_mean": 57.63697497435865,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 2.0986798303280838e-08
+    },
+    {
+      "metric": "so2",
+      "native_point_0": 4.4940406951354817e-10,
+      "gold": 9.55206111910155,
+      "independent_area_mean": 9.552061249517816,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.365320665603616e-08
+    },
+    {
+      "metric": "aod550",
+      "native_point_0": 0.020398695021867752,
+      "gold": 0.4567542509466038,
+      "independent_area_mean": 0.4567542399807159,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.0965887919933692e-08
+    },
+    {
+      "metric": "co_column",
+      "native_point_0": 0.0008272400591522455,
+      "gold": 1485.3620878981753,
+      "independent_area_mean": 1485.3620884877348,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 3.969129691425937e-10
+    },
+    {
+      "metric": "d2m",
+      "native_point_0": 278.76708984375,
+      "gold": 8.310049302884428,
+      "independent_area_mean": 8.310049002019753,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 3.62049219351593e-08
+    },
+    {
+      "metric": "mslp",
+      "native_point_0": 101870.375,
+      "gold": 1023.6266844749223,
+      "independent_area_mean": 1023.6266723354655,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.1859261876860026e-08
+    },
+    {
+      "metric": "no2_column",
+      "native_point_0": 1.7832375078796758e-06,
+      "gold": 2.561765908277829,
+      "independent_area_mean": 2.561765927878111,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 7.651082432159072e-09
+    },
+    {
+      "metric": "o3_column",
+      "native_point_0": 0.0050680567510426044,
+      "gold": 5167.180668131149,
+      "independent_area_mean": 5167.180606062466,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.2012098671160105e-08
+    },
+    {
+      "metric": "pm1",
+      "native_point_0": 3.4037498153338674e-08,
+      "gold": 49.730333276910905,
+      "independent_area_mean": 49.73033419247618,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.841059965192038e-08
+    },
+    {
+      "metric": "q_model",
+      "native_point_0": 0.007655530236661434,
+      "gold": 0.006204839188029211,
+      "independent_area_mean": 0.006204839188029211,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 0.0
+    },
+    {
+      "metric": "so2_column",
+      "native_point_0": 3.8403561575250933e-07,
+      "gold": 4.765026148097948,
+      "independent_area_mean": 4.765026072163817,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.593572203657964e-08
+    },
+    {
+      "metric": "sp",
+      "native_point_0": 83964.8125,
+      "gold": 986.4217019226173,
+      "independent_area_mean": 986.4217078216362,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 5.980220077300955e-09
+    },
+    {
+      "metric": "t2m",
+      "native_point_0": 279.4189453125,
+      "gold": 10.281776604501365,
+      "independent_area_mean": 10.28177622303166,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 3.710153745098822e-08
+    },
+    {
+      "metric": "t_model",
+      "native_point_0": 280.33544921875,
+      "gold": 9.708097983663391,
+      "independent_area_mean": 9.708097602193687,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 3.929397081246214e-08
+    },
+    {
+      "metric": "u10",
+      "native_point_0": -0.1279296875,
+      "gold": -0.7878082233532314,
+      "independent_area_mean": -0.7878082233532314,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 0.0
+    },
+    {
+      "metric": "v10",
+      "native_point_0": 1.7115020751953125,
+      "gold": -1.7256895793311817,
+      "independent_area_mean": -1.7256895793311815,
+      "spatial_weight_sum": 0.999999999803138,
+      "relative_error": 1.2867007345034107e-16
+    }
+  ],
+  "release": {
+    "channel": "air_quality",
+    "release_id": "9c7b0dbfec3c9b5ce8e421fbf504fecb2ebe6e60f16905c2716102e7737ad07a",
+    "output_snapshots_json": "{\"bridge_cams_region_weight\": 1728040732101950084, \"bridge_source_variable_metric\": 6680622762106135629, \"dim_admin_unit\": 6394779046518320028, \"dim_air_quality_series\": 6399092465024595552, \"dim_aqi_method\": 6067902805016511239, \"dim_date\": 6181366542123273271, \"dim_geo_component\": 2834441014725234671, \"dim_hour\": 4851449173785129427, \"dim_location\": 7549520481998947040, \"dim_metric\": 3840948387021761580, \"fact_air_quality_hourly\": 5030878412586580560, \"fact_aqi_daily\": 3411316456405457797, \"fact_aqi_hourly\": 3816592187395985336, \"fact_aqi_pollutant_daily\": 4671104421744979413, \"fact_aqi_pollutant_hourly\": 2339135578129268142, \"fact_environmental_hourly\": 5751520232532808740, \"mart_air_quality_daily\": 2212292193888939917, \"mart_air_quality_hourly\": 6424258490395876242, \"mart_air_quality_monthly\": 3589498446875854514, \"mart_environmental_daily\": 4139758067123911621, \"mart_environmental_monthly\": 6461675941098098729, \"mart_source_quality_daily\": 1499569197342314414, \"ref_aqi_breakpoint\": 3822330054417332813}",
+    "scope_start_utc": "2002-12-31T17:00:00.000Z",
+    "scope_end_utc": "2003-01-01T17:00:00.000Z",
+    "published_at": "2026-10-30T17:03:18.205Z"
+  }
+}

@@ -1,0 +1,21 @@
+test_lakehouse_config (unittest.loader._FailedTest.test_lakehouse_config) ... ERROR
+
+======================================================================
+ERROR: test_lakehouse_config (unittest.loader._FailedTest.test_lakehouse_config)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_lakehouse_config
+Traceback (most recent call last):
+  File "/home/zaneth/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/zaneth/.local/share/uv/python/cpython-3.12.14-linux-x86_64-gnu/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/home/zaneth/Projects/TLCN/airflow/tests/test_lakehouse_config.py", line 6, in <module>
+    from lakehouse_config import (
+ModuleNotFoundError: No module named 'lakehouse_config'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

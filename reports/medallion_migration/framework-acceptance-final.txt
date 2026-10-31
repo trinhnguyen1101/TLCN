@@ -1,0 +1,16 @@
+test_corrupt_json_and_csv_are_rejected (test_medallion.InventoryTests.test_corrupt_json_and_csv_are_rejected) ... ok
+test_hourly_contract_preserves_legacy (test_medallion.InventoryTests.test_hourly_contract_preserves_legacy) ... ok
+test_symlinks_are_not_ingested (test_medallion.InventoryTests.test_symlinks_are_not_ingested) ... ok
+test_unknown_and_empty_sources_have_no_invented_normalization (test_medallion.InventoryTests.test_unknown_and_empty_sources_have_no_invented_normalization) ... ERA5/single_levels 0
+extra/daily 1
+ok
+test_failed_native_source_blocks_shared_native_publication (test_medallion.PublicationSafetyTests.test_failed_native_source_blocks_shared_native_publication) ... ok
+test_registry_never_guesses_emission_units_or_relabels_waqi (test_medallion.RegistryTests.test_registry_never_guesses_emission_units_or_relabels_waqi) ... climate_trace/climate_trace_vietnam 1
+waqi/historical 1
+ok
+test_independent_failures_and_empty_sources (test_medallion.RunnerTests.test_independent_failures_and_empty_sources) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.072s
+
+OK

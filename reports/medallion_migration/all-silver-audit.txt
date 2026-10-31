@@ -1,0 +1,94 @@
+26/10/30 17:00:25 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/30 17:00:25 INFO SparkContext: Running Spark version 3.5.4
+26/10/30 17:00:25 INFO SparkContext: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 17:00:25 INFO SparkContext: Java version 11.0.31
+26/10/30 17:00:25 INFO ResourceUtils: ==============================================================
+26/10/30 17:00:25 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/10/30 17:00:25 INFO ResourceUtils: ==============================================================
+26/10/30 17:00:25 INFO SparkContext: Submitted application: silver-five-dataset-audit
+26/10/30 17:00:25 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/10/30 17:00:25 INFO ResourceProfile: Limiting resource is cpu
+26/10/30 17:00:25 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/10/30 17:00:25 INFO SecurityManager: Changing view acls to: spark
+26/10/30 17:00:25 INFO SecurityManager: Changing modify acls to: spark
+26/10/30 17:00:25 INFO SecurityManager: Changing view acls groups to: 
+26/10/30 17:00:25 INFO SecurityManager: Changing modify acls groups to: 
+26/10/30 17:00:25 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: spark; groups with view permissions: EMPTY; users with modify permissions: spark; groups with modify permissions: EMPTY
+26/10/30 17:00:25 INFO Utils: Successfully started service 'sparkDriver' on port 41677.
+26/10/30 17:00:25 INFO SparkEnv: Registering MapOutputTracker
+26/10/30 17:00:25 INFO SparkEnv: Registering BlockManagerMaster
+26/10/30 17:00:25 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/10/30 17:00:25 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/10/30 17:00:25 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/10/30 17:00:25 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-643f32bb-e272-4f83-a2cd-5a64a30d0462
+26/10/30 17:00:25 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+26/10/30 17:00:25 INFO SparkEnv: Registering OutputCommitCoordinator
+26/10/30 17:00:25 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/10/30 17:00:26 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/10/30 17:00:26 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar at spark://4f263bd74037:41677/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-aws-bundle-1.7.1.jar at spark://4f263bd74037:41677/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/hadoop-aws-3.3.4.jar at spark://4f263bd74037:41677/jars/hadoop-aws-3.3.4.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/aws-java-sdk-bundle-1.12.262.jar at spark://4f263bd74037:41677/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO Executor: Starting executor ID driver on host 4f263bd74037
+26/10/30 17:00:26 INFO Executor: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 17:00:26 INFO Executor: Java version 11.0.31
+26/10/30 17:00:26 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/10/30 17:00:26 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@61d3ec0c for default.
+26/10/30 17:00:26 INFO Executor: Fetching spark://4f263bd74037:41677/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO TransportClientFactory: Successfully created connection to 4f263bd74037/172.19.0.5:41677 after 22 ms (0 ms spent in bootstraps)
+26/10/30 17:00:26 INFO Utils: Fetching spark://4f263bd74037:41677/jars/aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/fetchFileTemp15088743679268463821.tmp
+26/10/30 17:00:26 INFO Executor: Adding file:/tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/aws-java-sdk-bundle-1.12.262.jar to class loader default
+26/10/30 17:00:26 INFO Executor: Fetching spark://4f263bd74037:41677/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO Utils: Fetching spark://4f263bd74037:41677/jars/iceberg-aws-bundle-1.7.1.jar to /tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/fetchFileTemp16200896854702709541.tmp
+26/10/30 17:00:26 INFO Executor: Adding file:/tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/iceberg-aws-bundle-1.7.1.jar to class loader default
+26/10/30 17:00:26 INFO Executor: Fetching spark://4f263bd74037:41677/jars/hadoop-aws-3.3.4.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO Utils: Fetching spark://4f263bd74037:41677/jars/hadoop-aws-3.3.4.jar to /tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/fetchFileTemp1773309141156679539.tmp
+26/10/30 17:00:26 INFO Executor: Adding file:/tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/hadoop-aws-3.3.4.jar to class loader default
+26/10/30 17:00:26 INFO Executor: Fetching spark://4f263bd74037:41677/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379625649
+26/10/30 17:00:26 INFO Utils: Fetching spark://4f263bd74037:41677/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to /tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/fetchFileTemp10243198572959608946.tmp
+26/10/30 17:00:26 INFO Executor: Adding file:/tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to class loader default
+26/10/30 17:00:26 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 45171.
+26/10/30 17:00:26 INFO NettyBlockTransferService: Server created on 4f263bd74037:45171
+26/10/30 17:00:26 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/10/30 17:00:26 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 4f263bd74037, 45171, None)
+26/10/30 17:00:26 INFO BlockManagerMasterEndpoint: Registering block manager 4f263bd74037:45171 with 434.4 MiB RAM, BlockManagerId(driver, 4f263bd74037, 45171, None)
+26/10/30 17:00:26 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 4f263bd74037, 45171, None)
+26/10/30 17:00:26 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 4f263bd74037, 45171, None)
+26/10/30 17:00:26 INFO SparkContext: Added file /opt/spark/work-dir/jobs/silver/common.py at file:/opt/spark/work-dir/jobs/silver/common.py with timestamp 1793379626717
+26/10/30 17:00:26 INFO Utils: Copying /opt/spark/work-dir/jobs/silver/common.py to /tmp/spark-b6e78e7d-fa9e-4b13-8fbc-b5622f3fc1e4/userFiles-71831ae9-727d-4f22-92a1-e89f7d428c22/common.py
+26/10/30 17:00:29 WARN MetricsConfig: Cannot locate configuration: tried hadoop-metrics2-s3a-file-system.properties,hadoop-metrics2.properties
+26/10/30 17:00:29 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/climate_trace/climate_trace_vietnam/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_ingestion_manifest
+26/10/30 17:00:30 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/climate_trace/climate_trace_vietnam/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_file_metadata
+SILVER_AUDIT={"dataset": "climate_trace/climate_trace_vietnam", "sha256_files": 3, "input": 61818, "output": 49664, "tables": {"emission_aggregate": 17280, "emission_source": 14886, "emission_source_observation": 32384}}
+26/10/30 17:00:39 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/reference/vietnam_administrative_divisions/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_ingestion_manifest
+26/10/30 17:00:40 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/reference/vietnam_administrative_divisions/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_file_metadata
+FILE_PROGRESS Bronze -> Silver READ ADMIN SOURCE: metadata/source.json <- s3a://lakehouse/bronze/reference/vietnam_administrative_divisions/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/files/metadata/source.json (bytes=266, sha256=f9f5b12c46f7ca1138ff70452b6b933175ed44d37a1d0b194add200e4aa0bb8b)
+SILVER_AUDIT={"dataset": "reference/vietnam_administrative_divisions", "sha256_files": 11, "input": 3355, "output": 3355, "tables": {"admin_unit": 3355, "admin_unit_source": 3355}}
+26/10/30 17:00:43 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/reference/vietnamese-provinces-database/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_ingestion_manifest
+26/10/30 17:00:44 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/reference/vietnamese-provinces-database/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_file_metadata
+FILE_PROGRESS Bronze -> Silver READ ADMIN SOURCE: json/vn_provinces_metadata.json <- s3a://lakehouse/bronze/reference/vietnamese-provinces-database/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/files/json/vn_provinces_metadata.json (bytes=104, sha256=731e0101e2c8a501a9de2e770ce1133a74f1b305a3c7cff8b237d082ec162b6b)
+AUDIT reference/vietnamese-provinces-database: verified SHA-256 500/3363
+AUDIT reference/vietnamese-provinces-database: verified SHA-256 1000/3363
+AUDIT reference/vietnamese-provinces-database: verified SHA-256 1500/3363
+AUDIT reference/vietnamese-provinces-database: verified SHA-256 2000/3363
+AUDIT reference/vietnamese-provinces-database: verified SHA-256 2500/3363
+AUDIT reference/vietnamese-provinces-database: verified SHA-256 3000/3363
+SILVER_AUDIT={"dataset": "reference/vietnamese-provinces-database", "sha256_files": 3363, "input": 6710, "output": 6710, "tables": {"admin_unit": 3355, "admin_unit_source": 3355, "admin_boundary": 3355}}
+26/10/30 17:01:17 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/waqi/historical/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_ingestion_manifest
+26/10/30 17:01:18 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/waqi/historical/ingestion_date=2026-10-26/batch_id=raw-20261026T141739Z/_file_metadata
+SILVER_AUDIT={"dataset": "waqi/historical", "sha256_files": 17, "input": 29725, "output": 179843, "tables": {"waqi_daily_observation": 179843, "waqi_station_source": 17, "waqi_station_variable": 119}}
+26/10/30 17:01:24 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/_ingestion_manifest
+26/10/30 17:01:25 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/_file_metadata
+26/10/30 17:01:25 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+SILVER_AUDIT={"dataset": "cams/eac4", "sha256_files": 20, "input": 34500, "output": 3, "tables": {"cams_cube_standard": 3, "cams_cube_standard_source": 20}}
+SILVER_AUDIT_OK=5

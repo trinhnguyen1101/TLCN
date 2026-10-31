@@ -1,5 +1,8 @@
 # Gold layer — hourly storage, VN_AQI và serving
 
+> Migration update (2026-10-31): see [dataset-aware operations](../../docs/lakehouse/medallion-modernization.md). CAMS Silver 4.1 accepts hourly instantaneous analyses under `EAC4-hourly-v1`; historical three-hour contracts remain separate. Current validation is recorded in `reports/medallion_migration/VALIDATION.md`. Older run counts and cadence descriptions below refer to retained historical evidence.
+
+
 Cập nhật triển khai: **28/10/2026 (giờ Việt Nam)**. Có DDL, ETL Spark, AQI engine,
 marts vật lý và FastAPI/Trino; đã chạy pilot dữ liệu thật và fixture 1h trên stack.
 Đây chưa phải nghiệm thu full archive hoặc AQI production.

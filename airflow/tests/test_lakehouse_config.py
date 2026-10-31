@@ -1,6 +1,8 @@
 """Unit tests for Airflow configuration without requiring Airflow itself."""
 
 from datetime import date, datetime, timezone
+import ast
+from pathlib import Path
 import unittest
 
 from lakehouse_config import (
@@ -8,6 +10,7 @@ from lakehouse_config import (
     validate_landing_all_conf,
     validate_landing_conf,
     validate_missing_hour_limit,
+    resolve_landing_full_conf,
 )
 
 
@@ -157,6 +160,51 @@ class SupabaseCoverageConfigTests(unittest.TestCase):
     def test_invalid_missing_hour_limit_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "between 0 and 23"):
             validate_missing_hour_limit("24")
+
+
+class FullLandingTriggerTests(unittest.TestCase):
+    def setUp(self):
+        # Read the actual DAG defaults without importing Airflow or executing a DAG.
+        path = Path(__file__).resolve().parents[1] / "dags/landing_batch_to_gold.py"
+        module = ast.parse(path.read_text())
+        self.defaults = next(
+            ast.literal_eval(node.value) for node in module.body
+            if isinstance(node, ast.Assign)
+            and any(isinstance(t, ast.Name) and t.id == "DEFAULT_FULL_RUN_CONF" for t in node.targets)
+        )
+        self.clock = datetime(2026, 10, 31, 0, 15, tzinfo=timezone.utc)
+
+    def resolve(self, conf=None, run_id="manual__2026-10-31T00:15:00+00:00"):
+        return resolve_landing_full_conf(
+            conf, defaults=self.defaults, run_id=run_id, logical_date=self.clock
+        )
+
+    def test_empty_ui_trigger_runs_all_sources_through_hourly_gold(self):
+        for conf in (None, {}):
+            result = self.resolve(conf)
+            self.assertTrue(result["publish_gold"])
+            self.assertEqual(len(result["datasets"]), 5)
+            self.assertEqual(result["gold_kind"], "cams")
+            self.assertEqual(result["gold_dataset_id"], "5ca22d69be491cfe59e338e641c6b2238fbfb9555358ae440e0ce1e05c4c5f5f")
+            self.assertEqual(result["gold_chunks"][0]["start_date"], "2003-01-01")
+            self.assertEqual(result["gold_chunks"][-1]["end_date"], "2026-01-02")
+            self.assertLessEqual(len(result["gold_chunks"]), 1024)
+            self.assertEqual(result["gold_chunk_days"], 14)
+
+    def test_retry_reuses_identity_but_new_run_gets_new_batches(self):
+        first = self.resolve()
+        self.assertEqual(first, self.resolve())
+        self.assertNotEqual(first["batch_id"], self.resolve(run_id="another-run")["batch_id"])
+        self.assertEqual(first["ingestion_date"], "2026-10-31")
+
+    def test_overrides_keep_defaults_and_can_disable_gold(self):
+        scoped = self.resolve({"gold": {"end_date": "2003-01-02"}})
+        self.assertEqual(len(scoped["gold_chunks"]), 1)
+        self.assertEqual(self.defaults["gold"]["end_date"], "2026-01-02")
+        disabled = self.resolve({"publish_gold": False, "batch_id": "resume-existing", "ingestion_date": "2026-10-30"})
+        self.assertFalse(disabled["publish_gold"])
+        self.assertEqual(disabled["batch_id"], "resume-existing")
+        self.assertEqual(disabled["ingestion_date"], "2026-10-30")
 
 
 if __name__ == "__main__":

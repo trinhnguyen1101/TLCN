@@ -1,0 +1,108 @@
+26/10/30 16:58:31 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/30 16:58:32 INFO SparkContext: Running Spark version 3.5.4
+26/10/30 16:58:32 INFO SparkContext: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 16:58:32 INFO SparkContext: Java version 11.0.31
+26/10/30 16:58:32 INFO ResourceUtils: ==============================================================
+26/10/30 16:58:32 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/10/30 16:58:32 INFO ResourceUtils: ==============================================================
+26/10/30 16:58:32 INFO SparkContext: Submitted application: landing-to-bronze
+26/10/30 16:58:32 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/10/30 16:58:32 INFO ResourceProfile: Limiting resource is cpu
+26/10/30 16:58:32 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/10/30 16:58:32 INFO SecurityManager: Changing view acls to: spark
+26/10/30 16:58:32 INFO SecurityManager: Changing modify acls to: spark
+26/10/30 16:58:32 INFO SecurityManager: Changing view acls groups to: 
+26/10/30 16:58:32 INFO SecurityManager: Changing modify acls groups to: 
+26/10/30 16:58:32 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: spark; groups with view permissions: EMPTY; users with modify permissions: spark; groups with modify permissions: EMPTY
+26/10/30 16:58:32 INFO Utils: Successfully started service 'sparkDriver' on port 40793.
+26/10/30 16:58:32 INFO SparkEnv: Registering MapOutputTracker
+26/10/30 16:58:32 INFO SparkEnv: Registering BlockManagerMaster
+26/10/30 16:58:32 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/10/30 16:58:32 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/10/30 16:58:32 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/10/30 16:58:33 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-7dfa0b7f-1ac3-47c8-b2f6-d0e9b9b7eeec
+26/10/30 16:58:33 INFO MemoryStore: MemoryStore started with capacity 434.4 MiB
+26/10/30 16:58:33 INFO SparkEnv: Registering OutputCommitCoordinator
+26/10/30 16:58:33 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/10/30 16:58:33 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/10/30 16:58:33 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar at spark://4f263bd74037:40793/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-aws-bundle-1.7.1.jar at spark://4f263bd74037:40793/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/hadoop-aws-3.3.4.jar at spark://4f263bd74037:40793/jars/hadoop-aws-3.3.4.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/aws-java-sdk-bundle-1.12.262.jar at spark://4f263bd74037:40793/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO Executor: Starting executor ID driver on host 4f263bd74037
+26/10/30 16:58:33 INFO Executor: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 16:58:33 INFO Executor: Java version 11.0.31
+26/10/30 16:58:33 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/10/30 16:58:33 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@7c22c026 for default.
+26/10/30 16:58:33 INFO Executor: Fetching spark://4f263bd74037:40793/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO TransportClientFactory: Successfully created connection to 4f263bd74037/172.19.0.5:40793 after 17 ms (0 ms spent in bootstraps)
+26/10/30 16:58:33 INFO Utils: Fetching spark://4f263bd74037:40793/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to /tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/fetchFileTemp3030621926401439135.tmp
+26/10/30 16:58:33 INFO Executor: Adding file:/tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to class loader default
+26/10/30 16:58:33 INFO Executor: Fetching spark://4f263bd74037:40793/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO Utils: Fetching spark://4f263bd74037:40793/jars/aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/fetchFileTemp15029018031859836659.tmp
+26/10/30 16:58:33 INFO Executor: Adding file:/tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/aws-java-sdk-bundle-1.12.262.jar to class loader default
+26/10/30 16:58:33 INFO Executor: Fetching spark://4f263bd74037:40793/jars/hadoop-aws-3.3.4.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO Utils: Fetching spark://4f263bd74037:40793/jars/hadoop-aws-3.3.4.jar to /tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/fetchFileTemp17835833989419176241.tmp
+26/10/30 16:58:33 INFO Executor: Adding file:/tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/hadoop-aws-3.3.4.jar to class loader default
+26/10/30 16:58:33 INFO Executor: Fetching spark://4f263bd74037:40793/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379512703
+26/10/30 16:58:33 INFO Utils: Fetching spark://4f263bd74037:40793/jars/iceberg-aws-bundle-1.7.1.jar to /tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/fetchFileTemp8208365898587844135.tmp
+26/10/30 16:58:33 INFO Executor: Adding file:/tmp/spark-8e8f8788-73f8-415e-9aee-3ef2d8d97169/userFiles-1155bf6f-de96-4c2a-9f24-e2bb80cf9437/iceberg-aws-bundle-1.7.1.jar to class loader default
+26/10/30 16:58:33 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 38899.
+26/10/30 16:58:33 INFO NettyBlockTransferService: Server created on 4f263bd74037:38899
+26/10/30 16:58:33 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/10/30 16:58:33 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 4f263bd74037, 38899, None)
+26/10/30 16:58:33 INFO BlockManagerMasterEndpoint: Registering block manager 4f263bd74037:38899 with 434.4 MiB RAM, BlockManagerId(driver, 4f263bd74037, 38899, None)
+26/10/30 16:58:33 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 4f263bd74037, 38899, None)
+26/10/30 16:58:33 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 4f263bd74037, 38899, None)
+26/10/30 16:58:41 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+26/10/30 16:58:42 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/_ingestion_manifest
+26/10/30 16:58:43 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/_file_metadata
+FILE_PROGRESS Bronze -> Silver [1/20] DOWNLOAD/READ GRIB: aod550_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/aod550_2003_2025_vietnam.grib (bytes=5496, sha256=b7e2ead4d1a63aa52133f4294849999e7727724e9df89d0369606dbe41e3eac9)
+FILE_PROGRESS Bronze -> Silver [2/20] DOWNLOAD/READ GRIB: co_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/co_2003_2025_vietnam.grib (bytes=7227, sha256=249e4474f080ffee7bcb00b474a4224371bb14131e663121ada31d9b77f6695b)
+FILE_PROGRESS Bronze -> Silver [3/20] DOWNLOAD/READ GRIB: co_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/co_column_2003_2025_vietnam.grib (bytes=5496, sha256=c18063682bb0e44f3629e6bc2ca40db84274c3a4eae0f5dbc5126731c0fd21db)
+FILE_PROGRESS Bronze -> Silver [4/20] DOWNLOAD/READ GRIB: d2m_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/d2m_2003_2025_vietnam.grib (bytes=5496, sha256=ca8eb6bf53e4b7e0ca2c26aef73d034375b80de07f1ec4ad39b926d91cc6c75b)
+FILE_PROGRESS Bronze -> Silver [5/20] DOWNLOAD/READ GRIB: mslp_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/mslp_2003_2025_vietnam.grib (bytes=5496, sha256=41527d5e14fab9c6775f3f46762d84dbcbf652207db372e8210b9e03072ac7e8)
+FILE_PROGRESS Bronze -> Silver [6/20] DOWNLOAD/READ GRIB: no2_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/no2_2003_2025_vietnam.grib (bytes=7227, sha256=b26cfae53f4ecbc0ce1742a266044b144eb12657abe8cc3dab2f4ceac2e0dbc3)
+FILE_PROGRESS Bronze -> Silver [7/20] DOWNLOAD/READ GRIB: no2_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/no2_column_2003_2025_vietnam.grib (bytes=5496, sha256=0a71d9f9334a8b565c22995f9c4bf0fc0e00b9126e692c13fd7be4b0141535bf)
+FILE_PROGRESS Bronze -> Silver [8/20] DOWNLOAD/READ GRIB: o3_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/o3_2003_2025_vietnam.grib (bytes=7227, sha256=88f4638917282f53555ec6d7cd8131db2d41ec70a05e5462a6fc18eb63051a11)
+FILE_PROGRESS Bronze -> Silver [9/20] DOWNLOAD/READ GRIB: o3_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/o3_column_2003_2025_vietnam.grib (bytes=5496, sha256=9cb7a419720a0a25bc571c224b94f2cfde21aa56f68628259a8874c8d25beb15)
+FILE_PROGRESS Bronze -> Silver [10/20] DOWNLOAD/READ GRIB: pm10_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/pm10_2003_2025_vietnam.grib (bytes=5496, sha256=cf221686b373d90ddd645f789d9bb6752c7116d25f2589f38f944a60b679b6b4)
+FILE_PROGRESS Bronze -> Silver [11/20] DOWNLOAD/READ GRIB: pm1_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/pm1_2003_2025_vietnam.grib (bytes=5496, sha256=3414ada4602672fb65e9dfb5ab61ff8cd2d317e0a6bcecf63a9130ba6413729f)
+FILE_PROGRESS Bronze -> Silver [12/20] DOWNLOAD/READ GRIB: pm2p5_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/pm2p5_2003_2025_vietnam.grib (bytes=5496, sha256=7da0d3180210e90ca6b016d17d9f353015fc9a84ea4d9c95066fcdf6c1e2059f)
+FILE_PROGRESS Bronze -> Silver [13/20] DOWNLOAD/READ GRIB: q_model_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/q_model_2003_2025_vietnam.grib (bytes=5502, sha256=9f04be9de9a5910ce58682eeedc94f1099e8ec4dee16bef0b3efa55ed5d9cc04)
+FILE_PROGRESS Bronze -> Silver [14/20] DOWNLOAD/READ GRIB: so2_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/so2_2003_2025_vietnam.grib (bytes=7227, sha256=0d9c374799bf70d56d6d4b7ac5cc5e1a24996603df9540ca86c3b0b21ec87a2f)
+FILE_PROGRESS Bronze -> Silver [15/20] DOWNLOAD/READ GRIB: so2_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/so2_column_2003_2025_vietnam.grib (bytes=5496, sha256=0782319037ded33717f6d069d235c26a962efbc35e238e7c97fb642c3c27b8e3)
+FILE_PROGRESS Bronze -> Silver [16/20] DOWNLOAD/READ GRIB: sp_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/sp_2003_2025_vietnam.grib (bytes=5496, sha256=bc5660c97b486d08d9523b0c0ea34959d78ec45d7f67a89ec06fb5af174f385a)
+FILE_PROGRESS Bronze -> Silver [17/20] DOWNLOAD/READ GRIB: t2m_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/t2m_2003_2025_vietnam.grib (bytes=5496, sha256=a36985c9abc3feb7de082f78d9548f6853d760f2de7061aebaca85d9dd5ef7ed)
+FILE_PROGRESS Bronze -> Silver [18/20] DOWNLOAD/READ GRIB: t_model_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/t_model_2003_2025_vietnam.grib (bytes=5502, sha256=74fe2cb126a364d47b909187c63305ed0e80252fea7236acbdbc7e11a02f6f14)
+FILE_PROGRESS Bronze -> Silver [19/20] DOWNLOAD/READ GRIB: u10_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/u10_2003_2025_vietnam.grib (bytes=5496, sha256=6da866e59a13e36a6160000926f3feaef1387771e995b3549a602a6132af5ef0)
+FILE_PROGRESS Bronze -> Silver [20/20] DOWNLOAD/READ GRIB: v10_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/v10_2003_2025_vietnam.grib (bytes=5496, sha256=27178f5b296871ef5d5c68ce1d11b4676a345b22fb39176c6d451f0f2faed141)
+CAMS cube committed 3 time/grid rows (complete)
+26/10/30 16:58:54 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/_ingestion_manifest
+26/10/30 16:58:54 WARN DataSource: All paths were ignored:
+  s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/_file_metadata
+FILE_PROGRESS Bronze -> Silver [1/20] DOWNLOAD/READ GRIB: aod550_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/aod550_2003_2025_vietnam.grib (bytes=5496, sha256=b7e2ead4d1a63aa52133f4294849999e7727724e9df89d0369606dbe41e3eac9)
+FILE_PROGRESS Bronze -> Silver [2/20] DOWNLOAD/READ GRIB: co_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/co_2003_2025_vietnam.grib (bytes=7227, sha256=249e4474f080ffee7bcb00b474a4224371bb14131e663121ada31d9b77f6695b)
+FILE_PROGRESS Bronze -> Silver [3/20] DOWNLOAD/READ GRIB: co_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/co_column_2003_2025_vietnam.grib (bytes=5496, sha256=c18063682bb0e44f3629e6bc2ca40db84274c3a4eae0f5dbc5126731c0fd21db)
+FILE_PROGRESS Bronze -> Silver [4/20] DOWNLOAD/READ GRIB: d2m_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/d2m_2003_2025_vietnam.grib (bytes=5496, sha256=ca8eb6bf53e4b7e0ca2c26aef73d034375b80de07f1ec4ad39b926d91cc6c75b)
+FILE_PROGRESS Bronze -> Silver [5/20] DOWNLOAD/READ GRIB: mslp_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/mslp_2003_2025_vietnam.grib (bytes=5496, sha256=41527d5e14fab9c6775f3f46762d84dbcbf652207db372e8210b9e03072ac7e8)
+FILE_PROGRESS Bronze -> Silver [6/20] DOWNLOAD/READ GRIB: no2_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/no2_2003_2025_vietnam.grib (bytes=7227, sha256=b26cfae53f4ecbc0ce1742a266044b144eb12657abe8cc3dab2f4ceac2e0dbc3)
+FILE_PROGRESS Bronze -> Silver [7/20] DOWNLOAD/READ GRIB: no2_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/no2_column_2003_2025_vietnam.grib (bytes=5496, sha256=0a71d9f9334a8b565c22995f9c4bf0fc0e00b9126e692c13fd7be4b0141535bf)
+FILE_PROGRESS Bronze -> Silver [8/20] DOWNLOAD/READ GRIB: o3_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/o3_2003_2025_vietnam.grib (bytes=7227, sha256=88f4638917282f53555ec6d7cd8131db2d41ec70a05e5462a6fc18eb63051a11)
+FILE_PROGRESS Bronze -> Silver [9/20] DOWNLOAD/READ GRIB: o3_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/o3_column_2003_2025_vietnam.grib (bytes=5496, sha256=9cb7a419720a0a25bc571c224b94f2cfde21aa56f68628259a8874c8d25beb15)
+FILE_PROGRESS Bronze -> Silver [10/20] DOWNLOAD/READ GRIB: pm10_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/pm10_2003_2025_vietnam.grib (bytes=5496, sha256=cf221686b373d90ddd645f789d9bb6752c7116d25f2589f38f944a60b679b6b4)
+FILE_PROGRESS Bronze -> Silver [11/20] DOWNLOAD/READ GRIB: pm1_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/pm1_2003_2025_vietnam.grib (bytes=5496, sha256=3414ada4602672fb65e9dfb5ab61ff8cd2d317e0a6bcecf63a9130ba6413729f)
+FILE_PROGRESS Bronze -> Silver [12/20] DOWNLOAD/READ GRIB: pm2p5_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/pm2p5_2003_2025_vietnam.grib (bytes=5496, sha256=7da0d3180210e90ca6b016d17d9f353015fc9a84ea4d9c95066fcdf6c1e2059f)
+FILE_PROGRESS Bronze -> Silver [13/20] DOWNLOAD/READ GRIB: q_model_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/q_model_2003_2025_vietnam.grib (bytes=5502, sha256=9f04be9de9a5910ce58682eeedc94f1099e8ec4dee16bef0b3efa55ed5d9cc04)
+FILE_PROGRESS Bronze -> Silver [14/20] DOWNLOAD/READ GRIB: so2_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/so2_2003_2025_vietnam.grib (bytes=7227, sha256=0d9c374799bf70d56d6d4b7ac5cc5e1a24996603df9540ca86c3b0b21ec87a2f)
+FILE_PROGRESS Bronze -> Silver [15/20] DOWNLOAD/READ GRIB: so2_column_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/so2_column_2003_2025_vietnam.grib (bytes=5496, sha256=0782319037ded33717f6d069d235c26a962efbc35e238e7c97fb642c3c27b8e3)
+FILE_PROGRESS Bronze -> Silver [16/20] DOWNLOAD/READ GRIB: sp_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/sp_2003_2025_vietnam.grib (bytes=5496, sha256=bc5660c97b486d08d9523b0c0ea34959d78ec45d7f67a89ec06fb5af174f385a)
+FILE_PROGRESS Bronze -> Silver [17/20] DOWNLOAD/READ GRIB: t2m_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/t2m_2003_2025_vietnam.grib (bytes=5496, sha256=a36985c9abc3feb7de082f78d9548f6853d760f2de7061aebaca85d9dd5ef7ed)
+FILE_PROGRESS Bronze -> Silver [18/20] DOWNLOAD/READ GRIB: t_model_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/t_model_2003_2025_vietnam.grib (bytes=5502, sha256=74fe2cb126a364d47b909187c63305ed0e80252fea7236acbdbc7e11a02f6f14)
+FILE_PROGRESS Bronze -> Silver [19/20] DOWNLOAD/READ GRIB: u10_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/u10_2003_2025_vietnam.grib (bytes=5496, sha256=6da866e59a13e36a6160000926f3feaef1387771e995b3549a602a6132af5ef0)
+FILE_PROGRESS Bronze -> Silver [20/20] DOWNLOAD/READ GRIB: v10_2003_2025_vietnam.grib <- s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9/files/v10_2003_2025_vietnam.grib (bytes=5496, sha256=27178f5b296871ef5d5c68ce1d11b4676a345b22fb39176c6d451f0f2faed141)
+CAMS cube committed 3 time/grid rows (complete)
+CAMS_INTEGRATION_RESULT={"batch_id": "cams-validation-99b11acaf6f9", "bronze_path": "s3a://lakehouse/bronze/cams/eac4/ingestion_date=2026-10-30/batch_id=cams-validation-99b11acaf6f9", "dataset_id": "0e77964957f0cae4ca9f82442fc919b7029f3cb016c279cc7716b8b79da7a02a", "timesteps": 3, "grid_points": 575, "input_grib_messages": 60, "input_scalar_values": 34500, "output_cube_rows": 3, "output_arrays": 60, "output_scalar_values": 34500, "valid_values": 34500, "null_values": 0, "source_files": 20, "duplicates": 0, "invalid_values": 0, "filtered_values": 0, "valid_pm_zero_values": 3, "legacy_snapshots_unchanged": true, "bronze_sha256_unchanged": true, "merge_retry_identical": true, "successful_run_skipped": true, "max_float32_relative_error": 5.955228465914786e-08}

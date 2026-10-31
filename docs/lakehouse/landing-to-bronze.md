@@ -1,5 +1,8 @@
 # Landing → Bronze trên MinIO
 
+> Migration update (2026-10-31): see [dataset-aware operations](medallion-modernization.md). CAMS Silver 4.1 accepts hourly instantaneous analyses under `EAC4-hourly-v1`; historical three-hour contracts remain separate. Current validation is recorded in `reports/medallion_migration/VALIDATION.md`. Older run counts and cadence descriptions below refer to retained historical evidence.
+
+
 [Mục lục tài liệu](../README.md) / **Lakehouse**
 
 Cập nhật 2026-10-28. Job có thể chạy độc lập hoặc qua DAG manual

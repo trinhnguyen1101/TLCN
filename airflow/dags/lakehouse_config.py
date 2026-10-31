@@ -7,6 +7,8 @@ semantics can be tested without starting the scheduler.
 from __future__ import annotations
 
 import re
+import hashlib
+from copy import deepcopy
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from pathlib import PurePosixPath
@@ -220,6 +222,31 @@ def validate_landing_all_conf(conf: dict | None) -> dict:
         )
     result.update(gold_chunk_days=chunk_days, gold_chunks=chunks)
     return result
+
+
+def resolve_landing_full_conf(
+    conf: dict | None, *, defaults: dict, run_id: str, logical_date: datetime
+) -> dict:
+    """Resolve a UI trigger without requiring editable JSON.
+
+    Identity derives from the DagRun, so retry/clear reuses the same Bronze
+    paths, while a new trigger gets distinct immutable batch identities.
+    Explicit configuration remains available for automated callers.
+    """
+    if not run_id or logical_date.tzinfo is None:
+        raise ValueError("A stable DagRun ID and timezone-aware logical date are required")
+    if conf is not None and not isinstance(conf, dict):
+        raise ValueError("DagRun configuration must be a JSON object")
+    config = deepcopy(defaults)
+    config["batch_id"] = "landing-full-" + hashlib.sha256(run_id.encode()).hexdigest()[:24]
+    config["ingestion_date"] = logical_date.astimezone(UTC).date().isoformat()
+    overrides = conf or {}
+    for key, value in overrides.items():
+        if key == "gold" and isinstance(value, dict):
+            config["gold"].update(deepcopy(value))
+        else:
+            config[key] = deepcopy(value)
+    return validate_landing_all_conf(config)
 
 
 def daily_window(data_interval_end: datetime) -> dict:

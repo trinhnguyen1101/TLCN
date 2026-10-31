@@ -93,9 +93,9 @@ def execute(args):
             datasets=build.read('dataset').filter('dataset_id=\''+args.dataset_id+'\'').collect()
             if len(datasets)!=1 or datasets[0].source_system!='cams':
                 raise ValueError('Unknown CAMS dataset')
-            if datasets[0].source_version!='EAC4' and not args.allow_validation:
+            if datasets[0].source_version!=contract.get('source_version', 'EAC4') and not args.allow_validation:
                 raise ValueError('Production accepts only reviewed EAC4 dataset version')
-            if contract.get('temporal_support')!='instantaneous' or contract.get('contract_version')!='cams-eac4-instant-v1':
+            if contract.get('temporal_support')!='instantaneous' or contract.get('contract_version') not in ('cams-eac4-instant-v1','cams-eac4-hourly-instant-v1'):
                 raise ValueError('This EAC4 adapter accepts only reviewed instantaneous contract')
         if args.adapter=='normalized_hourly' and not args.fixture:
             datasets=build.read('dataset').filter(F.col('dataset_id')==args.dataset_id).collect()
@@ -123,6 +123,8 @@ def execute(args):
             build_spatial(build)
             timings['spatial_seconds']=time.monotonic()-phase
             facts,series=cams(build,args.dataset_id,locations)
+            from environmental import materialize_environmental
+            materialize_environmental(build,args.dataset_id)
         else:
             facts,series=normalized_hourly(build,args.dataset_id,locations)
         print('GOLD_PHASE concentration_materialized '+str(len(facts)),flush=True)
@@ -153,7 +155,7 @@ def parse_args():
     p.add_argument('--schema',default='gold')
     p.add_argument('--silver-schema',default='silver')
     p.add_argument('--schema-sql',default='/opt/spark/work-dir/lakehouse/gold/gold.sql')
-    p.add_argument('--contract',default='/opt/spark/work-dir/lakehouse/gold/contracts/cams-eac4-v1.json')
+    p.add_argument('--contract',default='/opt/spark/work-dir/lakehouse/gold/contracts/cams-eac4-hourly-v1.json')
     p.add_argument('--adapter',choices=['cams','normalized_hourly'],default='cams')
     p.add_argument('--dataset-id',required=True,type=identifier_hash)
     p.add_argument('--start-date',required=True)

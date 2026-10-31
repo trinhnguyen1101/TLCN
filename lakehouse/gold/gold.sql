@@ -500,3 +500,32 @@ CREATE TABLE IF NOT EXISTS nessie.{{schema}}.fact_measurement_provenance (
 ) USING iceberg PARTITIONED BY (release_id, months(hour_start_utc))
 LOCATION 's3a://lakehouse/{{schema}}/fact_measurement_provenance'
 TBLPROPERTIES ('format-version'='2','write.parquet.compression-codec'='zstd');
+
+-- Additive physical metrics; deliberately outside concentration/AQI schemas.
+CREATE TABLE IF NOT EXISTS nessie.{{schema}}.fact_environmental_hourly (
+ release_id STRING, dataset_id STRING, location_id STRING, hour_start_utc TIMESTAMP,
+ metric STRING, unit STRING, physical_quantity STRING, value DOUBLE,
+ spatial_coverage DOUBLE, input_run_ids ARRAY<STRING>, input_snapshot_id BIGINT,
+ temporal_support STRING, aggregation_policy STRING,
+ vertical_support STRING, source_resolution_minutes INT, quality_status STRING, missing_reason STRING
+) USING iceberg PARTITIONED BY (release_id, days(hour_start_utc))
+LOCATION 's3a://lakehouse/{{schema}}/fact_environmental_hourly'
+TBLPROPERTIES ('format-version'='2');
+
+CREATE TABLE IF NOT EXISTS nessie.{{schema}}.mart_environmental_daily (
+ release_id STRING, dataset_id STRING, location_id STRING, metric STRING,
+ unit STRING, physical_quantity STRING, period_start_local DATE,
+ value_sum DOUBLE, valid_samples BIGINT, minimum DOUBLE, maximum DOUBLE,
+ value DOUBLE, aggregation_policy STRING
+) USING iceberg PARTITIONED BY (release_id)
+LOCATION 's3a://lakehouse/{{schema}}/mart_environmental_daily'
+TBLPROPERTIES ('format-version'='2');
+
+CREATE TABLE IF NOT EXISTS nessie.{{schema}}.mart_environmental_monthly (
+ release_id STRING, dataset_id STRING, location_id STRING, metric STRING,
+ unit STRING, physical_quantity STRING, period_start_local DATE,
+ value_sum DOUBLE, valid_samples BIGINT, minimum DOUBLE, maximum DOUBLE,
+ value DOUBLE, aggregation_policy STRING
+) USING iceberg PARTITIONED BY (release_id)
+LOCATION 's3a://lakehouse/{{schema}}/mart_environmental_monthly'
+TBLPROPERTIES ('format-version'='2');

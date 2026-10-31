@@ -34,7 +34,7 @@ from cams_physics import (
 
 
 PIPELINE = "cams-eac4-bronze-to-silver"
-PIPELINE_VERSION = "4.0.0"
+PIPELINE_VERSION = "4.1.0"
 CUBE_TABLE = f"{TABLE_PREFIX}.cams_cube_standard"
 SOURCE_TABLE = f"{TABLE_PREFIX}.cams_cube_standard_source"
 CAMS_CHUNK_TIMESTEPS = 512
@@ -94,7 +94,7 @@ def parse_args():
             "SILVER_SCHEMA_SQL", "/opt/spark/work-dir/lakehouse/silver/silver.sql"
         ),
     )
-    parser.add_argument("--source-version", default="EAC4")
+    parser.add_argument("--source-version", default="EAC4-hourly-v1")
     return parser.parse_args()
 
 
@@ -125,8 +125,8 @@ def valid_time(metadata):
     day = str(int(metadata["validityDate"]))
     clock = f"{int(metadata['validityTime']):04d}"
     source_utc = datetime.strptime(day + clock, "%Y%m%d%H%M").replace(tzinfo=timezone.utc)
-    if source_utc.minute or source_utc.hour % 3:
-        raise DataQualityError("EAC4 analysis requires 3-hour UTC timestamps")
+    if source_utc.minute:
+        raise DataQualityError("EAC4 analysis requires aligned UTC hourly timestamps")
     if metadata["dataType"] != "an" or metadata["stepType"] != "instant" or float(metadata["step"]) != 0:
         raise DataQualityError("Expected instantaneous EAC4 analysis at forecast step 0")
     if (int(metadata["dataDate"]), int(metadata["dataTime"])) != (

@@ -95,6 +95,16 @@ class FakeSpark:
 
 
 class CamsCubeTests(unittest.TestCase):
+    def test_hourly_analysis_keeps_real_instants(self):
+        for hour in range(24):
+            meta = messages()['sp'][0]
+            meta.update(dataTime=hour*100, validityTime=hour*100)
+            self.assertEqual(cams.valid_time(meta).astimezone(timezone.utc).hour, hour)
+        meta['stepType'] = 'avg'
+        with self.assertRaises(common.DataQualityError):
+            cams.valid_time(meta)
+
+
     def test_aligns_surface_and_hybrid_sections_by_ordered_coordinates(self):
         coordinates, aligned = {}, {}
         _, _, grid_id, _ = cams.align_grid_messages(messages(), coordinates, aligned)

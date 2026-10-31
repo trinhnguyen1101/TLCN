@@ -1,0 +1,64 @@
+[
+  {
+    "suite": "framework",
+    "command": [
+      "backend/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "scripts/tests",
+      "-v"
+    ],
+    "env_override": {},
+    "exit_code": 0,
+    "log": "reports/medallion_migration/framework-acceptance-final.txt"
+  },
+  {
+    "suite": "silver",
+    "command": [
+      "backend/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "spark/jobs/silver/tests",
+      "-v"
+    ],
+    "env_override": {},
+    "exit_code": 0,
+    "log": "reports/medallion_migration/silver-acceptance-final.txt"
+  },
+  {
+    "suite": "gold",
+    "command": [
+      "backend/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "spark/jobs/gold/tests",
+      "-v"
+    ],
+    "env_override": {},
+    "exit_code": 0,
+    "log": "reports/medallion_migration/gold-acceptance-final.txt"
+  },
+  {
+    "suite": "airflow",
+    "command": [
+      "backend/.venv/bin/python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "airflow/tests",
+      "-v"
+    ],
+    "env_override": {
+      "PYTHONPATH": "airflow/dags"
+    },
+    "exit_code": 0,
+    "log": "reports/medallion_migration/airflow-acceptance-final.txt"
+  }
+]

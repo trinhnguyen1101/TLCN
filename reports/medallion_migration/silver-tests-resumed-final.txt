@@ -1,0 +1,45 @@
+test_aligns_surface_and_hybrid_sections_by_ordered_coordinates (test_cams_cube.CamsCubeTests.test_aligns_surface_and_hybrid_sections_by_ordered_coordinates) ... ok
+test_bad_unit_never_reaches_standard_cube (test_cams_cube.CamsCubeTests.test_bad_unit_never_reaches_standard_cube) ... ok
+test_conversion_preserves_source_arrays_and_repeats_identically (test_cams_cube.CamsCubeTests.test_conversion_preserves_source_arrays_and_repeats_identically) ... CAMS cube committed 2 time/grid rows
+CAMS cube committed 3 time/grid rows (complete)
+CAMS cube committed 2 time/grid rows
+CAMS cube committed 3 time/grid rows (complete)
+ok
+test_gas_concentration_and_humidity_remain_distinct (test_cams_cube.CamsCubeTests.test_gas_concentration_and_humidity_remain_distinct) ... ok
+test_hourly_analysis_keeps_real_instants (test_cams_cube.CamsCubeTests.test_hourly_analysis_keeps_real_instants) ... ok
+test_invalid_density_input_never_writes_concentration (test_cams_cube.CamsCubeTests.test_invalid_density_input_never_writes_concentration) ... ok
+test_migrated_column_order_preserves_each_variable_and_lineage (test_cams_cube.CamsCubeTests.test_migrated_column_order_preserves_each_variable_and_lineage) ... ok
+test_migration_adds_only_missing_arrays_and_can_be_repeated (test_cams_cube.CamsCubeTests.test_migration_adds_only_missing_arrays_and_can_be_repeated) ... ok
+test_rejects_different_coordinate_order (test_cams_cube.CamsCubeTests.test_rejects_different_coordinate_order) ... ok
+test_rejects_different_times (test_cams_cube.CamsCubeTests.test_rejects_different_times) ... ok
+test_rejects_file_checksum_size_and_bronze_path_mismatch (test_cams_cube.CamsCubeTests.test_rejects_file_checksum_size_and_bronze_path_mismatch) ... ok
+test_rejects_model_field_at_wrong_level (test_cams_cube.CamsCubeTests.test_rejects_model_field_at_wrong_level) ... ok
+test_rejects_old_fourteen_file_batch (test_cams_cube.CamsCubeTests.test_rejects_old_fourteen_file_batch) ... ok
+test_rejects_unexpected_parameter (test_cams_cube.CamsCubeTests.test_rejects_unexpected_parameter) ... ok
+test_rejects_unverified_grid (test_cams_cube.CamsCubeTests.test_rejects_unverified_grid) ... ok
+test_schema_sql_and_driver_use_same_twenty_arrays (test_cams_cube.CamsCubeTests.test_schema_sql_and_driver_use_same_twenty_arrays) ... ok
+test_twenty_streams_write_aligned_chunks_with_all_arrays (test_cams_cube.CamsCubeTests.test_twenty_streams_write_aligned_chunks_with_all_arrays) ... CAMS cube committed 2 time/grid rows
+CAMS cube committed 3 time/grid rows (complete)
+ok
+test_valid_time_preserves_utc_instant_and_checks_reference_and_step (test_cams_cube.CamsCubeTests.test_valid_time_preserves_utc_instant_and_checks_reference_and_step) ... ok
+test_accepts_quantized_2013_to_2016_grib_a_coefficients (test_cams_physics.CamsPhysicsTests.test_accepts_quantized_2013_to_2016_grib_a_coefficients) ... ok
+test_each_gas_uses_local_density_kelvin_and_no_column_conversion (test_cams_physics.CamsPhysicsTests.test_each_gas_uses_local_density_kelvin_and_no_column_conversion) ... ok
+test_grib_coefficients_take_precedence_when_another_model_field_has_no_pv (test_cams_physics.CamsPhysicsTests.test_grib_coefficients_take_precedence_when_another_model_field_has_no_pv) ... ok
+test_independent_half_and_full_pressure (test_cams_physics.CamsPhysicsTests.test_independent_half_and_full_pressure) ... ok
+test_invalid_meteorology_and_missing_values (test_cams_physics.CamsPhysicsTests.test_invalid_meteorology_and_missing_values) ... ok
+test_linear_conversions (test_cams_physics.CamsPhysicsTests.test_linear_conversions) ... ok
+test_missing_fields_shapes_coefficients_and_units_fail_closed (test_cams_physics.CamsPhysicsTests.test_missing_fields_shapes_coefficients_and_units_fail_closed) ... ok
+test_prefers_grib_and_rejects_wrong_or_malformed_coefficients (test_cams_physics.CamsPhysicsTests.test_prefers_grib_and_rejects_wrong_or_malformed_coefficients) ... ok
+test_virtual_temperature_and_density (test_cams_physics.CamsPhysicsTests.test_virtual_temperature_and_density) ... ok
+test_zero_pm_is_a_valid_concentration (test_cams_physics.CamsPhysicsTests.test_zero_pm_is_a_valid_concentration) ... ok
+test_aqi_rejects_fraction_negative_nan_and_overflow (test_supabase_transform.SupabaseTransformTest.test_aqi_rejects_fraction_negative_nan_and_overflow) ... ok
+test_conflicting_retry_is_rejected (test_supabase_transform.SupabaseTransformTest.test_conflicting_retry_is_rejected) ... ok
+test_manifest_links_raw_and_skips_non_json_failed_response (test_supabase_transform.SupabaseTransformTest.test_manifest_links_raw_and_skips_non_json_failed_response) ... ok
+test_ninjas_keeps_aqi_separate_and_unconfirmed_unit_null (test_supabase_transform.SupabaseTransformTest.test_ninjas_keeps_aqi_separate_and_unconfirmed_unit_null) ... ok
+test_waqi_latest_collection_wins_for_repeated_observation_clock (test_supabase_transform.SupabaseTransformTest.test_waqi_latest_collection_wins_for_repeated_observation_clock) ... ok
+test_waqi_uses_observation_time_and_keeps_missing_optional_value (test_supabase_transform.SupabaseTransformTest.test_waqi_uses_observation_time_and_keeps_missing_optional_value) ... ok
+
+----------------------------------------------------------------------
+Ran 34 tests in 0.135s
+
+OK

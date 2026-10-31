@@ -17,35 +17,43 @@ from lakehouse_airflow import (
     spark_command,
     spark_task,
 )
-from lakehouse_config import validate_landing_all_conf
+from lakehouse_config import resolve_landing_full_conf
+
+
+# Edit this configuration to change the scope of a normal UI Trigger.
+# Dates are Vietnam reporting dates; end_date is exclusive. This processes
+# the complete current hourly archive, not the three-hour validation pilot.
+DEFAULT_FULL_RUN_CONF = {
+    "publish_gold": True,
+    "gold": {
+        "dataset_id": "5ca22d69be491cfe59e338e641c6b2238fbfb9555358ae440e0ce1e05c4c5f5f",
+        "start_date": "2003-01-01",
+        "end_date": "2026-01-02",
+        "chunk_days": 14,
+        "allow_validation": False,
+    },
+}
 
 
 DOC = """
-Trigger this DAG once to process every dataset currently stored under Landing:
+Click Trigger DAG with empty/default configuration to process all five
+populated registered Landing datasets through Bronze, Silver and Gold.
+No JSON editing is required. DEFAULT_FULL_RUN_CONF in this file defines
+the hourly CAMS dataset, 2003-01-01 through 2026-01-02 (exclusive), and
+14-day Gold chunks. ERA5 is empty and live providers use their separate DAG.
+Silver reads the full source archive; the dates bound Gold only.
 
-```json
-{
-  "batch_id": "landing-full-20261029",
-  "ingestion_date": "2026-10-29",
-  "publish_gold": true,
-  "gold": {
-    "dataset_id": "5e556517c0a8c99f37b3e30eca7e9a7de962637af0779b357dca7590e836e12c",
-    "start_date": "2003-01-01",
-    "end_date": "2026-01-02",
-    "chunk_days": 14,
-    "allow_validation": false
-  }
-}
-```
+Batch IDs and UTC ingestion dates derive from the DagRun and remain stable
+on task retry/clear. A new trigger creates a new batch. Explicit DagRun
+configuration overrides these defaults, including publish_gold=false.
 
 The Graph contains two TaskGroups. Each expands to the four top-level Landing
 folders: `cams`, `climate_trace`, `reference`, and `waqi`. The `reference`
 folder expands once more because it contains two independent datasets.
 
-`publish_gold` defaults to false. When true, Native Gold is published after all
-five Silver jobs succeed and CAMS Gold additionally requires `gold.dataset_id`,
-`gold.start_date`, `gold.end_date`, and optionally `gold.chunk_days` (default
-14, allowed 1..31) and `gold.allow_validation`. The full CAMS date range is
+`publish_gold` defaults to true for this DAG. Native Gold is published after all
+five Silver jobs succeed. CAMS Gold uses the configured hourly source identity
+and scope. The full CAMS date range is
 automatically split into mapped Gold tasks; no external backfill script is
 required.
 
@@ -58,7 +66,12 @@ the batch is running.
 
 def _validate(**context) -> dict:
     dag_run = context.get("dag_run")
-    return validate_landing_all_conf(dag_run.conf if dag_run else None)
+    return resolve_landing_full_conf(
+        dag_run.conf if dag_run else None,
+        defaults=DEFAULT_FULL_RUN_CONF,
+        run_id=dag_run.run_id if dag_run else context["run_id"],
+        logical_date=dag_run.logical_date if dag_run else context["logical_date"],
+    )
 
 
 def _gold_branch(config: dict) -> str:
@@ -131,7 +144,7 @@ def _silver_task(task_id: str, key: str):
 
 with DAG(
     dag_id="landing_batch_to_gold",
-    description="One manual run for all Landing datasets through Silver and optional Gold",
+    description="Trigger to process all five populated Landing datasets through Bronze, Silver and Gold",
     doc_md=DOC,
     schedule=None,
     start_date=pendulum.datetime(2026, 1, 1, tz="Asia/Ho_Chi_Minh"),

@@ -1,0 +1,107 @@
+{
+  "restore_input": {
+    "seconds": 7.959,
+    "exit_code": 0,
+    "markers": []
+  },
+  "baseline": {
+    "seconds": 28.06,
+    "exit_code": 0,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"075095a6ab1c3440be34b2224db7fe1c1c8addbc2572570e97f6ce214e9c153e\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 4913517341554998302}}",
+      "GOLD_PHASE foundation_dimensions_ok",
+      "GOLD_PHASE concentration_materialized 354",
+      "GOLD_PHASE aqi_materialized",
+      "GOLD_TIMINGS {\"phases\": {\"foundation_seconds\": 5.473132859999168, \"adapter_seconds\": 1.5861468510011036, \"aqi_seconds\": 2.887101801999961, \"marts_seconds\": 3.7550370009994367, \"validation_seconds\": 3.5122573530006775, \"publish_seconds\": 2.319239012998878}, \"metrics\": {\"driver_collect_rows\": 354, \"driver_collect_calls\": 1}}",
+      "GOLD_PUBLISHED {\"counts\": {\"aqi_daily_valid\": 2, \"aqi_hourly_valid\": 48, \"bridge_source_variable_metric\": 0, \"dim_admin_unit\": 36, \"dim_air_quality_series\": 1, \"dim_aqi_method\": 1, \"dim_date\": 3, \"dim_geo_component\": 36, \"dim_hour\": 59, \"dim_location\": 34, \"dim_metric\": 6, \"fact_air_quality_hourly\": 354, \"fact_aqi_daily\": 2, \"fact_aqi_hourly\": 48, \"fact_aqi_pollutant_daily\": 14, \"fact_aqi_pollutant_hourly\": 288, \"fact_measurement_provenance\": 0, \"mart_air_quality_daily\": 12, \"mart_air_quality_hourly\": 288, \"mart_air_quality_monthly\": 6, \"mart_source_quality_daily\": 12, \"ref_aqi_breakpoint\": 102}, \"elapsed_seconds\": 25.289, \"release_id\": \"075095a6ab1c3440be34b2224db7fe1c1c8addbc2572570e97f6ce214e9c153e\", \"snapshots\": {\"bridge_source_variable_metric\": 1436500544644917244, \"dim_admin_unit\": 1501666258800085240, \"dim_air_quality_series\": 3992889967559303238, \"dim_aqi_method\": 1958309359624856157, \"dim_date\": 8665119590696137643, \"dim_geo_component\": 7944205793250848597, \"dim_hour\": 4383212773432175278, \"dim_location\": 756588928216412617, \"dim_metric\": 8786340706244230192, \"fact_air_quality_hourly\": 242571701357412732, \"fact_aqi_daily\": 5909320608036141254, \"fact_aqi_hourly\": 4414929884455041449, \"fact_aqi_pollutant_daily\": 227938134907117571, \"fact_aqi_pollutant_hourly\": 4139064325098214784, \"mart_air_quality_daily\": 6812122201772523835, \"mart_air_quality_hourly\": 3601249671339139331, \"mart_air_quality_monthly\": 3151918224388331173, \"mart_source_quality_daily\": 5621323137118722257, \"ref_aqi_breakpoint\": 3874984088866616169}}"
+    ]
+  },
+  "replay": {
+    "seconds": 7.831,
+    "exit_code": 0,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"075095a6ab1c3440be34b2224db7fe1c1c8addbc2572570e97f6ce214e9c153e\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 4913517341554998302}}",
+      "GOLD_REPLAY {\"release_id\": \"075095a6ab1c3440be34b2224db7fe1c1c8addbc2572570e97f6ce214e9c153e\", \"channel\": \"air_quality\", \"scope_start_utc\": \"2026-01-01 17:00:00\", \"scope_end_utc\": \"2026-01-03 17:00:00\", \"input_snapshots_json\": \"{\\\"nessie.gold_test_silver.admin_boundary\\\": 4914290065602254733, \\\"nessie.gold_test_silver.admin_unit\\\": 7096343226727722840, \\\"nessie.gold_test_silver.hourly_concentration\\\": 4913517341554998302, \\\"nessie.gold_test_silver.ingestion_run\\\": 5953157810763190619}\", \"output_snapshots_json\": \"{\\\"bridge_source_variable_metric\\\": 1436500544644917244, \\\"dim_admin_unit\\\": 1501666258800085240, \\\"dim_air_quality_series\\\": 3992889967559303238, \\\"dim_aqi_method\\\": 1958309359624856157, \\\"dim_date\\\": 8665119590696137643, \\\"dim_geo_component\\\": 7944205793250848597, \\\"dim_hour\\\": 4383212773432175278, \\\"dim_location\\\": 756588928216412617, \\\"dim_metric\\\": 8786340706244230192, \\\"fact_air_quality_hourly\\\": 242571701357412732, \\\"fact_aqi_daily\\\": 5909320608036141254, \\\"fact_aqi_hourly\\\": 4414929884455041449, \\\"fact_aqi_pollutant_daily\\\": 227938134907117571, \\\"fact_aqi_pollutant_hourly\\\": 4139064325098214784, \\\"mart_air_quality_daily\\\": 6812122201772523835, \\\"mart_air_quality_hourly\\\": 3601249671339139331, \\\"mart_air_quality_monthly\\\": 3151918224388331173, \\\"mart_source_quality_daily\\\": 5621323137118722257, \\\"ref_aqi_breakpoint\\\": 3874984088866616169}\", \"method_version\": \"vn-aqi-1459-2019-project-v1\", \"contract_sha256\": \"af612da27282ac783f1e94ff2595b2d624ef7d754b473c1103d525deb9137f69\", \"code_sha256\": \"fe2c06dca0744b76ef06ae1a3a0b264d946eb521e553d47e1e4c45b1d6dba35b\", \"published_at\": \"2026-10-30 17:05:52.590088\", \"validation_json\": \"{\\\"aqi_daily_valid\\\": 2, \\\"aqi_hourly_valid\\\": 48, \\\"bridge_source_variable_metric\\\": 0, \\\"dim_admin_unit\\\": 36, \\\"dim_air_quality_series\\\": 1, \\\"dim_aqi_method\\\": 1, \\\"dim_date\\\": 3, \\\"dim_geo_component\\\": 36, \\\"dim_hour\\\": 59, \\\"dim_location\\\": 34, \\\"dim_metric\\\": 6, \\\"fact_air_quality_hourly\\\": 354, \\\"fact_aqi_daily\\\": 2, \\\"fact_aqi_hourly\\\": 48, \\\"fact_aqi_pollutant_daily\\\": 14, \\\"fact_aqi_pollutant_hourly\\\": 288, \\\"fact_measurement_provenance\\\": 0, \\\"mart_air_quality_daily\\\": 12, \\\"mart_air_quality_hourly\\\": 288, \\\"mart_air_quality_monthly\\\": 6, \\\"mart_source_quality_daily\\\": 12, \\\"ref_aqi_breakpoint\\\": 102}\"}"
+    ]
+  },
+  "correct_delete": {
+    "seconds": 8.396,
+    "exit_code": 0,
+    "markers": []
+  },
+  "failed_stage": {
+    "seconds": 24.344,
+    "exit_code": 1,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"525d501030f18957581f75547aaf4031930affa245b4f257ae8a544bcab1b2b7\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 2799821041826502985}}",
+      "GOLD_PHASE foundation_dimensions_ok",
+      "GOLD_PHASE concentration_materialized 353",
+      "GOLD_PHASE aqi_materialized"
+    ]
+  },
+  "failed_after_registry": {
+    "seconds": 26.176,
+    "exit_code": 1,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"525d501030f18957581f75547aaf4031930affa245b4f257ae8a544bcab1b2b7\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 2799821041826502985}}",
+      "GOLD_PHASE foundation_dimensions_ok",
+      "GOLD_PHASE concentration_materialized 353",
+      "GOLD_PHASE aqi_materialized"
+    ]
+  },
+  "recovery": {
+    "seconds": 11.764,
+    "exit_code": 0,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"525d501030f18957581f75547aaf4031930affa245b4f257ae8a544bcab1b2b7\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 2799821041826502985}}",
+      "GOLD_RECOVERED_POINTER 525d501030f18957581f75547aaf4031930affa245b4f257ae8a544bcab1b2b7",
+      "GOLD_REPLAY {\"release_id\": \"525d501030f18957581f75547aaf4031930affa245b4f257ae8a544bcab1b2b7\", \"channel\": \"air_quality\", \"scope_start_utc\": \"2026-01-01 17:00:00\", \"scope_end_utc\": \"2026-01-03 17:00:00\", \"input_snapshots_json\": \"{\\\"nessie.gold_test_silver.admin_boundary\\\": 4914290065602254733, \\\"nessie.gold_test_silver.admin_unit\\\": 7096343226727722840, \\\"nessie.gold_test_silver.hourly_concentration\\\": 2799821041826502985, \\\"nessie.gold_test_silver.ingestion_run\\\": 5953157810763190619}\", \"output_snapshots_json\": \"{\\\"bridge_source_variable_metric\\\": 4696366700902779214, \\\"dim_admin_unit\\\": 4272517276949341389, \\\"dim_air_quality_series\\\": 4899611308207653010, \\\"dim_aqi_method\\\": 4205602630657185616, \\\"dim_date\\\": 4105557926145121971, \\\"dim_geo_component\\\": 5088215036967288779, \\\"dim_hour\\\": 80129247752440481, \\\"dim_location\\\": 7948581631273925313, \\\"dim_metric\\\": 4350351837829265539, \\\"fact_air_quality_hourly\\\": 2145761144947363246, \\\"fact_aqi_daily\\\": 3955546661158630812, \\\"fact_aqi_hourly\\\": 6441662813610346122, \\\"fact_aqi_pollutant_daily\\\": 7984986520393171706, \\\"fact_aqi_pollutant_hourly\\\": 4442281432384280703, \\\"mart_air_quality_daily\\\": 568398717919145668, \\\"mart_air_quality_hourly\\\": 7430786290921420000, \\\"mart_air_quality_monthly\\\": 8355067597850749747, \\\"mart_source_quality_daily\\\": 3279781659438750020, \\\"ref_aqi_breakpoint\\\": 3412532010694331398}\", \"method_version\": \"vn-aqi-1459-2019-project-v1\", \"contract_sha256\": \"af612da27282ac783f1e94ff2595b2d624ef7d754b473c1103d525deb9137f69\", \"code_sha256\": \"fe2c06dca0744b76ef06ae1a3a0b264d946eb521e553d47e1e4c45b1d6dba35b\", \"published_at\": \"2026-10-30 17:07:01.765017\", \"validation_json\": \"{\\\"aqi_daily_valid\\\": 2, \\\"aqi_hourly_valid\\\": 48, \\\"bridge_source_variable_metric\\\": 0, \\\"dim_admin_unit\\\": 36, \\\"dim_air_quality_series\\\": 1, \\\"dim_aqi_method\\\": 1, \\\"dim_date\\\": 3, \\\"dim_geo_component\\\": 36, \\\"dim_hour\\\": 59, \\\"dim_location\\\": 34, \\\"dim_metric\\\": 6, \\\"fact_air_quality_hourly\\\": 353, \\\"fact_aqi_daily\\\": 2, \\\"fact_aqi_hourly\\\": 48, \\\"fact_aqi_pollutant_daily\\\": 14, \\\"fact_aqi_pollutant_hourly\\\": 288, \\\"fact_measurement_provenance\\\": 0, \\\"mart_air_quality_daily\\\": 12, \\\"mart_air_quality_hourly\\\": 288, \\\"mart_air_quality_monthly\\\": 6, \\\"mart_source_quality_daily\\\": 12, \\\"ref_aqi_breakpoint\\\": 102}\"}"
+    ]
+  },
+  "rollback": {
+    "seconds": 13.849,
+    "exit_code": 0,
+    "markers": [
+      "GOLD_ACTIVATED 075095a6ab1c3440be34b2224db7fe1c1c8addbc2572570e97f6ce214e9c153e"
+    ]
+  },
+  "restore_again": {
+    "seconds": 8.847,
+    "exit_code": 0,
+    "markers": []
+  },
+  "final_baseline": {
+    "seconds": 29.854,
+    "exit_code": 0,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"8eec1ac09328ebe129265fe56a1ed2e7057da6e1b9ba4008e4d41b70d6981656\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 8786723147191850253}}",
+      "GOLD_PHASE foundation_dimensions_ok",
+      "GOLD_PHASE concentration_materialized 354",
+      "GOLD_PHASE aqi_materialized",
+      "GOLD_TIMINGS {\"phases\": {\"foundation_seconds\": 6.092683515000317, \"adapter_seconds\": 1.722127533001185, \"aqi_seconds\": 3.061004862000118, \"marts_seconds\": 4.177404621999813, \"validation_seconds\": 4.082107932999861, \"publish_seconds\": 2.7140256989987392}, \"metrics\": {\"driver_collect_rows\": 354, \"driver_collect_calls\": 1}}",
+      "GOLD_PUBLISHED {\"counts\": {\"aqi_daily_valid\": 2, \"aqi_hourly_valid\": 48, \"bridge_source_variable_metric\": 0, \"dim_admin_unit\": 36, \"dim_air_quality_series\": 1, \"dim_aqi_method\": 1, \"dim_date\": 3, \"dim_geo_component\": 36, \"dim_hour\": 59, \"dim_location\": 34, \"dim_metric\": 6, \"fact_air_quality_hourly\": 354, \"fact_aqi_daily\": 2, \"fact_aqi_hourly\": 48, \"fact_aqi_pollutant_daily\": 14, \"fact_aqi_pollutant_hourly\": 288, \"fact_measurement_provenance\": 0, \"mart_air_quality_daily\": 12, \"mart_air_quality_hourly\": 288, \"mart_air_quality_monthly\": 6, \"mart_source_quality_daily\": 12, \"ref_aqi_breakpoint\": 102}, \"elapsed_seconds\": 26.991, \"release_id\": \"8eec1ac09328ebe129265fe56a1ed2e7057da6e1b9ba4008e4d41b70d6981656\", \"snapshots\": {\"bridge_source_variable_metric\": 6012020135102625912, \"dim_admin_unit\": 709021579955554694, \"dim_air_quality_series\": 6886381368404905931, \"dim_aqi_method\": 4046476281082207068, \"dim_date\": 823553248182297313, \"dim_geo_component\": 7816606490228532922, \"dim_hour\": 2418195274043820274, \"dim_location\": 8067528028235316595, \"dim_metric\": 2662503884934737175, \"fact_air_quality_hourly\": 4505598871306107066, \"fact_aqi_daily\": 2418983495202957024, \"fact_aqi_hourly\": 3905103544432090871, \"fact_aqi_pollutant_daily\": 6971944833341741295, \"fact_aqi_pollutant_hourly\": 7391177526763501570, \"mart_air_quality_daily\": 1414502050957346183, \"mart_air_quality_hourly\": 714305195303857080, \"mart_air_quality_monthly\": 6181727624056792109, \"mart_source_quality_daily\": 894238190582365328, \"ref_aqi_breakpoint\": 5025584287312389627}}"
+    ]
+  },
+  "partition_fixture": {
+    "seconds": 7.563,
+    "exit_code": 0,
+    "markers": []
+  },
+  "partition_build": {
+    "seconds": 29.718,
+    "exit_code": 0,
+    "markers": [
+      "GOLD_BEGIN {\"release_id\": \"11bf03be5ec52ca11939e3e5d6d0bae460fcf2764ae132627a7fd49aef4e1e80\", \"inputs\": {\"nessie.gold_test_silver.admin_unit\": 7096343226727722840, \"nessie.gold_test_silver.admin_boundary\": 4914290065602254733, \"nessie.gold_test_silver.ingestion_run\": 5953157810763190619, \"nessie.gold_test_silver.hourly_concentration\": 8786723147191850253}}",
+      "GOLD_PHASE foundation_dimensions_ok",
+      "GOLD_PHASE concentration_materialized 354",
+      "GOLD_PHASE aqi_materialized",
+      "GOLD_TIMINGS {\"phases\": {\"foundation_seconds\": 5.702002540001558, \"adapter_seconds\": 1.6102603459985403, \"aqi_seconds\": 3.101163823999741, \"marts_seconds\": 3.94360803300151, \"validation_seconds\": 3.7607969910004613, \"publish_seconds\": 2.407470795000336}, \"metrics\": {\"driver_collect_rows\": 354, \"driver_collect_calls\": 1}}",
+      "GOLD_PUBLISHED {\"counts\": {\"aqi_daily_valid\": 2, \"aqi_hourly_valid\": 48, \"bridge_source_variable_metric\": 0, \"dim_admin_unit\": 36, \"dim_air_quality_series\": 1, \"dim_aqi_method\": 1, \"dim_date\": 3, \"dim_geo_component\": 36, \"dim_hour\": 59, \"dim_location\": 34, \"dim_metric\": 6, \"fact_air_quality_hourly\": 354, \"fact_aqi_daily\": 2, \"fact_aqi_hourly\": 48, \"fact_aqi_pollutant_daily\": 14, \"fact_aqi_pollutant_hourly\": 288, \"fact_measurement_provenance\": 0, \"mart_air_quality_daily\": 12, \"mart_air_quality_hourly\": 288, \"mart_air_quality_monthly\": 12, \"mart_source_quality_daily\": 12, \"ref_aqi_breakpoint\": 102}, \"elapsed_seconds\": 26.923, \"release_id\": \"11bf03be5ec52ca11939e3e5d6d0bae460fcf2764ae132627a7fd49aef4e1e80\", \"snapshots\": {\"bridge_source_variable_metric\": 201036153005425233, \"dim_admin_unit\": 7992528148384684351, \"dim_air_quality_series\": 8954313752233264686, \"dim_aqi_method\": 2463133023667352112, \"dim_date\": 3636082909977665675, \"dim_geo_component\": 7869288293939164405, \"dim_hour\": 3206105285824400025, \"dim_location\": 9090563228470472549, \"dim_metric\": 5120326153445317767, \"fact_air_quality_hourly\": 4902178641246554381, \"fact_aqi_daily\": 2192293390552814351, \"fact_aqi_hourly\": 314461057233628204, \"fact_aqi_pollutant_daily\": 5298999935595235690, \"fact_aqi_pollutant_hourly\": 4915031864349306671, \"mart_air_quality_daily\": 953007207144010727, \"mart_air_quality_hourly\": 953980971280842435, \"mart_air_quality_monthly\": 6718988265466304966, \"mart_source_quality_daily\": 4703643548053104459, \"ref_aqi_breakpoint\": 5868666498311639289}}"
+    ]
+  },
+  "releases": {
+    "original": "075095a6ab1c3440be34b2224db7fe1c1c8addbc2572570e97f6ce214e9c153e",
+    "corrected": "525d501030f18957581f75547aaf4031930affa245b4f257ae8a544bcab1b2b7",
+    "final": "8eec1ac09328ebe129265fe56a1ed2e7057da6e1b9ba4008e4d41b70d6981656"
+  }
+}

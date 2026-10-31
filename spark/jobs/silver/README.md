@@ -1,5 +1,8 @@
 # Bronze to Silver Spark jobs
 
+> Migration update (2026-10-31): see [dataset-aware operations](../../../docs/lakehouse/medallion-modernization.md). CAMS Silver 4.1 accepts hourly instantaneous analyses under `EAC4-hourly-v1`; historical three-hour contracts remain separate. Current validation is recorded in `reports/medallion_migration/VALIDATION.md`. Older run counts and cadence descriptions below refer to retained historical evidence.
+
+
 These jobs read completed Bronze batches and write Iceberg tables in
 `nessie.silver`. Spark displays timestamps in `Asia/Ho_Chi_Minh` (UTC+07:00).
 Bronze GRIB validity times are UTC instants; WAQI daily dates are already
@@ -130,7 +133,7 @@ run. L137, conflicting coefficients, changing coefficients, nonpositive
 pressure/temperature, q outside [0,1), negative concentrations, missing or
 nonfinite values fail without substitution or clipping. `mslp` is never used
 for density. Reference and valid times must agree, with analysis step zero
-on the 3-hour UTC grid; gaps are retained, without interpolation.
+on aligned UTC hours; gaps are retained, without interpolation.
 
 GRIB is retained in Bronze for exact source values. The job verifies SHA-256
 and file size after copying each source. `cams_cube_standard_source` holds
@@ -149,7 +152,7 @@ container's temporary disk, reads the files in lockstep, and commits bounded
 512-time-step Iceberg `MERGE` chunks. Allow at least 3 GB temporary disk.
 Progress appears as `CAMS cube committed N time/grid rows`.
 
-The CAMS pipeline version is `4.0.0`, so an older successful native run
+The CAMS pipeline version is `4.1.0`, so an older successful native run
 does not cause this job to skip. Old 14-file Bronze batches cannot be
 processed by v4; ingest a new full 20-file batch first. Successful runs of
 the same version/batch are skipped. Retry after failure MERGEs the logical

@@ -1,0 +1,1 @@
+{"release_id": "9c7b0dbfec3c9b5ce8e421fbf504fecb2ebe6e60f16905c2716102e7737ad07a", "compared_values": 2040, "metrics": 20, "max_relative_error": 5.0950107255482535e-08}

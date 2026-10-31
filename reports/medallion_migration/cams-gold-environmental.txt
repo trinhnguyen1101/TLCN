@@ -1,0 +1,83 @@
+26/10/30 17:02:19 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/30 17:02:20 INFO SparkContext: Running Spark version 3.5.4
+26/10/30 17:02:20 INFO SparkContext: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 17:02:20 INFO SparkContext: Java version 11.0.31
+26/10/30 17:02:20 INFO ResourceUtils: ==============================================================
+26/10/30 17:02:20 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/10/30 17:02:20 INFO ResourceUtils: ==============================================================
+26/10/30 17:02:20 INFO SparkContext: Submitted application: gold-hourly-v1
+26/10/30 17:02:20 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/10/30 17:02:20 INFO ResourceProfile: Limiting resource is cpu
+26/10/30 17:02:20 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/10/30 17:02:20 INFO SecurityManager: Changing view acls to: spark
+26/10/30 17:02:20 INFO SecurityManager: Changing modify acls to: spark
+26/10/30 17:02:20 INFO SecurityManager: Changing view acls groups to: 
+26/10/30 17:02:20 INFO SecurityManager: Changing modify acls groups to: 
+26/10/30 17:02:20 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: spark; groups with view permissions: EMPTY; users with modify permissions: spark; groups with modify permissions: EMPTY
+26/10/30 17:02:20 INFO Utils: Successfully started service 'sparkDriver' on port 38975.
+26/10/30 17:02:20 INFO SparkEnv: Registering MapOutputTracker
+26/10/30 17:02:20 INFO SparkEnv: Registering BlockManagerMaster
+26/10/30 17:02:20 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/10/30 17:02:20 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/10/30 17:02:20 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/10/30 17:02:20 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-480e2e1a-55d0-4d2e-9eed-58363ac9b10f
+26/10/30 17:02:20 INFO MemoryStore: MemoryStore started with capacity 1048.8 MiB
+26/10/30 17:02:20 INFO SparkEnv: Registering OutputCommitCoordinator
+26/10/30 17:02:20 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/10/30 17:02:20 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/10/30 17:02:20 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar at spark://4f263bd74037:38975/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379740458
+26/10/30 17:02:20 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-aws-bundle-1.7.1.jar at spark://4f263bd74037:38975/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379740458
+26/10/30 17:02:20 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/hadoop-aws-3.3.4.jar at spark://4f263bd74037:38975/jars/hadoop-aws-3.3.4.jar with timestamp 1793379740458
+26/10/30 17:02:20 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/aws-java-sdk-bundle-1.12.262.jar at spark://4f263bd74037:38975/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379740458
+26/10/30 17:02:20 INFO Executor: Starting executor ID driver on host 4f263bd74037
+26/10/30 17:02:20 INFO Executor: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 17:02:20 INFO Executor: Java version 11.0.31
+26/10/30 17:02:20 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/10/30 17:02:20 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@739a1ba9 for default.
+26/10/30 17:02:20 INFO Executor: Fetching spark://4f263bd74037:38975/jars/hadoop-aws-3.3.4.jar with timestamp 1793379740458
+26/10/30 17:02:20 INFO TransportClientFactory: Successfully created connection to 4f263bd74037/172.19.0.5:38975 after 16 ms (0 ms spent in bootstraps)
+26/10/30 17:02:20 INFO Utils: Fetching spark://4f263bd74037:38975/jars/hadoop-aws-3.3.4.jar to /tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/fetchFileTemp3942063387938763066.tmp
+26/10/30 17:02:20 INFO Executor: Adding file:/tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/hadoop-aws-3.3.4.jar to class loader default
+26/10/30 17:02:20 INFO Executor: Fetching spark://4f263bd74037:38975/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379740458
+26/10/30 17:02:20 INFO Utils: Fetching spark://4f263bd74037:38975/jars/aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/fetchFileTemp542520405537100760.tmp
+26/10/30 17:02:21 INFO Executor: Adding file:/tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/aws-java-sdk-bundle-1.12.262.jar to class loader default
+26/10/30 17:02:21 INFO Executor: Fetching spark://4f263bd74037:38975/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379740458
+26/10/30 17:02:21 INFO Utils: Fetching spark://4f263bd74037:38975/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to /tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/fetchFileTemp12652265547414205183.tmp
+26/10/30 17:02:21 INFO Executor: Adding file:/tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to class loader default
+26/10/30 17:02:21 INFO Executor: Fetching spark://4f263bd74037:38975/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379740458
+26/10/30 17:02:21 INFO Utils: Fetching spark://4f263bd74037:38975/jars/iceberg-aws-bundle-1.7.1.jar to /tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/fetchFileTemp11494170386753228035.tmp
+26/10/30 17:02:21 INFO Executor: Adding file:/tmp/spark-9545638c-dda5-4687-b61c-13a4aca17427/userFiles-46d4595e-b440-41b8-b52e-402cc88676e0/iceberg-aws-bundle-1.7.1.jar to class loader default
+26/10/30 17:02:21 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 35487.
+26/10/30 17:02:21 INFO NettyBlockTransferService: Server created on 4f263bd74037:35487
+26/10/30 17:02:21 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/10/30 17:02:21 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 4f263bd74037, 35487, None)
+26/10/30 17:02:21 INFO BlockManagerMasterEndpoint: Registering block manager 4f263bd74037:35487 with 1048.8 MiB RAM, BlockManagerId(driver, 4f263bd74037, 35487, None)
+26/10/30 17:02:21 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 4f263bd74037, 35487, None)
+26/10/30 17:02:21 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 4f263bd74037, 35487, None)
+26/10/30 17:02:23 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+Traceback (most recent call last):
+  File "/opt/spark/work-dir/jobs/gold/run.py", line 179, in <module>
+    execute(parse_args())
+  File "/opt/spark/work-dir/jobs/gold/run.py", line 75, in execute
+    bootstrap(spark,schema,args.schema_sql)
+  File "/opt/spark/work-dir/jobs/gold/runtime.py", line 43, in bootstrap
+    spark.sql(statement)
+  File "/opt/spark/python/lib/pyspark.zip/pyspark/sql/session.py", line 1631, in sql
+  File "/opt/spark/python/lib/py4j-0.10.9.7-src.zip/py4j/java_gateway.py", line 1322, in __call__
+  File "/opt/spark/python/lib/pyspark.zip/pyspark/errors/exceptions/captured.py", line 185, in deco
+pyspark.errors.exceptions.captured.ParseException: 
+[PARSE_SYNTAX_ERROR] Syntax error at or near 'format'.(line 10, pos 16)
+
+== SQL ==
+
+
+CREATE TABLE IF NOT EXISTS nessie.gold_test_medallion_hourly.mart_environmental_daily (
+ release_id STRING, dataset_id STRING, location_id STRING, metric STRING,
+ unit STRING, physical_quantity STRING, period_start_local DATE,
+ value_sum DOUBLE, valid_samples BIGINT, minimum DOUBLE, maximum DOUBLE,
+ value DOUBLE, aggregation_policy STRING
+) USING iceberg PARTITIONED BY (release_id)
+LOCATION 's3a://lakehouse/gold_test_medallion_hourly/mart_environmental_daily
+TBLPROPERTIES ('format-version'='2')
+----------------^^^
+

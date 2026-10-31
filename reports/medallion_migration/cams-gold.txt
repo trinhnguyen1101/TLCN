@@ -1,0 +1,68 @@
+26/10/30 16:59:37 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/30 16:59:38 INFO SparkContext: Running Spark version 3.5.4
+26/10/30 16:59:38 INFO SparkContext: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 16:59:38 INFO SparkContext: Java version 11.0.31
+26/10/30 16:59:38 INFO ResourceUtils: ==============================================================
+26/10/30 16:59:38 INFO ResourceUtils: No custom resources configured for spark.driver.
+26/10/30 16:59:38 INFO ResourceUtils: ==============================================================
+26/10/30 16:59:38 INFO SparkContext: Submitted application: gold-hourly-v1
+26/10/30 16:59:38 INFO ResourceProfile: Default ResourceProfile created, executor resources: Map(cores -> name: cores, amount: 1, script: , vendor: , memory -> name: memory, amount: 1024, script: , vendor: , offHeap -> name: offHeap, amount: 0, script: , vendor: ), task resources: Map(cpus -> name: cpus, amount: 1.0)
+26/10/30 16:59:38 INFO ResourceProfile: Limiting resource is cpu
+26/10/30 16:59:38 INFO ResourceProfileManager: Added ResourceProfile id: 0
+26/10/30 16:59:38 INFO SecurityManager: Changing view acls to: spark
+26/10/30 16:59:38 INFO SecurityManager: Changing modify acls to: spark
+26/10/30 16:59:38 INFO SecurityManager: Changing view acls groups to: 
+26/10/30 16:59:38 INFO SecurityManager: Changing modify acls groups to: 
+26/10/30 16:59:38 INFO SecurityManager: SecurityManager: authentication disabled; ui acls disabled; users with view permissions: spark; groups with view permissions: EMPTY; users with modify permissions: spark; groups with modify permissions: EMPTY
+26/10/30 16:59:38 INFO Utils: Successfully started service 'sparkDriver' on port 44487.
+26/10/30 16:59:38 INFO SparkEnv: Registering MapOutputTracker
+26/10/30 16:59:38 INFO SparkEnv: Registering BlockManagerMaster
+26/10/30 16:59:38 INFO BlockManagerMasterEndpoint: Using org.apache.spark.storage.DefaultTopologyMapper for getting topology information
+26/10/30 16:59:38 INFO BlockManagerMasterEndpoint: BlockManagerMasterEndpoint up
+26/10/30 16:59:38 INFO SparkEnv: Registering BlockManagerMasterHeartbeat
+26/10/30 16:59:38 INFO DiskBlockManager: Created local directory at /tmp/blockmgr-846565db-9ded-429b-969c-c73e7fa6dea2
+26/10/30 16:59:38 INFO MemoryStore: MemoryStore started with capacity 1048.8 MiB
+26/10/30 16:59:38 INFO SparkEnv: Registering OutputCommitCoordinator
+26/10/30 16:59:38 INFO JettyUtils: Start Jetty 0.0.0.0:4040 for SparkUI
+26/10/30 16:59:38 INFO Utils: Successfully started service 'SparkUI' on port 4040.
+26/10/30 16:59:38 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar at spark://4f263bd74037:44487/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/iceberg-aws-bundle-1.7.1.jar at spark://4f263bd74037:44487/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/hadoop-aws-3.3.4.jar at spark://4f263bd74037:44487/jars/hadoop-aws-3.3.4.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO SparkContext: Added JAR file:///opt/spark/custom-jars/aws-java-sdk-bundle-1.12.262.jar at spark://4f263bd74037:44487/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO Executor: Starting executor ID driver on host 4f263bd74037
+26/10/30 16:59:38 INFO Executor: OS info Linux, 7.0.0-42-generic, amd64
+26/10/30 16:59:38 INFO Executor: Java version 11.0.31
+26/10/30 16:59:38 INFO Executor: Starting executor with user classpath (userClassPathFirst = false): ''
+26/10/30 16:59:38 INFO Executor: Created or updated repl class loader org.apache.spark.util.MutableURLClassLoader@101c23c0 for default.
+26/10/30 16:59:38 INFO Executor: Fetching spark://4f263bd74037:44487/jars/aws-java-sdk-bundle-1.12.262.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO TransportClientFactory: Successfully created connection to 4f263bd74037/172.19.0.5:44487 after 15 ms (0 ms spent in bootstraps)
+26/10/30 16:59:38 INFO Utils: Fetching spark://4f263bd74037:44487/jars/aws-java-sdk-bundle-1.12.262.jar to /tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/fetchFileTemp2756968042967443028.tmp
+26/10/30 16:59:38 INFO Executor: Adding file:/tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/aws-java-sdk-bundle-1.12.262.jar to class loader default
+26/10/30 16:59:38 INFO Executor: Fetching spark://4f263bd74037:44487/jars/hadoop-aws-3.3.4.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO Utils: Fetching spark://4f263bd74037:44487/jars/hadoop-aws-3.3.4.jar to /tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/fetchFileTemp17114541852747974211.tmp
+26/10/30 16:59:38 INFO Executor: Adding file:/tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/hadoop-aws-3.3.4.jar to class loader default
+26/10/30 16:59:38 INFO Executor: Fetching spark://4f263bd74037:44487/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO Utils: Fetching spark://4f263bd74037:44487/jars/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to /tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/fetchFileTemp1334172943609295018.tmp
+26/10/30 16:59:38 INFO Executor: Adding file:/tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/iceberg-spark-runtime-3.5_2.12-1.7.1.jar to class loader default
+26/10/30 16:59:38 INFO Executor: Fetching spark://4f263bd74037:44487/jars/iceberg-aws-bundle-1.7.1.jar with timestamp 1793379578139
+26/10/30 16:59:38 INFO Utils: Fetching spark://4f263bd74037:44487/jars/iceberg-aws-bundle-1.7.1.jar to /tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/fetchFileTemp10711808753462862082.tmp
+26/10/30 16:59:39 INFO Executor: Adding file:/tmp/spark-d08a15eb-45ec-4b9c-badd-c60bacc96fae/userFiles-2285162d-34ea-49b7-9022-aec94845a950/iceberg-aws-bundle-1.7.1.jar to class loader default
+26/10/30 16:59:39 INFO Utils: Successfully started service 'org.apache.spark.network.netty.NettyBlockTransferService' on port 41635.
+26/10/30 16:59:39 INFO NettyBlockTransferService: Server created on 4f263bd74037:41635
+26/10/30 16:59:39 INFO BlockManager: Using org.apache.spark.storage.RandomBlockReplicationPolicy for block replication policy
+26/10/30 16:59:39 INFO BlockManagerMaster: Registering BlockManager BlockManagerId(driver, 4f263bd74037, 41635, None)
+26/10/30 16:59:39 INFO BlockManagerMasterEndpoint: Registering block manager 4f263bd74037:41635 with 1048.8 MiB RAM, BlockManagerId(driver, 4f263bd74037, 41635, None)
+26/10/30 16:59:39 INFO BlockManagerMaster: Registered BlockManager BlockManagerId(driver, 4f263bd74037, 41635, None)
+26/10/30 16:59:39 INFO BlockManager: Initialized BlockManager: BlockManagerId(driver, 4f263bd74037, 41635, None)
+26/10/30 16:59:42 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+GOLD_BEGIN {"release_id": "fce853b28359bee7b1237d68d25de5818cb9a0103d473da56c0bc99ecfb78e31", "inputs": {"nessie.silver.admin_unit": 5170689017209035660, "nessie.silver.admin_boundary": 6530732959169950407, "nessie.silver.ingestion_run": 6437237065259091231, "nessie.silver.dataset": 5830803944133107901, "nessie.silver.cams_grid": 5600102572031035242, "nessie.silver.cams_grid_point": 257309707197336105, "nessie.silver.cams_cube_standard_source": 5474799642572411399, "nessie.silver.cams_cube_standard": 7491258031199225106}}
+26/10/30 16:59:47 WARN TaskSetManager: Stage 10 contains a task of very large size (1464 KiB). The maximum recommended task size is 1000 KiB.
+26/10/30 16:59:48 WARN TaskSetManager: Stage 13 contains a task of very large size (1464 KiB). The maximum recommended task size is 1000 KiB.
+GOLD_PHASE foundation_dimensions_ok
+GOLD_PHASE concentration_materialized 612
+GOLD_PHASE aqi_materialized
+26/10/30 17:00:08 WARN DataSourceV2Strategy: Can't translate true to source filter, unsupported expression
+26/10/30 17:00:08 WARN DataSourceV2Strategy: Can't translate true to source filter, unsupported expression
+26/10/30 17:00:08 WARN DataSourceV2Strategy: Can't translate true to source filter, unsupported expression
+GOLD_TIMINGS {"phases": {"foundation_seconds": 4.886543855000127, "spatial_seconds": 9.18401645800077, "adapter_seconds": 14.23356312100077, "aqi_seconds": 3.4489971729999525, "marts_seconds": 2.870775796000089, "validation_seconds": 3.4906677579983807, "publish_seconds": 1.4911464489996433}, "metrics": {"driver_collect_rows": 612, "driver_collect_calls": 1}}
+GOLD_PUBLISHED {"counts": {"aqi_daily_valid": 0, "aqi_hourly_valid": 0, "bridge_source_variable_metric": 6, "dim_admin_unit": 36, "dim_air_quality_series": 34, "dim_aqi_method": 1, "dim_date": 2, "dim_geo_component": 36, "dim_hour": 35, "dim_location": 34, "dim_metric": 6, "fact_air_quality_hourly": 612, "fact_aqi_daily": 34, "fact_aqi_hourly": 816, "fact_aqi_pollutant_daily": 238, "fact_aqi_pollutant_hourly": 4896, "fact_measurement_provenance": 0, "mart_air_quality_daily": 204, "mart_air_quality_hourly": 4896, "mart_air_quality_monthly": 204, "mart_source_quality_daily": 204, "ref_aqi_breakpoint": 102}, "elapsed_seconds": 37.459, "release_id": "fce853b28359bee7b1237d68d25de5818cb9a0103d473da56c0bc99ecfb78e31", "snapshots": {"bridge_cams_region_weight": 1728040732101950084, "bridge_source_variable_metric": 7545841973560341939, "dim_admin_unit": 8153958044945863207, "dim_air_quality_series": 6807040021259962363, "dim_aqi_method": 6029169944210769344, "dim_date": 2100547914379184324, "dim_geo_component": 3841397926658452605, "dim_hour": 1922879000201057848, "dim_location": 7754557478314773239, "dim_metric": 8655876900131092939, "fact_air_quality_hourly": 8684822221283020842, "fact_aqi_daily": 7126276409195968967, "fact_aqi_hourly": 2500772963107140312, "fact_aqi_pollutant_daily": 1190224553097608312, "fact_aqi_pollutant_hourly": 7878598124349497954, "mart_air_quality_daily": 1559785747178878743, "mart_air_quality_hourly": 7658092828011931330, "mart_air_quality_monthly": 7214050593536370599, "mart_source_quality_daily": 2072119693331344298, "ref_aqi_breakpoint": 3455498713340147200}}

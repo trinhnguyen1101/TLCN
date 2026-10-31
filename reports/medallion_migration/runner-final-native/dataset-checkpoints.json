@@ -1,0 +1,74 @@
+{
+  "climate_trace/climate_trace_vietnam:50c4a36d0177f2fcac9faa24418586ded37b8c76bc479133104dc23bb928ee18": {
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "dataset": "climate_trace/climate_trace_vietnam",
+    "source_version": "provider_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 5.52,
+      "log": "reports/medallion_migration/runner-final-native/climate_trace_climate_trace_vietnam-bronze-20261030T190800574023.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 12.623,
+      "log": "reports/medallion_migration/runner-final-native/climate_trace_climate_trace_vietnam-silver-20261030T190806094483.log"
+    }
+  },
+  "reference/vietnam_administrative_divisions:c643d900b71a0f2a442b094c897590d27225ca4d110d23d9c952d1545b44fed7": {
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "dataset": "reference/vietnam_administrative_divisions",
+    "source_version": "source_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 5.977,
+      "log": "reports/medallion_migration/runner/reference_vietnam_administrative_divisions-bronze-20261030T190604807516.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 12.188,
+      "log": "reports/medallion_migration/runner/reference_vietnam_administrative_divisions-silver-20261030T190610784899.log"
+    }
+  },
+  "reference/vietnamese-provinces-database:8ae39426746115a952d5e7100fce3239abd2dd51523bdb9a1288687d258d41b5": {
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "dataset": "reference/vietnamese-provinces-database",
+    "source_version": "source_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 35.48,
+      "log": "reports/medallion_migration/runner/reference_vietnamese-provinces-database-bronze-20261030T190622974853.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 12.393,
+      "log": "reports/medallion_migration/runner/reference_vietnamese-provinces-database-silver-20261030T190658455019.log"
+    }
+  },
+  "waqi/historical:7bb436d2e313f6fb6b2f5a83ce08f426d685d52861b8ab16540131f1ee2c4104": {
+    "batch_id": "raw-20261026T141739Z",
+    "ingestion_date": "2026-10-26",
+    "dataset": "waqi/historical",
+    "source_version": "provider_native",
+    "bronze": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 6.675,
+      "log": "reports/medallion_migration/runner-final-native/waqi_historical-bronze-20261030T190818717861.log"
+    },
+    "silver": {
+      "exit_code": 0,
+      "status": "passed",
+      "seconds": 11.663,
+      "log": "reports/medallion_migration/runner-final-native/waqi_historical-silver-20261030T190825393300.log"
+    }
+  }
+}

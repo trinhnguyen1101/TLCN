@@ -154,7 +154,7 @@ def main():
                 source_time = fields["sp"][1].astimezone(timezone.utc).replace(tzinfo=None)
                 assert row.valid_time == source_time
                 if index:
-                    assert (row.valid_time - rows[index - 1].valid_time).total_seconds() == 10800
+                    assert (row.valid_time - rows[index - 1].valid_time).total_seconds() == 3600
                 metadata = fields["co"][0]
                 pv = metadata["pv"]
                 for point in range(cells):

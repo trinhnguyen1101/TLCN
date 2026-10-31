@@ -1,0 +1,16 @@
+test_airflow_interval_is_normalized_to_vietnam_day (test_lakehouse_config.DailyWindowTests.test_airflow_interval_is_normalized_to_vietnam_day) ... ok
+test_admin_cannot_be_forced_into_gold (test_lakehouse_config.LandingConfigTests.test_admin_cannot_be_forced_into_gold) ... ok
+test_cams_gold_requires_scope (test_lakehouse_config.LandingConfigTests.test_cams_gold_requires_scope) ... ok
+test_full_landing_gold_rejects_invalid_chunk_days (test_lakehouse_config.LandingConfigTests.test_full_landing_gold_rejects_invalid_chunk_days) ... ok
+test_full_landing_gold_rejects_too_many_mapped_tasks (test_lakehouse_config.LandingConfigTests.test_full_landing_gold_rejects_too_many_mapped_tasks) ... ok
+test_full_landing_gold_requires_cams_scope (test_lakehouse_config.LandingConfigTests.test_full_landing_gold_requires_cams_scope) ... ok
+test_full_landing_gold_splits_the_entire_scope_for_airflow_mapping (test_lakehouse_config.LandingConfigTests.test_full_landing_gold_splits_the_entire_scope_for_airflow_mapping) ... ok
+test_full_landing_run_builds_five_isolated_batches (test_lakehouse_config.LandingConfigTests.test_full_landing_run_builds_five_isolated_batches) ... ok
+test_historical_waqi_defaults_to_silver_only (test_lakehouse_config.LandingConfigTests.test_historical_waqi_defaults_to_silver_only) ... ok
+test_invalid_missing_hour_limit_is_rejected (test_lakehouse_config.SupabaseCoverageConfigTests.test_invalid_missing_hour_limit_is_rejected) ... ok
+test_one_missing_hour_is_allowed_by_default_policy (test_lakehouse_config.SupabaseCoverageConfigTests.test_one_missing_hour_is_allowed_by_default_policy) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.020s
+
+OK
