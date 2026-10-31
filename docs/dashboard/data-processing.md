@@ -183,9 +183,9 @@ bước khởi động web thông thường.
 
 ## 6. Dữ liệu cũ và phạm vi thay đổi
 
-Các generation cũ chỉ được dọn sau khi bộ mới qua kiểm chứng số liệu, API và giao
-diện. [Danh sách đã xóa](../../reports/dashboard/science/deleted-files.json) là
-biên bản của lần triển khai trước, không phải lệnh dọn dữ liệu định kỳ.
+Chỉ giữ generation được `CURRENT` trỏ tới khi dọn các bản xuất không còn sử dụng.
+Giữ đầy đủ manifest, observations, monthly và weights của generation đó.
+Metadata về generation cha là nguồn gốc xử lý, không phải dependency khi API đọc.
 
 Không xóa GRIB nguồn, tệp địa lý hay test fixture để giải quyết lỗi API.
 Toàn bộ hướng dẫn trên chỉ dùng pipeline dashboard độc lập, không chạy các

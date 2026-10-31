@@ -52,8 +52,6 @@ docs/
   QC, lineage và điều kiện để dữ liệu được Gold tiếp nhận.
 - [Gold](lakehouse/GOLD.md): hourly storage, spatial aggregation, VN_AQI,
   analytical marts, publication, historical queries và dashboard contracts.
-- [Gold schema v2 lưu trữ](../lakehouse/gold/SCHEMA-v2-ARCHIVE.md): thiết kế schema
-  ban đầu; phân biệt với implementation hiện tại trong Gold SCHEMA.
 - [Script rà soát nguồn Gold](../scripts/review_gold_sources.py) ghi output vào
   `docs/lakehouse/gold-source-review.json`. Artifact này hiện không có trong
   checkout; chỉ dùng `--reuse-cloud` khi đã có output của một lần rà soát trước.

@@ -10,7 +10,6 @@ marts vật lý và FastAPI/Trino; đã chạy pilot dữ liệu thật và fixt
 - [Schema và thay đổi so với thiết kế v2](SCHEMA.md)
 - [Runbook vận hành](RUNBOOK.md)
 - [Báo cáo kiểm thử](../../reports/gold/VALIDATION.md)
-- [Thiết kế schema v2 lưu trữ](SCHEMA-v2-ARCHIVE.md)
 - [Benchmark và giới hạn scale đã đo](../../reports/gold/performance/README.md)
 - [Unknown observation clock: migration chưa kích hoạt](OBSERVATION-TIME-MIGRATION.md)
 

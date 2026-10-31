@@ -1,6 +1,0 @@
-CAMS/EAC4 20
-ERA5/single_levels 0
-climate_trace/climate_trace_vietnam 3
-reference/vietnam_administrative_divisions 11
-reference/vietnamese-provinces-database 3363
-waqi/historical 17

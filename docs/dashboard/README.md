@@ -13,7 +13,6 @@ Chạy dashboard độc lập không cần Docker, Spark, Airflow, MinIO hay Tri
 | Tạo lại Parquet, kiểm tra `CURRENT`, tìm hiểu cấu trúc dữ liệu hoặc chạy kiểm thử | [Xử lý và kiểm tra dữ liệu dashboard](data-processing.md) |
 | Hiểu đơn vị, mật độ khí, áp suất tầng mô hình và giới hạn dữ liệu | [Phương pháp và kết quả kiểm chứng](scientific-hourly-validation.md) |
 | Tra code backend hoặc frontend | [Backend README](../../backend/README.md) · [Frontend README](../../frontend/README.md) |
-| Xem các đợt chuyển đổi trước đây | [Tài liệu lưu trữ](archive/README.md) |
 
 Nếu bạn chỉ muốn mở web, bắt đầu ở **[hướng dẫn chạy FE–BE](run-dashboard.md)**.
 Chỉ đọc phần xử lý dữ liệu khi thiếu Parquet hoặc cần tạo một phiên bản mới.

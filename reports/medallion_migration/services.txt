@@ -1,9 +1,0 @@
-airflow-scheduler Up 31 minutes (healthy)
-airflow-webserver Up 31 minutes (healthy)
-docker-proxy Up 31 minutes
-minio Up 31 minutes (healthy)
-nessie Up 31 minutes (healthy)
-postgres Up 31 minutes (healthy)
-spark-master Up 31 minutes (healthy)
-spark-worker Up 31 minutes
-trino Up 31 minutes (healthy)

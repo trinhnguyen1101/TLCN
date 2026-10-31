@@ -17,4 +17,3 @@ Không sửa trực tiếp các tệp trong generation đã công bố.
 
 - [Chạy backend và frontend](../../../docs/dashboard/run-dashboard.md).
 - [Phương pháp và biên bản kiểm chứng](../../../docs/dashboard/scientific-hourly-validation.md).
-- [Biên bản xóa các bộ dữ liệu cũ](../../../reports/dashboard/science/deleted-files.json).

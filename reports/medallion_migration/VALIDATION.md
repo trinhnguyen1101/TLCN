@@ -99,7 +99,7 @@ Climate TRACE unit metadata, live provider payloads/timestamps, ERA5 source cont
 
 ## Changed implementation and operating guide
 
-Changes cover `scripts/inventory_landing.py`, `audit_medallion_grib.py`, `run_medallion.py`, `verify_medallion_gold.py`, framework tests, Silver CAMS cadence/version and tests, Gold hourly contract/runner, environmental facts/marts and additive DDL. Existing Bronze immutable storage, Silver physics, native source adapters, VN_AQI engine and release/timeline architecture were reused. See [medallion operations](../../docs/lakehouse/medallion-modernization.md) for execution, retry, contract and backfill details. All evidence, including failed intermediate attempts, remains retained.
+Changes cover `scripts/inventory_landing.py`, `audit_medallion_grib.py`, `run_medallion.py`, `verify_medallion_gold.py`, framework tests, Silver CAMS cadence/version and tests, Gold hourly contract/runner, environmental facts/marts and additive DDL. Existing Bronze immutable storage, Silver physics, native source adapters, VN_AQI engine and release/timeline architecture were reused. See [medallion operations](../../docs/lakehouse/medallion-modernization.md) for execution, retry, contract and backfill details. Reusable source audits, final acceptance evidence and runner checkpoints are retained; superseded intermediate reports may be removed.
 
 ## Final execution reconciliation
 

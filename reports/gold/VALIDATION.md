@@ -1,10 +1,10 @@
 # Gold audit, fixes và readiness — 28/10/2026
 
-Bổ sung mới nhất: [Performance hardening](performance/README.md), [measurements](performance/SUMMARY.json). Báo cáo chức năng trước hardening giữ tại [VALIDATION-functional-20261028.md](VALIDATION-functional-20261028.md). Kết quả lịch sử bên dưới có thời điểm riêng; xem phần latest acceptance cuối báo cáo để phân biệt tests chạy lại và runtime blockers.
+Bổ sung mới nhất: [Performance hardening](performance/README.md), [measurements](performance/SUMMARY.json). Kết quả lịch sử bên dưới có thời điểm riêng; xem phần latest acceptance cuối báo cáo để phân biệt tests chạy lại và runtime blockers.
 
 Gold vẫn dùng hourly grain, Spark/Iceberg/Nessie/MinIO và Trino serving. Đã nghiệm thu trên stack development: multi-chunk historical serving, corrections/deletions, metric withdrawal, AQI fixtures 1h và dashboard. **Chưa production ready**: chưa có EAC4 production/hourly-mean Silver thật, station/proxy onboarding, emission-unit certification hoặc Airflow submit transport; full-archive throughput và bounded snapshot lifecycle chưa được chứng minh.
 
-Báo cáo MVP trước đó được giữ ở [VALIDATION-MVP.md](VALIDATION-MVP.md). Kết quả hiện tại ưu tiên evidence trong [readiness/](readiness/); không suy pass từ báo cáo cũ. Các negative tests có Spark exit1 được ghi rõ dưới đây.
+Kết quả hiện tại ưu tiên evidence trong [readiness/](readiness/); không suy pass từ báo cáo cũ. Các negative tests có Spark exit1 được ghi rõ dưới đây.
 
 ## 1. Re-audit và baseline
 

@@ -281,7 +281,7 @@ thành `gold_test_manual` nếu kiểm tra fixture ở bước4:
 
 Các lệnh API/tests dùng `backend/.venv` và dashboard dùng dependencies đã cài
 trong `frontend/`; nếu cài môi trường mới, làm theo
-[hướng dẫn setup backend/frontend](../dashboard/setup-web-dashboard.md) trước.
+[hướng dẫn setup backend/frontend](../dashboard/run-dashboard.md) trước.
 
 ```bash
 DASHBOARD_DATA_SOURCE=gold GOLD_SCHEMA=gold_pilot \

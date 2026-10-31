@@ -1,2 +1,0 @@
-{"start_date": "2026-03-01", "end_date": "2026-03-05", "seconds": 28.334, "exit_code": 0, "log": "reports/gold/2026-03-01-gold_test_hostrunner.log"}
-{"start_date": "2026-03-05", "end_date": "2026-03-08", "seconds": 28.732, "exit_code": 0, "log": "reports/gold/2026-03-05-gold_test_hostrunner.log"}

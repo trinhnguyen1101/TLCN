@@ -1,1 +1,0 @@
-{"period_checks": {"daily": "passed_sum_count_average", "monthly": "passed_sum_count_average"}, "environmental_storage": [{"files": 1, "bytes": 19830}], "release_id": "febdf11bd37187c2e9ffee7ba2ad2732ffbada442b571dd441f55d616560b78d", "compared_values": 2040, "metrics": 20, "max_relative_error": 5.0950107255482535e-08}

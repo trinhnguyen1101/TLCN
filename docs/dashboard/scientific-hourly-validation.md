@@ -1,17 +1,11 @@
 # Phương pháp và kết quả kiểm chứng dashboard
 
-> Cập nhật phân cấp: dashboard hiện dùng 34 tỉnh/thành; Hoàng Sa thuộc Đà Nẵng,
-> Trường Sa thuộc Khánh Hòa. Các con số **36 vùng** bên dưới thuộc lần kiểm chứng
-> generation cũ, không phải số tỉnh hành chính. Xem [phân cấp và chuyển dữ liệu](data-processing.md#phân-cấp-hành-chính-34-tỉnhthành).
-> [Biên bản kiểm chứng 34 tỉnh/thành](../../reports/dashboard/province-hierarchy.md)
-> có kết quả API, GRIB và trình duyệt sau thay đổi này.
+Dashboard dùng 34 tỉnh/thành; Hoàng Sa thuộc Đà Nẵng, Trường Sa thuộc Khánh Hòa.
+Xem [phân cấp hành chính](data-processing.md#phân-cấp-hành-chính-34-tỉnhthành).
 
 [← Tài liệu dashboard](README.md) · [Chạy web FE–BE](run-dashboard.md) · [Tạo Parquet](data-processing.md)
 
-Trang này giải thích ý nghĩa số liệu và tóm tắt **lần kiểm chứng ngày 30/10/2026**.
-Các kết quả bên dưới là biên bản tại thời điểm đó, không tự cập nhật khi code hay
-dữ liệu thay đổi. Muốn chạy lại kiểm chứng, dùng [hướng dẫn xử lý dữ liệu](data-processing.md#5-kiểm-thử-cho-người-phát-triển).
-Bản gốc chi tiết bằng tiếng Anh được giữ trong [kho lưu trữ](archive/scientific-hourly-validation-2026-10-30.md).
+Trang này mô tả phương pháp chuyển đổi, ý nghĩa và giới hạn số liệu.
 
 ## 1. Cần hiểu gì trước khi đọc dashboard?
 
@@ -148,7 +142,7 @@ bốn khí có cơ sở khối lượng ẩm trong generation này.
 - Thiếu hoặc sai đầu vào thì nồng độ là NULL, có lý do trong `quality_reason`.
 - Không có fallback sang mật độ cố định, trường khí tượng khác hay giá trị giờ trước.
 - Giá trị gió âm được giữ nguyên. Không cắt giá trị thực theo một ngưỡng tùy ý.
-- Phép tổng hợp giữ trọng số diện tích EPSG:6933 và 36 vùng báo cáo. Cần ít nhất
+- Phép tổng hợp giữ trọng số diện tích EPSG:6933 và 34 tỉnh/thành. Cần ít nhất
   95% diện tích hợp lệ; ngày cần 18/24 slot, tháng cần 75% slot kỳ vọng.
 
 ## 5. Các giá trị chuẩn số học
@@ -168,56 +162,18 @@ Với p_model=95000 Pa, T_model=300 K, q=0,01:
 Công thức nhiệt độ ảo được kiểm tra tương đương đại số với công thức hỗn hợp,
 trong cùng giả thiết khí lý tưởng.
 
-## 6. Kết quả triển khai được ghi nhận
+## 6. Kiểm chứng dữ liệu hiện tại
 
-| Hạng mục | Kết quả lần kiểm chứng 30/10/2026 |
-| --- | --- |
-| Generation | `5febe7dde83c41fdac2e3ba5a5532844` |
-| Dữ liệu phục vụ | 130.651.056 dòng; 18 chỉ số, 36 vùng; thêm hai biến nội bộ cho mật độ |
-| Khí suy ra | Mỗi khí có 7.258.392 dòng vùng–giờ hợp lệ |
-| Backend | 49 kiểm thử đạt; còn một cảnh báo deprecation Starlette/httpx |
-| Frontend | Bốn tệp kiểm thử đạt; lint và build đạt |
-| Trình duyệt | Hai route × ba chiều rộng 1440/768/390 px; không lỗi console hoặc tràn ngang |
-| Khoảng trống cuối thẻ bản đồ Admin | 1 px viền ở cả ba kích thước |
-| Thời gian repository mặc định | 474,48 ms lần đầu; 21,71 ms khi dùng cache, một lần đo cục bộ, chưa tính HTTP/browser |
+Đọc `CURRENT` và manifest của generation đang phục vụ để xác định phạm vi,
+nguồn, đơn vị và phương pháp. Không dùng mã generation hay số đo hiệu năng của
+một lần triển khai trước để mô tả dữ liệu hiện tại.
 
-Đối chiếu GRIB độc lập khớp bốn khí trên 36 vùng tại sáu mốc, bao gồm hai biên
-đổi mã hóa PV năm 2013 và 2017. Hai API trả đủ 24 giờ cho ngày hoàn chỉnh
-30/12/2025. Trung bình ngày/tháng tháng 12/2025 của cả bảy chất khớp phép tính lại
-từ dữ liệu giờ. Hash của cả 20 tệp nguồn và ranh giới vẫn khớp sau xử lý.
+Chạy lại các bước kiểm chứng trong [hướng dẫn xử lý dữ liệu](data-processing.md#5-kiểm-thử-cho-người-phát-triển)
+khi thay dữ liệu hoặc thuật toán. Báo cáo và ảnh kiểm thử là đầu ra có thể tạo lại.
 
-| Bằng chứng | Nội dung |
-| --- | --- |
-| [integration.json](../../reports/dashboard/science/integration.json) | API, tham chiếu ô lưới, tổng hợp thời gian và hiệu năng |
-| [final-integrity.json](../../reports/dashboard/science/final-integrity.json) | Hash và chất lượng đầu ra khí |
-| [backend-tests.txt](../../reports/dashboard/science/backend-tests.txt) | Kết quả bộ test backend |
-| [frontend-tests.txt](../../reports/dashboard/science/frontend-tests.txt) | Kết quả test frontend |
-| [frontend-lint.txt](../../reports/dashboard/science/frontend-lint.txt) / [frontend-build.txt](../../reports/dashboard/science/frontend-build.txt) | Lint và build |
-| [browser-results.json](../../reports/dashboard/science/browser-results.json) | Bộ lọc, đơn vị, CSV, layout và kích thước bản đồ |
+Các giới hạn khi diễn giải số liệu:
 
-Ảnh: [User desktop](../../reports/dashboard/science/user-1440.png),
-[Admin desktop](../../reports/dashboard/science/admin-1440.png),
-[User mobile](../../reports/dashboard/science/user-390.png),
-[Admin mobile](../../reports/dashboard/science/admin-390.png).
-
-## 7. Dọn dữ liệu và giới hạn còn lại
-
-Sau khi kiểm chứng, đã xóa 705 đường dẫn lỗi thời thuộc ba generation cũ và
-`backend/app/etl/sample.py`. Các API và kiểm tra trình duyệt vẫn đạt sau khi xóa.
-[Biên bản xóa](../../reports/dashboard/science/deleted-files.json) ghi từng đường dẫn,
-kích thước, hash và lý do. GRIB gốc, tệp địa lý, fixture và Lakehouse không bị sửa/xóa.
-
-322 partition không đổi được xác minh tái sử dụng bằng hard link trước khi dọn;
-[bằng chứng trước cleanup](../../reports/dashboard/science/integration-before-cleanup.json)
-được giữ lại. Xóa đường dẫn cũ không xóa liên kết dữ liệu trong generation mới.
-Mã generation cha trong metadata chỉ phục vụ truy vết, không phải dependency runtime.
-
-Các giới hạn cần giữ nguyên khi diễn giải số liệu:
-
-1. Nội suy theo giờ không biến dữ liệu mô hình thành quan sát trạm độc lập.
-2. Bộ biến được cung cấp không đủ để định lượng hiệu chỉnh nước ngưng tụ bị bỏ qua.
-3. Nồng độ và thang màu mô tả không xác nhận mức sức khỏe hoặc AQI.
-4. Partition lớn là tệp tạo cục bộ; bản clone mới cần ETL trước khi đọc đủ dữ liệu.
-
-Chi tiết thay đổi code và hồ sơ triển khai đầy đủ nằm trong
-[bản lưu kỹ thuật](archive/scientific-hourly-validation-2026-10-30.md).
+- Nội suy giờ không biến dữ liệu mô hình thành quan sát trạm độc lập.
+- Bộ biến không đủ để định lượng hiệu chỉnh nước ngưng tụ bị bỏ qua.
+- Nồng độ và thang màu mô tả không xác nhận mức sức khỏe hoặc AQI.
+- Bản clone mới cần ETL và dữ liệu nguồn trước khi đọc đủ partition giờ.

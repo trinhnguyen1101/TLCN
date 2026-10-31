@@ -1,6 +1,6 @@
 # Gold physical schema — 28/10/2026
 
-This file documents the executable implementation only. [gold.sql](gold.sql) is the Spark/Iceberg DDL; [archived v2 design](SCHEMA-v2-ARCHIVE.md) preserves the earlier wide target and decisions. There is no `gold_build_id` column or wide concentration fact in this implementation.
+This file documents the executable implementation only. [gold.sql](gold.sql) is the Spark/Iceberg DDL. There is no `gold_build_id` column or wide concentration fact in this implementation.
 
 ## Storage and identity
 
